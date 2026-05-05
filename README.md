@@ -7,11 +7,11 @@ A live mathematics panel displays each equation with its current numerical resul
 🚀 Formulas
 
 Expression	Physical Meaning
-p = W / Nₓ	Pixel pitch: screen width ÷ horizontal pixels
-P_f = n × p	Fringe pitch: pixels per fringe × pixel pitch
-L = n_cols × a + (n_cols−1) × g	Array width: mirrors + gaps
-N_f = L / P_f	Fringes across array: must be ≥ 40 (≥ 60 ideal)
-θ = 2·arctan(Ws/2d)	Screen angular FOV: array must fit inside
+p = W / Nₓ	Pixel pitch: screen width ÷ horizontal pixels </br>
+P_f = n × p	Fringe pitch: pixels per fringe × pixel pitch </br>
+L = n_cols × a + (n_cols−1) × g	Array width: mirrors + gaps </br>
+N_f = L / P_f	Fringes across array: must be ≥ 40 (≥ 60 ideal) </br>
+θ = 2·arctan(Ws/2d)	Screen angular FOV: array must fit inside </br>
 
 Authors: 
 Diego Bethancourth | (Quote Credits)
