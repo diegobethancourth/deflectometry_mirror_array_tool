@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ASU Deflectometry — Array Configuration Tool</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,Helvetica,sans-serif;background:#FAFAFA;color:#191919;font-size:14px}
+.nav{background:#8C1D40;display:flex;align-items:center;gap:14px;padding:0 24px;height:52px}
+.asu-mark{background:#FFC627;width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:3px;flex-shrink:0}
+.asu-mark span{color:#8C1D40;font-weight:900;font-size:17px;letter-spacing:-1px;font-family:Arial,sans-serif}
+.nav-text{color:#fff}.nav-text .t1{font-size:14px;font-weight:700;line-height:1.2}.nav-text .t2{font-size:11px;color:rgba(255,255,255,0.7)}
+.gold-bar{height:4px;background:#FFC627}
+.page-hdr{background:#fff;border-bottom:1px solid #E8E8E8;padding:10px 24px;display:flex;align-items:baseline;gap:16px}
+.page-hdr h1{font-size:17px;font-weight:700;color:#8C1D40}.page-hdr p{font-size:12px;color:#747474}
+.app{display:grid;grid-template-columns:260px 1fr;gap:0;min-height:calc(100vh - 80px)}
+.left-col{background:#fff;border-right:1px solid #E8E8E8;padding:14px;display:flex;flex-direction:column;gap:12px}
+.right-col{padding:12px;display:flex;flex-direction:column;gap:10px}
+.sec-lbl{font-size:10px;font-weight:700;color:#8C1D40;text-transform:uppercase;letter-spacing:.07em;border-left:3px solid #FFC627;padding-left:8px;margin-bottom:7px}
+.ctrl-group{display:flex;flex-direction:column;gap:4px}
+.ctrl-group label{font-size:10px;font-weight:700;color:#747474;text-transform:uppercase;letter-spacing:.04em}
+.ctrl-group select{width:100%;font-size:13px;color:#191919;border:1px solid #BFBFBF;border-radius:4px;padding:4px 6px;background:#FAFAFA}
+.ctrl-group input[type=range]{width:100%;accent-color:#8C1D40}
+.ctrl-val{font-size:16px;font-weight:700;color:#8C1D40}
+.explainer{background:#FFF5D0;border-left:3px solid #FFC627;padding:8px 10px;font-size:11px;color:#3E3E3E;line-height:1.55;border-radius:0 4px 4px 0}
+.explainer strong{color:#8C1D40}
+.fixed-box{background:#FAFAFA;border:1px solid #E8E8E8;border-radius:5px;padding:9px 11px}
+.mvar{font-size:11px;color:#747474;line-height:1.8}.mvar span{color:#191919;font-weight:700}
+.metrics-row{display:grid;grid-template-columns:repeat(6,1fr);gap:7px}
+.metric{background:#fff;border:1px solid #E8E8E8;border-radius:5px;padding:8px 10px}
+.metric .ml{font-size:10px;color:#747474;text-transform:uppercase;letter-spacing:.03em;margin-bottom:2px}
+.metric .mv{font-size:17px;font-weight:700;color:#8C1D40}.metric .ms{font-size:10px;color:#747474;margin-top:1px}
+.status-ok{background:#edf7ed;border-left:3px solid #2e7d32;border-radius:0 4px 4px 0;padding:7px 11px;font-size:12px;color:#1b5e20}
+.status-warn{background:#fff8e1;border-left:3px solid #f9a825;border-radius:0 4px 4px 0;padding:7px 11px;font-size:12px;color:#4e342e}
+.mid-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.panel{background:#fff;border:1px solid #E8E8E8;border-radius:6px;padding:12px}
+.panel-heading{font-size:13px;font-weight:700;color:#8C1D40;margin-bottom:3px}
+.panel-sub{font-size:10px;color:#747474;margin-bottom:8px}
+.bottom-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.card{background:#fff;border:1px solid #E8E8E8;border-radius:6px;padding:11px}
+.comp-table{width:100%;border-collapse:collapse;font-size:11px;table-layout:fixed}
+.comp-table th{background:#8C1D40;color:#fff;padding:5px 7px;text-align:left;font-size:10px;font-weight:700}
+.comp-table td{padding:5px 7px;border-bottom:1px solid #E8E8E8}
+.comp-table tr.act td{background:#FFF5D0;font-weight:700}
+.comp-table tr:nth-child(even):not(.act) td{background:#FAFAFA}
+.g{color:#2e7d32;font-weight:700}.m{color:#e65100;font-weight:700}.b{color:#b71c1c;font-weight:700}
+.math-block{margin-bottom:9px;padding-bottom:9px;border-bottom:1px solid #F0F0F0}
+.math-block:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.math-title{font-size:11px;font-weight:700;color:#8C1D40;margin-bottom:3px;display:flex;justify-content:space-between;align-items:center}
+.live{background:#8C1D40;color:#fff;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;white-space:nowrap}
+.formula{background:#F7F7F7;border:1px solid #E8E8E8;border-radius:3px;padding:4px 7px;font-family:"Courier New",monospace;font-size:11px;color:#3E3E3E;margin:3px 0}
+.mvar2{font-size:10px;color:#747474;line-height:1.6}.mvar2 span{color:#191919;font-weight:700}
+.verdict-good{background:#edf7ed;border-left:4px solid #2e7d32;border-radius:0 6px 6px 0;padding:9px 14px;font-size:12px;color:#1b5e20;font-weight:500;margin-bottom:2px}
+.verdict-warn{background:#fff8e1;border-left:4px solid #f9a825;border-radius:0 6px 6px 0;padding:9px 14px;font-size:12px;color:#6d4c00;font-weight:500;margin-bottom:2px}
+.verdict-bad{background:#fdecea;border-left:4px solid #b71c1c;border-radius:0 6px 6px 0;padding:9px 14px;font-size:12px;color:#7f0000;font-weight:500;margin-bottom:2px}
+.footer{background:#3E3E3E;color:#BFBFBF;font-size:10px;padding:10px 24px;text-align:center;margin-top:auto}
+.footer span{color:#FFC627}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="asu-mark"><span>ASU</span></div>
+  <div class="nav-text">
+    <div class="t1">Deflectometry Research</div>
+    <div class="t2">School of Manufacturing Systems and Networks &nbsp;·&nbsp; Dr. Xiangyu Guo</div>
+  </div>
+</div>
+<div class="gold-bar"></div>
+
+<div class="page-hdr">
+  <h1>Mirror-Screen-Camera Array Configuration Tool</h1>
+  <p>Weekly Progress &nbsp;·&nbsp; Diego Bethancourth &nbsp;·&nbsp; Arizona State University &nbsp;·&nbsp; ASU ID: 1238599780</p>
+</div>
+
+<div class="app">
+  <div class="left-col">
+
+    <div>
+      <div class="sec-lbl">How it works</div>
+      <div class="explainer">
+        Applies 6 governing equations for Deflectometry components selection. Adjust any control — every metric, sketch, and equation result updates live.
+        <br><br><strong>Goal: N<sub>f</sub> &ge; 60 fringes</strong> across the array for reliable SMOTS phase extraction.
+      </div>
+    </div>
+
+    <div>
+      <div class="sec-lbl">Array configuration</div>
+      <div class="ctrl-group" style="margin-bottom:8px">
+        <label>Mirror layout</label>
+        <select id="arr" onchange="update()">
+          <option value="1x4">1&times;4 &mdash; 4 mirrors (linear)</option>
+          <option value="1x5">1&times;5 &mdash; 5 mirrors (linear)</option>
+          <option value="2x4">2&times;4 &mdash; 8 mirrors</option>
+          <option value="3x3" selected>3&times;3 &mdash; 9 mirrors &#9733;</option>
+          <option value="2x5">2&times;5 &mdash; 10 mirrors</option>
+          <option value="3x4">3&times;4 &mdash; 12 mirrors</option>
+        </select>
+      </div>
+      <div class="ctrl-group" style="margin-bottom:8px">
+        <label>Mirror gap (mm)</label>
+        <input type="range" id="gap" min="1" max="8" value="3" step="1" oninput="update()">
+        <span class="ctrl-val" id="gap-v">3 mm</span>
+      </div>
+      <div class="ctrl-group" style="margin-bottom:8px">
+        <label>Screen&ndash;mirror distance d (mm)</label>
+        <input type="range" id="dist" min="200" max="500" value="300" step="10" oninput="update()">
+        <span class="ctrl-val" id="dist-v">300 mm</span>
+      </div>
+      <div class="ctrl-group">
+        <label>Pixels per fringe (n)</label>
+        <input type="range" id="ppf" min="8" max="30" value="15" step="1" oninput="update()">
+        <span class="ctrl-val" id="ppf-v">15 px</span>
+      </div>
+    </div>
+
+    <div>
+      <div class="sec-lbl">Camera &amp; Lens</div>
+      <div class="ctrl-group" style="margin-bottom:8px">
+        <label>Sensor format</label>
+        <select id="sensor" onchange="update()">
+          <option value="4.8,3.6">1/4" — 4.8 × 3.6 mm</option>
+          <option value="6.4,4.8">1/3" — 6.4 × 4.8 mm</option>
+          <option value="8.0,6.0" selected>1/2" — 8.0 × 6.0 mm ★</option>
+          <option value="11.0,8.0">2/3" — 11.0 × 8.0 mm</option>
+          <option value="12.8,9.6">1" — 12.8 × 9.6 mm</option>
+          <option value="17.6,13.2">4/3" — 17.6 × 13.2 mm</option>
+          <option value="23.5,15.6">APS-C — 23.5 × 15.6 mm</option>
+        </select>
+      </div>
+      <div class="ctrl-group" style="margin-bottom:8px">
+        <label>Focal length (mm)</label>
+        <input type="range" id="focal" min="6" max="75" value="25" step="1" oninput="update()">
+        <span class="ctrl-val" id="focal-v">25 mm</span>
+      </div>
+      <div id="cam-check" class="verdict-good" style="font-size:11px;padding:7px 10px;margin-top:4px"></div>
+    </div>
+
+    <div>
+      <div class="sec-lbl">Fixed parameters</div>
+      <div class="fixed-box">
+        <div class="mvar">
+          <span>Mirror side:</span> 25.4 mm (PFSQ10-03-G01)<br>
+          <span>Screen width:</span> 344 mm (Upperizon 15.6&quot; UHD)<br>
+          <span>Resolution:</span> 3840 &times; 2160 px<br>
+          <span>Pixel pitch p:</span> 89.6 &micro;m<br>
+          <span>Surface flatness:</span> &lambda;/10 &mdash; &Delta;z &le; 55 nm &#10003;<br>
+          <span>Mount:</span> Thorlabs KMSR_M<br>
+          <span>Piezo:</span> Thorlabs PIA25 (&times;2 per mirror)
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="right-col">
+    <div class="metrics-row" id="metrics"></div>
+    <div id="status"></div>
+
+    <div id="verdict-banner" class="verdict-good"></div>
+
+    <div class="mid-row">
+      <div class="panel">
+        <div class="panel-heading">Array Footprint</div>
+        <div class="panel-sub">Top view &mdash; mirror grid layout</div>
+        <svg id="arr-svg" width="100%" viewBox="0 0 300 160"></svg>
+      </div>
+      <div class="panel">
+        <div class="panel-heading">PMD Optical System</div>
+        <div class="panel-sub">Live sketch base &middot; ref. Huang et al. 2018, Fig. 1 &amp; 3</div>
+        <svg id="sys-svg" width="100%" viewBox="0 0 300 260"></svg>
+      </div>
+    </div>
+
+    <div class="bottom-row">
+      <div class="card">
+        <div class="sec-lbl" style="margin-bottom:8px">All configurations compared</div>
+        <div id="comp"></div>
+      </div>
+      <div class="card">
+        <div class="sec-lbl" style="margin-bottom:8px">Mathematics</div>
+        <div id="math"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <span>Arizona State University</span> &nbsp;&middot;&nbsp; School of Manufacturing Systems and Networks &nbsp;&middot;&nbsp;
+  Deflectometry Research &nbsp;&middot;&nbsp; Diego Bethancourth &nbsp;&middot;&nbsp; Advisor: Dr. Xiangyu Guo &nbsp;&middot;&nbsp; Weekly Progress Report
+</div>
+
+<script>
+const MIRROR=25.4, SW=344, PP=SW/3840;
+const cfgs={'1x4':{c:4,r:1},'1x5':{c:5,r:1},'2x4':{c:4,r:2},'3x3':{c:3,r:3},'2x5':{c:5,r:2},'3x4':{c:4,r:3}};
+
+function update(){
+  const key=document.getElementById('arr').value;
+  const gap=+document.getElementById('gap').value;
+  const dist=+document.getElementById('dist').value;
+  const ppf=+document.getElementById('ppf').value;
+  const focal=+document.getElementById('focal').value;
+  const sensorVal=document.getElementById('sensor').value.split(',');
+  const sW=+sensorVal[0], sH=+sensorVal[1];
+  document.getElementById('gap-v').textContent=gap+' mm';
+  document.getElementById('dist-v').textContent=dist+' mm';
+  document.getElementById('ppf-v').textContent=ppf+' px';
+  document.getElementById('focal-v').textContent=focal+' mm';
+
+  // Camera AOV
+  const aovH=2*Math.atan(sW/2/focal)*180/Math.PI;
+  const aovV=2*Math.atan(sH/2/focal)*180/Math.PI;
+  // Field of view at mirror distance
+  const fovAtMir_W=2*dist*Math.tan(aovH/2*Math.PI/180);
+  const fovAtMir_H=2*dist*Math.tan(aovV/2*Math.PI/180);
+
+  const {c,r}=cfgs[key];
+  const W=c*MIRROR+(c-1)*gap, H=r*MIRROR+(r-1)*gap;
+  const Pf=ppf*PP, Nf=W/Pf;
+  const fov=2*Math.atan(SW/2/dist)*180/Math.PI;
+  const fits=W<=SW*0.9, nfg=Nf>=60, nfok=Nf>=40;
+  const vc=nfg?'#2e7d32':nfok?'#e65100':'#b71c1c';
+
+  // Camera FOV check
+  const camFitsW=fovAtMir_W>=W, camFitsH=fovAtMir_H>=H;
+  const camOk=camFitsW&&camFitsH;
+  const camIcon=camOk?'&#10003;':'&#10007;';
+  const camCls=camOk?'verdict-good':'verdict-bad';
+  const camMsg=camOk
+    ?`Camera FOV at ${dist} mm: ${Math.round(fovAtMir_W)}&times;${Math.round(fovAtMir_H)} mm &mdash; covers ${Math.round(W)}&times;${Math.round(H)} mm array. AOV ${aovH.toFixed(1)}&deg;&times;${aovV.toFixed(1)}&deg; &#10003;`
+    :`Camera FOV at ${dist} mm: ${Math.round(fovAtMir_W)}&times;${Math.round(fovAtMir_H)} mm &mdash; too small for ${Math.round(W)}&times;${Math.round(H)} mm array. Try shorter focal length or larger sensor.`;
+
+  document.getElementById('metrics').innerHTML=`
+    <div class="metric"><div class="ml">Array width</div><div class="mv">${Math.round(W)} mm</div><div class="ms">${(W/25.4).toFixed(1)}"</div></div>
+    <div class="metric"><div class="ml">Array height</div><div class="mv">${Math.round(H)} mm</div><div class="ms">${(H/25.4).toFixed(1)}"</div></div>
+    <div class="metric"><div class="ml">Fringe pitch</div><div class="mv">${Pf.toFixed(2)} mm</div><div class="ms">at ${ppf} px/fringe</div></div>
+    <div class="metric"><div class="ml">Fringes N<sub>f</sub></div><div class="mv" style="color:${vc}">${Math.round(Nf)}</div><div class="ms">${nfg?'Excellent':nfok?'Marginal':'Too few'}</div></div>
+    <div class="metric"><div class="ml">Screen FOV</div><div class="mv">${fov.toFixed(1)}&deg;</div><div class="ms">@ ${dist} mm</div></div>
+    <div class="metric" style="border-left:3px solid ${camOk?'#2e7d32':'#b71c1c'}"><div class="ml">Camera AOV</div><div class="mv" style="color:${camOk?'#2e7d32':'#b71c1c'}">${aovH.toFixed(1)}&deg;</div><div class="ms">${aovH.toFixed(1)}&deg;&times;${aovV.toFixed(1)}&deg; ${camOk?'&#10003;':'&#10007;'}</div></div>`;
+
+  const msg=!fits
+    ?`Array width ${Math.round(W)} mm exceeds screen limit. Reduce columns or gap.`
+    :!nfok
+    ?`Only ${Math.round(Nf)} fringes &mdash; try reducing pixels/fringe or adding more columns.`
+    :`${c}&times;${r} array: ${Math.round(Nf)} fringes across ${Math.round(W)} mm &mdash; ${nfg?'excellent':'adequate'} for SMOTS phase extraction.`;
+  document.getElementById('status').innerHTML=`<div class="${(!fits||!nfok)?'status-warn':'status-ok'}">${msg}</div>`;
+
+  document.getElementById('cam-check').className=camCls;
+  document.getElementById('cam-check').innerHTML=`<span style="font-weight:700;margin-right:4px">${camIcon}</span>${camMsg}`;
+
+  drawArray(c,r,gap);
+  drawSystem(dist,W,fov,aovH);
+
+  const rows=Object.entries(cfgs).map(([k,{c:cc,r:rr}])=>{
+    const w=cc*MIRROR+(cc-1)*gap, nf=Math.round(w/Pf), f=w<=SW*0.9;
+    const nc=nf>=60?'g':nf>=40?'m':'b';
+    const shallow=rr===1;
+    const verdict=!f?'<span class="b">Exceeds screen</span>'
+      :nf<40?'<span class="b">Too few fringes</span>'
+      :shallow?'<span class="m">Too shallow</span>'
+      :nf>=60&&!shallow?`<span class="g">${cc===rr?'Best &mdash; square':'Good'}</span>`
+      :'<span class="m">Marginal</span>';
+    return `<tr class="${k===key?'act':''}"><td>${rr}&times;${cc}</td><td>${cc*rr}</td><td>${Math.round(w)} mm</td><td class="${nc}">${nf}</td><td class="${f?'g':'b'}">${f?'Yes':'No'}</td><td>${verdict}</td></tr>`;
+  }).join('');
+  document.getElementById('comp').innerHTML=`
+    <table class="comp-table"><tr><th>Layout</th><th>N</th><th>Width</th><th>Fringes</th><th>Fits?</th><th>Verdict</th></tr>${rows}</table>
+    <p style="font-size:10px;color:#747474;margin-top:5px">Green &ge;60 fringes, orange 40&ndash;59, red &lt;40. Highlighted row = current selection.</p>`;
+
+  const selCfg=cfgs[key];
+  const selW=selCfg.c*MIRROR+(selCfg.c-1)*gap, selNf=Math.round(selW/Pf);
+  const selFits=selW<=SW*0.9, selShallow=selCfg.r===1;
+  const selGood=selFits&&selNf>=60&&!selShallow;
+  const selMarginal=selFits&&selNf>=40&&!selGood;
+  const bannerCls=!selFits||selNf<40?'verdict-bad':selShallow?'verdict-warn':selMarginal?'verdict-warn':'verdict-good';
+  const bannerIcon=selGood?'&#10003;':(!selFits||selNf<40)?'&#10007;':'&#9888;';
+  const bannerText=!selFits?`${selCfg.c}&times;${selCfg.r}: Array width ${Math.round(selW)} mm exceeds screen — reduce columns or gap.`
+    :selNf<40?`${selCfg.c}&times;${selCfg.r}: Only ${selNf} fringes — too few for reliable phase extraction.`
+    :selShallow?`${selCfg.c}&times;${selCfg.r}: Linear array — only ${selCfg.r} row. Consider adding rows for better 2D coverage.`
+    :selMarginal?`${selCfg.c}&times;${selCfg.r}: ${selNf} fringes — marginal. Try increasing columns or reducing px/fringe.`
+    :`${selCfg.c}&times;${selCfg.r}: ${selNf} fringes across ${Math.round(selW)} mm — ${selCfg.c===selCfg.r?'square array, best choice':'good configuration'} for SMOTS.`;
+  document.getElementById('verdict-banner').className=bannerCls;
+  document.getElementById('verdict-banner').innerHTML=`<span style="font-size:14px;font-weight:700;margin-right:6px">${bannerIcon}</span>${bannerText}`;
+
+  document.getElementById('math').innerHTML=`
+    <div class="math-block">
+      <div class="math-title">&sect;1 Pixel pitch <span class="live">${(PP*1000).toFixed(0)} &micro;m</span></div>
+      <div class="formula">p = W / N&#x2093; = 344 / 3840</div>
+      <div class="mvar2"><span>W</span> = screen width &nbsp;&middot;&nbsp; <span>N&#x2093;</span> = horizontal pixels</div>
+    </div>
+    <div class="math-block">
+      <div class="math-title">&sect;2 Fringe pitch <span class="live">${Pf.toFixed(2)} mm</span></div>
+      <div class="formula">P&#8198;f = n &times; p = ${ppf} &times; 89.6 &micro;m</div>
+      <div class="mvar2"><span>n</span> = ${ppf} px/fringe (slider above)</div>
+    </div>
+    <div class="math-block">
+      <div class="math-title">&sect;3 Array width <span class="live">${Math.round(W)} mm</span></div>
+      <div class="formula">L = ${c}&times;25.4 + ${c>1?c-1:0}&times;${gap} mm</div>
+      <div class="mvar2"><span>a</span> = 25.4 mm &nbsp;&middot;&nbsp; <span>g</span> = ${gap} mm gap</div>
+    </div>
+    <div class="math-block">
+      <div class="math-title">&sect;4 Fringes across <span class="live" style="background:${vc}">${Math.round(Nf)}</span></div>
+      <div class="formula">N&#8198;f = L / P&#8198;f = ${Math.round(W)} / ${Pf.toFixed(2)}</div>
+      <div class="mvar2">Target: <span>&ge; 60</span> for reliable phase unwrapping</div>
+    </div>
+    <div class="math-block">
+      <div class="math-title">&sect;5 Screen FOV <span class="live">${fov.toFixed(1)}&deg;</span></div>
+      <div class="formula">&theta; = 2&middot;arctan(344 / 2&times;${dist})</div>
+      <div class="mvar2"><span>d</span> = ${dist} mm &nbsp;&middot;&nbsp; Array must fit within &theta;</div>
+    </div>
+    <div class="math-block">
+      <div class="math-title">&sect;6 Surface flatness <span class="live" style="background:#2e7d32">&lambda;/10 &#10003;</span></div>
+      <div class="formula">&Delta;z &le; &lambda;/4 &rarr; &le;137 nm &nbsp;&middot;&nbsp; actual: &le;55 nm</div>
+      <div class="mvar2">PFSQ10-03-G01: 2&times; better than the minimum requirement</div>
+    </div>
+    <div class="math-block">
+      <div class="math-title">&sect;7 Camera AOV <span class="live" style="background:${camOk?'#2e7d32':'#b71c1c'}">${aovH.toFixed(1)}&deg;&times;${aovV.toFixed(1)}&deg;</span></div>
+      <div class="formula">AOV = 2&middot;arctan(sensor / 2&times;f)</div>
+      <div class="mvar2"><span>sensor</span> = ${sW}&times;${sH} mm &nbsp;&middot;&nbsp; <span>f</span> = ${focal} mm<br>FOV at mirror: <span>${Math.round(fovAtMir_W)}&times;${Math.round(fovAtMir_H)} mm</span> &nbsp;&middot;&nbsp; Array: <span>${Math.round(W)}&times;${Math.round(H)} mm</span></div>
+    </div>`;
+}
+
+function drawArray(cols,rows,gap){
+  const svg=document.getElementById('arr-svg');
+  const pX=12,pY=10,svgW=300,svgH=160;
+  const uW=svgW-2*pX, uH=svgH-2*pY-18;
+  const tW=cols*MIRROR+(cols-1)*gap, tH=rows*MIRROR+(rows-1)*gap;
+  const sc=Math.min(uW/tW,uH/tH);
+  const mw=MIRROR*sc, gp=gap*sc;
+  const oX=pX+(uW-(cols*mw+(cols-1)*gp))/2;
+  const oY=pY+(uH-(rows*mw+(rows-1)*gp))/2;
+  let h='';
+  for(let row=0;row<rows;row++) for(let col=0;col<cols;col++){
+    const x=oX+col*(mw+gp), y=oY+row*(mw+gp), i=row*cols+col+1;
+    h+=`<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${mw.toFixed(1)}" height="${mw.toFixed(1)}" rx="2" fill="#F9E4EC" stroke="#8C1D40" stroke-width="1.5"/>`;
+    h+=`<text x="${(x+mw/2).toFixed(1)}" y="${(y+mw/2+4).toFixed(1)}" text-anchor="middle" font-family="Arial" font-size="${Math.max(7,Math.min(11,mw*.36)).toFixed(0)}" fill="#8C1D40" font-weight="700">M${i}</text>`;
+  }
+  const aW=cols*mw+(cols-1)*gp;
+  const cx=(oX+aW/2).toFixed(1), lY=(oY+rows*mw+(rows-1)*gp+5).toFixed(1);
+  h+=`<line x1="${oX.toFixed(1)}" y1="${lY}" x2="${(oX+aW).toFixed(1)}" y2="${lY}" stroke="#FFC627" stroke-width="2"/>`;
+  h+=`<text x="${cx}" y="${svgH-2}" text-anchor="middle" font-family="Arial" font-size="10" fill="#747474">${Math.round(tW)} \u00d7 ${Math.round(tH)} mm \u00a0(${(tW/25.4).toFixed(1)}" \u00d7 ${(tH/25.4).toFixed(1)}")</text>`;
+  svg.innerHTML=h;
+}
+
+function drawSystem(dist,arrayW,fov,aovH){
+  const svg=document.getElementById('sys-svg');
+  const W=300,H=225;
+  const mirX=52, midY=H/2+5;
+  const mirH=Math.min(80,Math.max(24,arrayW*0.25));
+  const mirTop=midY-mirH/2, mirBot=midY+mirH/2, mirW=7, tilt=8;
+  const distFrac=(dist-200)/(500-200);
+  const camX=220+distFrac*40, camY=30;
+  const scrX=210+distFrac*40, scrH=75;
+  const scrTopY=H-20-scrH, scrBotY=H-20, scrW=7;
+  const refX=mirX+mirW, refY=midY;
+  const cW=18, cH=13, lx1=camX-cW/2;
+  let h='';
+
+  // Camera AOV cone — shows how much the lens sees at mirror distance
+  const aovRad=(aovH||40)*Math.PI/180;
+  // Direction from camera to mirror
+  const dx=refX-lx1, dy=refY-camY;
+  const camDist=Math.sqrt(dx*dx+dy*dy);
+  const baseAngle=Math.atan2(dy,dx);
+  const coneLen=camDist;
+  const cx1=lx1+coneLen*Math.cos(baseAngle-aovRad/2);
+  const cy1=camY+coneLen*Math.sin(baseAngle-aovRad/2);
+  const cx2=lx1+coneLen*Math.cos(baseAngle+aovRad/2);
+  const cy2=camY+coneLen*Math.sin(baseAngle+aovRad/2);
+  h+=`<polygon points="${lx1},${camY} ${cx1.toFixed(1)},${cy1.toFixed(1)} ${cx2.toFixed(1)},${cy2.toFixed(1)}" fill="#1565C0" opacity="0.08"/>`;
+  h+=`<line x1="${lx1}" y1="${camY}" x2="${cx1.toFixed(1)}" y2="${cy1.toFixed(1)}" stroke="#1565C0" stroke-width="0.8" stroke-dasharray="3,2" opacity="0.5"/>`;
+  h+=`<line x1="${lx1}" y1="${camY}" x2="${cx2.toFixed(1)}" y2="${cy2.toFixed(1)}" stroke="#1565C0" stroke-width="0.8" stroke-dasharray="3,2" opacity="0.5"/>`;
+  // AOV label
+  const aovArcR=16;
+  const aax1=lx1+aovArcR*Math.cos(baseAngle-aovRad/2);
+  const aay1=camY+aovArcR*Math.sin(baseAngle-aovRad/2);
+  const aax2=lx1+aovArcR*Math.cos(baseAngle+aovRad/2);
+  const aay2=camY+aovArcR*Math.sin(baseAngle+aovRad/2);
+  h+=`<path d="M ${aax1.toFixed(1)} ${aay1.toFixed(1)} A ${aovArcR} ${aovArcR} 0 0 1 ${aax2.toFixed(1)} ${aay2.toFixed(1)}" fill="none" stroke="#1565C0" stroke-width="1.2"/>`;
+  h+=`<text x="${(lx1+aovArcR*Math.cos(baseAngle)-6).toFixed(1)}" y="${(camY+aovArcR*Math.sin(baseAngle)+10).toFixed(1)}" font-family="Arial" font-size="8" fill="#1565C0" font-weight="700">AOV ${(aovH||40).toFixed(0)}&deg;</text>`;
+
+  h+=`<polygon points="${mirX},${mirTop+tilt} ${mirX+mirW},${mirTop-tilt} ${mirX+mirW},${mirBot-tilt} ${mirX},${mirBot+tilt}" fill="#8C1D40" opacity="0.9"/>`;
+  h+=`<text x="${mirX+mirW/2}" y="${mirTop-tilt-8}" text-anchor="middle" font-family="Arial" font-size="10" fill="#8C1D40" font-weight="700">Mirror array</text>`;
+  h+=`<text x="${mirX+mirW/2}" y="${mirTop-tilt-19}" text-anchor="middle" font-family="Arial" font-size="9" fill="#8C1D40">(SUT)</text>`;
+  h+=`<text x="${mirX-6}" y="${mirBot+tilt+13}" text-anchor="middle" font-family="Arial" font-size="9" fill="#747474">${Math.round(arrayW)} mm</text>`;
+
+  h+=`<rect x="${lx1}" y="${camY-cH/2}" width="${cW}" height="${cH}" rx="2" fill="#1565C0"/>`;
+  h+=`<polygon points="${lx1},${camY-5} ${lx1-8},${camY-7} ${lx1-8},${camY+7} ${lx1},${camY+5}" fill="#0D47A1"/>`;
+  h+=`<text x="${camX}" y="${camY-cH/2-6}" text-anchor="middle" font-family="Arial" font-size="10" fill="#1565C0" font-weight="700">Camera</text>`;
+
+  h+=`<rect x="${scrX}" y="${scrTopY}" width="${scrW}" height="${scrH}" rx="1" fill="#3E3E3E"/>`;
+  for(let i=0;i<5;i++){const ly=scrTopY+8+i*12;if(ly<scrBotY-4)h+=`<line x1="${scrX+1}" y1="${ly}" x2="${scrX+scrW-1}" y2="${ly}" stroke="#FFC627" stroke-width="1.5" opacity="0.8"/>`;}
+  h+=`<text x="${scrX+scrW/2}" y="${scrBotY+13}" text-anchor="middle" font-family="Arial" font-size="10" fill="#3E3E3E" font-weight="700">Screen</text>`;
+  h+=`<text x="${scrX+scrW/2}" y="${scrBotY+36}" text-anchor="middle" font-family="Arial" font-size="9" fill="#747474">344 mm</text>`;
+
+  h+=`<line x1="${lx1-8}" y1="${camY}" x2="${refX}" y2="${refY}" stroke="#1565C0" stroke-width="1.8"/>`;
+  const pmx=((lx1-8+refX)/2-14).toFixed(0), pmy=((camY+refY)/2-6).toFixed(0);
+  h+=`<text x="${pmx}" y="${pmy}" font-family="Arial" font-size="8" fill="#1565C0" font-style="italic">probe ray</text>`;
+
+  const scrCY=(scrTopY+scrBotY)/2;
+  h+=`<line x1="${refX}" y1="${refY}" x2="${scrX}" y2="${scrCY}" stroke="#E65100" stroke-width="1.8"/>`;
+  const rmx=((refX+scrX)/2+4).toFixed(0), rmy=((refY+scrCY)/2-6).toFixed(0);
+  h+=`<text x="${rmx}" y="${rmy}" font-family="Arial" font-size="8" fill="#E65100" font-style="italic">reflected ray (2\u03b1)</text>`;
+
+  h+=`<line x1="${refX}" y1="${refY}" x2="${refX-28}" y2="${refY+38}" stroke="#888" stroke-width="1" stroke-dasharray="4,3"/>`;
+  h+=`<text x="${refX-38}" y="${refY+50}" font-family="Arial" font-size="8" fill="#888" font-style="italic">reference</text>`;
+
+  const arcR=20;
+  const refDir=Math.atan2(38,-28);
+  const refAngle=Math.atan2(scrCY-refY,scrX-refX);
+  const a1x=refX+arcR*Math.cos(refDir), a1y=refY+arcR*Math.sin(refDir);
+  const a2x=refX+arcR*Math.cos(refAngle), a2y=refY+arcR*Math.sin(refAngle);
+  h+=`<path d="M ${a1x.toFixed(1)} ${a1y.toFixed(1)} A ${arcR} ${arcR} 0 0 0 ${a2x.toFixed(1)} ${a2y.toFixed(1)}" fill="none" stroke="#E65100" stroke-width="1.5"/>`;
+  h+=`<text x="${refX+arcR+2}" y="${refY+16}" font-family="Arial" font-size="9" fill="#E65100" font-weight="700">2\u03b1</text>`;
+
+  const dimY=scrTopY-14;
+  h+=`<line x1="${refX}" y1="${dimY}" x2="${scrX}" y2="${dimY}" stroke="#BFBFBF" stroke-width="1"/>`;
+  h+=`<line x1="${refX}" y1="${dimY-4}" x2="${refX}" y2="${dimY+4}" stroke="#BFBFBF" stroke-width="1"/>`;
+  h+=`<line x1="${scrX}" y1="${dimY-4}" x2="${scrX}" y2="${dimY+4}" stroke="#BFBFBF" stroke-width="1"/>`;
+  const dMidX=((refX+scrX)/2).toFixed(0);
+  h+=`<rect x="${+dMidX-22}" y="${dimY-7}" width="44" height="13" fill="#fff"/>`;
+  h+=`<text x="${dMidX}" y="${dimY+4}" text-anchor="middle" font-family="Arial" font-size="9" fill="#8C1D40" font-weight="700">d = ${dist} mm</text>`;
+
+  const fovRad=fov*Math.PI/180, aR=18;
+  const fA1=Math.PI-fovRad/2, fA2=Math.PI+fovRad/2;
+  const fax1=scrX+aR*Math.cos(fA1), fay1=scrCY+aR*Math.sin(fA1);
+  const fax2=scrX+aR*Math.cos(fA2), fay2=scrCY+aR*Math.sin(fA2);
+  h+=`<path d="M ${fax1.toFixed(1)} ${fay1.toFixed(1)} A ${aR} ${aR} 0 0 1 ${fax2.toFixed(1)} ${fay2.toFixed(1)}" fill="none" stroke="#FFC627" stroke-width="1.8"/>`;
+  h+=`<text x="${scrX-aR-32}" y="${scrCY-12}" font-family="Arial" font-size="9" fill="#BA7517" font-weight="700">\u03b8=${fov.toFixed(0)}\u00b0</text>`;
+
+  h+=`<line x1="8" y1="${H-20}" x2="22" y2="${H-22}" stroke="#1565C0" stroke-width="1.8"/>`;
+  h+=`<text x="26" y="${H-18}" font-family="Arial" font-size="8" fill="#555">probe ray (camera \u2192 mirror)</text>`;
+  h+=`<line x1="8" y1="${H-8}" x2="22" y2="${H-10}" stroke="#E65100" stroke-width="1.8"/>`;
+  h+=`<text x="26" y="${H-6}" font-family="Arial" font-size="8" fill="#555">reflected ray (mirror \u2192 screen, 2\u03b1)</text>`;
+
+  svg.innerHTML=h;
+}
+
+update();
+</script>
+</body>
+</html>
