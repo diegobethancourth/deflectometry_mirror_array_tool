@@ -16,6 +16,8 @@ mathematics panel simultaneously.
 | [`fringes.html`](fringes.html) — **Fringe Generator** | What exactly do I display on the screen? Phase-shifted sinusoid design, 1:1 pixel inspection, full-resolution PNG export and a matching Python snippet. |
 | [`piezo.html`](piezo.html) — **Tilt & Actuation** | Can the mounts actually point each mirror? Per-mirror law-of-reflection solution, piezo displacement, angular resolution and range budget. |
 | [`budget.html`](budget.html) — **Error Budget** | How accurate will the measurement be? Phase → slope → height propagation with each term integrated by its spatial character. |
+| [`simulator.html`](simulator.html) — **SMOTS Simulator** | Does the algorithm actually work? Ray-traces the camera image, runs the full SMOTS retrieval on it live, and compares recovered tilt against commanded tilt. |
+| [`smots/`](smots/) — **Python package** | The measurement algorithm for the experimental work: sheared Fourier analysis, per-segment apertures, 2π unwrapping, with a validated forward model and 40 tests. |
 
 ## Governing relations
 
@@ -64,14 +66,52 @@ pure tilt, so the reconstruction's piston-and-tilt fit removes it exactly. The
 budget page classifies every term this way rather than applying one rule to all of
 them.
 
+## The SMOTS algorithm
+
+[`smots/`](smots/) implements the retrieval described in
+
+> H. Choi, I. Trumper, M. Dubin, W. Zhao and D. W. Kim, *"Simultaneous angular
+> alignment of segmented mirrors using sinusoidal pattern analysis"*,
+> Proc. SPIE **10377**, 103770G (2017).
+
+```bash
+cd smots && python demo.py && python -m pytest tests/ -q
+```
+
+SMOTS is not phase-shifting deflectometry: one pattern is displayed, one
+reference frame is captured, and every later frame is compared against it. The
+shift is recovered from the *sheared* pattern in the Fourier domain, per segment,
+all segments at once. Because the phase is measured as a fraction of a period —
+invariant under magnification — the camera's scale never enters the calculation.
+
+On the synthetic bench the implementation recovers a 150 µrad tilt to **0.63 µrad
+RMS** at 2 DN camera noise; the paper reports 0.8 µrad RMS against an
+autocollimator. See [`smots/README.md`](smots/README.md) for the three sign
+conventions that will silently invert your angles if you get them wrong.
+
+It also includes **mirror-based screen-pose calibration** (`calibration.py`),
+which recovers `z_d` and the screen orientation from reflected-ray
+correspondences rather than a tape measure — the screen geometry is what the
+error budget says dominates. One result from it is worth stating up front: a
+perfectly flat mirror array makes the calibration **exactly degenerate**, because
+every reflected ray is parallel and distance along them is unobservable. Deliberate
+tilt spread across the reference nodes is what makes the screen distance
+measurable at all.
+
 ## Notes on the defaults
 
-The fixed hardware values describe the current bench: 25.4 mm PFSQ10-03-G01
-mirrors, a 344 mm / 3840 px panel (89.6 µm pixel pitch), Thorlabs KMSR_M mounts
-and PIA25 actuators. **Mount- and actuator-specific numbers on the tilt page —
-lever arm, tilt limit, travel and step size — are editable inputs, not verified
-specifications.** Read them off the datasheet drawing before committing to a
-design.
+The fixed hardware values describe the as-built 9-node TR1.5/PH1.5 hybrid from
+the 18 Sep 2026 weekly report: 25.4 mm PFSQ10-03-G01 mirrors on Thorlabs KMSR
+kinematic mounts, a 344 mm / 3840 px panel (89.6 µm pixel pitch), and the centre
+node (M5) motorised with 2× MPIA10 actuators on a KIM101 controller. A KIM101
+drives four channels and a tip/tilt node consumes two, so **at most two nodes can
+be motorised per controller** — the tilt page enforces that budget.
+
+**Mount- and actuator-specific numbers — lever arm, tilt limit, travel and step
+size — are editable inputs, not verified specifications.** Likewise the screen
+pixel pitch and the mirror-to-screen distance: both scale every angle the
+algorithm reports, and both need measuring rather than assuming. Read the
+hardware numbers off the datasheet drawing before committing to a design.
 
 ## Authors
 

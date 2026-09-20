@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SMOTS Live Simulator — Diego Bethancourth | ASU Deflectometry</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,Helvetica,sans-serif;background:#F2F2F5;color:#191919;font-size:14px}
+.nav{background:#8C1D40;display:flex;align-items:center;gap:14px;padding:0 24px;height:52px;flex-wrap:wrap}
+.nav-links{margin-left:auto;display:flex;gap:3px;flex-wrap:wrap}
+.nav-links a{color:rgba(255,255,255,.85);text-decoration:none;font-size:12px;font-weight:700;padding:6px 11px;border-radius:3px;white-space:nowrap}
+.nav-links a:hover{background:rgba(255,255,255,.14);color:#fff}
+.nav-links a.active{background:#FFC627;color:#8C1D40}
+.gold-bar{height:4px;background:#FFC627}
+.brandbar{background:#fff;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:7px 24px;flex-wrap:wrap}
+.brandbar img{display:block}
+.logo-asu{height:30px;width:auto}
+.logo-lab{height:52px;width:auto;mix-blend-mode:multiply}
+.nav-title .t1{font-size:14px;font-weight:700;line-height:1.2;color:#fff}
+.nav-title .t2{font-size:11px;color:rgba(255,255,255,0.72)}
+.byline{font-size:12px;color:#747474}
+.byline strong{color:#8C1D40}
+@media(max-width:760px){.logo-asu{height:22px}.logo-lab{height:32px}}
+.page-hdr{background:#fff;padding:10px 24px;display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+.page-hdr h1{font-size:17px;font-weight:700;color:#8C1D40}
+.app{display:grid;grid-template-columns:272px 1fr;gap:0;min-height:calc(100vh - 80px)}
+.left-col{background:#fff;padding:14px;display:flex;flex-direction:column;gap:12px}
+.right-col{padding:12px;display:flex;flex-direction:column;gap:10px}
+.sec-lbl{font-size:10px;font-weight:700;color:#8C1D40;text-transform:uppercase;letter-spacing:.07em;margin-bottom:7px}
+.ctrl-group{display:flex;flex-direction:column;gap:4px}
+.ctrl-group label{font-size:10px;font-weight:700;color:#747474;text-transform:uppercase;letter-spacing:.04em}
+.ctrl-group label .u{text-transform:none;letter-spacing:0}
+.ctrl-group select,.ctrl-group input[type=number]{width:100%;font-size:13px;color:#191919;border:none;border-radius:6px;padding:6px 8px;background:#F1F1F4}
+.ctrl-group input[type=range]{width:100%;accent-color:#8C1D40}
+.ctrl-val{font-size:16px;font-weight:700;color:#8C1D40}
+.explainer{background:#FFF4D6;padding:10px 12px;font-size:11px;color:#3E3E3E;line-height:1.55;border-radius:8px}
+.explainer strong{color:#8C1D40}
+.mvar2{font-size:10px;color:#747474;line-height:1.6}.mvar2 span{color:#191919;font-weight:700}
+.metrics-row{display:grid;grid-template-columns:repeat(6,1fr);gap:7px}
+.metric{background:#fff;border-radius:8px;padding:10px 12px}
+.metric .ml{font-size:10px;color:#747474;text-transform:uppercase;letter-spacing:.03em;margin-bottom:2px}
+.metric .mv{font-size:17px;font-weight:700;color:#8C1D40}.metric .ms{font-size:10px;color:#747474;margin-top:1px}
+.mid-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.panel{background:#fff;border-radius:10px;padding:14px}
+.panel-heading{font-size:13px;font-weight:700;color:#8C1D40;margin-bottom:3px}
+.panel-sub{font-size:10px;color:#747474;margin-bottom:8px}
+.bottom-row{display:grid;grid-template-columns:1.1fr 1fr;gap:10px}
+.card{background:#fff;border-radius:10px;padding:13px}
+.comp-table{width:100%;border-collapse:collapse;font-size:11px;table-layout:fixed}
+.comp-table th{background:#8C1D40;color:#fff;padding:6px;text-align:left;font-size:10px;font-weight:700}
+.comp-table td{padding:6px}
+.comp-table tr:nth-child(even) td{background:#F6F6F9}
+.comp-table tr.sel td{background:#FFF4D6;font-weight:700}
+.g{color:#2e7d32;font-weight:700}.m{color:#e65100;font-weight:700}.b{color:#b71c1c;font-weight:700}
+.verdict-good{background:#E9F4EB;border-radius:8px;padding:11px 16px;font-size:12px;color:#1b5e20;font-weight:500}
+.verdict-warn{background:#FDF2DA;border-radius:8px;padding:11px 16px;font-size:12px;color:#6d4c00;font-weight:500}
+.verdict-bad{background:#FBEAEA;border-radius:8px;padding:11px 16px;font-size:12px;color:#7f0000;font-weight:500}
+canvas{display:block;width:100%;image-rendering:pixelated;border-radius:8px;background:#000}
+.btn{background:#8C1D40;color:#fff;border:none;border-radius:4px;padding:7px 9px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit}
+.btn:hover{background:#6d1631}
+.btn.alt{background:#F6E7EE;color:#8C1D40}
+.btn.alt:hover{background:#FFF4D6}
+.btn-row{display:flex;gap:6px;flex-wrap:wrap}
+.caveat{font-size:10px;color:#747474;line-height:1.5;background:#F1F1F4;border-radius:8px;padding:9px 11px}
+.caveat b{color:#8C1D40}
+.math-block{margin-bottom:10px;padding-bottom:0}
+.math-block:last-child{margin-bottom:0}
+.math-title{font-size:11px;font-weight:700;color:#8C1D40;margin-bottom:3px;display:flex;justify-content:space-between;gap:6px}
+.live{background:#8C1D40;color:#fff;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;white-space:nowrap}
+.formula{background:#F1F1F4;border-radius:6px;padding:5px 8px;font-family:"Courier New",monospace;font-size:11px;color:#3E3E3E;margin:3px 0}
+.footer{background:#3E3E3E;color:#BFBFBF;font-size:10px;padding:10px 24px;text-align:center;margin-top:auto}
+.footer span{color:#FFC627}
+</style>
+</head>
+<body>
+
+<div class="brandbar">
+  <img class="logo-asu" src="logos/ASU%20Logo%20School.png" alt="Arizona State University — Ira A. Fulton Schools of Engineering, School of Manufacturing Systems and Networks">
+  <img class="logo-lab" src="logos/SOLAR%20LAB%20LOGO.png" alt="SOLAR — Sensing, Optics, Laser Application Research">
+</div>
+<div class="nav">
+  <div class="nav-title">
+    <div class="t1">Deflectometry Mirror-Array Toolkit</div>
+    <div class="t2">SMOTS &mdash; Simultaneous Multi-segmented mirror Orientation Test System</div>
+  </div>
+  <nav class="nav-links">
+    <a href="index.html">Array Config</a>
+    <a href="fringes.html">Fringe Generator</a>
+    <a href="piezo.html">Tilt &amp; Actuation</a>
+    <a href="budget.html">Error Budget</a>
+    <a href="simulator.html" class="active">SMOTS Simulator</a>
+  </nav>
+</div>
+<div class="gold-bar"></div>
+
+<div class="page-hdr">
+  <h1>SMOTS Live Simulator</h1>
+  <p class="byline"><strong>Diego Bethancourth</strong> &nbsp;&middot;&nbsp; Advisor: Dr. Xiangyu Guo &nbsp;&middot;&nbsp; Systems, Optics and Laser Application Research Lab &nbsp;&middot;&nbsp; Arizona State University</p>
+</div>
+
+<div class="app">
+  <div class="left-col">
+
+    <div>
+      <div class="sec-lbl">How it works</div>
+      <div class="explainer">
+        This page ray-traces the image your camera would record, then runs the
+        <strong>full SMOTS retrieval on it</strong> &mdash; shear, FFT, phase, angle &mdash;
+        and compares the recovered tilt against the tilt you commanded.
+        It is the same algorithm as the Python package, reimplemented in the browser,
+        so you can see the loop close in real time.
+        <br><br>Tilt a mirror and watch its fringes shift.
+      </div>
+    </div>
+
+    <div>
+      <div class="sec-lbl">Tilt a node</div>
+      <div class="ctrl-group" style="margin-bottom:8px">
+        <label>Selected mirror</label>
+        <select id="sel" onchange="refreshTiltUI();draw()"></select>
+      </div>
+      <div class="ctrl-group" style="margin-bottom:8px">
+        <label>&theta;<sub>x</sub> &mdash; shifts fringes in x <span class="u">(&micro;rad)</span></label>
+        <input type="range" id="tx" min="-600" max="600" value="150" step="1" oninput="setTilt()">
+        <span class="ctrl-val" id="tx-v">+150 &micro;rad</span>
+      </div>
+      <div class="ctrl-group" style="margin-bottom:8px">
+        <label>&theta;<sub>y</sub> &mdash; shifts fringes in y <span class="u">(&micro;rad)</span></label>
+        <input type="range" id="ty" min="-600" max="600" value="0" step="1" oninput="setTilt()">
+        <span class="ctrl-val" id="ty-v">+0 &micro;rad</span>
+      </div>
+      <div class="btn-row">
+        <button class="btn" onclick="nudge(1)">+1 actuator step</button>
+        <button class="btn alt" onclick="nudge(-1)">&minus;1 step</button>
+      </div>
+      <div class="btn-row" style="margin-top:6px">
+        <button class="btn alt" onclick="scatter()">Random all</button>
+        <button class="btn alt" onclick="resetAll()">Reset</button>
+      </div>
+      <div class="mvar2" style="margin-top:6px" id="step-note"></div>
+    </div>
+
+    <div>
+      <div class="sec-lbl">Pattern &amp; bench</div>
+      <div class="ctrl-group" style="margin-bottom:8px">
+        <label>Carrier period (screen px)</label>
+        <input type="range" id="per" min="10" max="60" value="30" step="1" oninput="draw()">
+        <span class="ctrl-val" id="per-v">30 px</span>
+      </div>
+      <div class="ctrl-group" style="margin-bottom:8px">
+        <label>Screen distance z<sub>d</sub> (mm)</label>
+        <input type="range" id="zd" min="150" max="900" value="400" step="10" oninput="draw()">
+        <span class="ctrl-val" id="zd-v">400 mm</span>
+      </div>
+      <div class="ctrl-group" style="margin-bottom:8px">
+        <label>Camera noise &sigma;<sub>I</sub> (DN)</label>
+        <input type="range" id="noise" min="0" max="8" value="1" step="0.5" oninput="draw()">
+        <span class="ctrl-val" id="noise-v">1.0 DN</span>
+      </div>
+      <div class="ctrl-group">
+        <label>Mirror layout</label>
+        <select id="arr" onchange="rebuild()">
+          <option value="1x4">1&times;4 &mdash; 4 mirrors</option>
+          <option value="2x4">2&times;4 &mdash; 8 mirrors</option>
+          <option value="3x3" selected>3&times;3 &mdash; 9 mirrors &#9733;</option>
+          <option value="3x4">3&times;4 &mdash; 12 mirrors</option>
+        </select>
+      </div>
+    </div>
+
+    <div>
+      <div class="sec-lbl">View</div>
+      <div class="ctrl-group">
+        <label>Right panel shows</label>
+        <select id="view" onchange="draw()">
+          <option value="shear" selected>Sheared pattern (measured &minus; reference)</option>
+          <option value="ref">Reference frame</option>
+          <option value="spec">Carrier spectrum of selected node</option>
+        </select>
+      </div>
+      <div class="caveat" style="margin-top:8px">
+        <b>Model limits.</b> Orthographic camera, flat mirrors, single reflection,
+        no lens distortion or defocus. The retrieval works in fractions of a
+        period, which is magnification-invariant, so this exercises exactly the
+        arithmetic that matters &mdash; but it is not an optical-design model.
+      </div>
+    </div>
+
+  </div>
+
+  <div class="right-col">
+    <div class="metrics-row" id="metrics"></div>
+    <div id="verdict" class="verdict-good"></div>
+
+    <div class="mid-row">
+      <div class="panel">
+        <div class="panel-heading">Simulated camera view</div>
+        <div class="panel-sub">Ray-traced: pattern reflected off each tilted mirror &middot; click a mirror to select it</div>
+        <canvas id="cam" width="430" height="430"></canvas>
+      </div>
+      <div class="panel">
+        <div class="panel-heading" id="rp-head">Sheared pattern</div>
+        <div class="panel-sub" id="rp-sub">measured &minus; reference &mdash; this is what the FFT sees</div>
+        <canvas id="aux" width="430" height="430"></canvas>
+      </div>
+    </div>
+
+    <div class="bottom-row">
+      <div class="card">
+        <div class="sec-lbl" style="margin-bottom:8px">Commanded vs recovered &mdash; all nodes, one frame pair</div>
+        <div id="tbl"></div>
+      </div>
+      <div class="card">
+        <div class="sec-lbl" style="margin-bottom:8px">Retrieval chain</div>
+        <div id="math"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <span>Arizona State University</span> &nbsp;&middot;&nbsp; School of Manufacturing Systems and Networks &nbsp;&middot;&nbsp; SOLAR Lab &nbsp;&middot;&nbsp; Diego Bethancourth &nbsp;&middot;&nbsp; Advisor: Dr. Xiangyu Guo
+</div>
+
+<script>
+// Highlighted metrics use a soft pastel wash rather than an accent rule, so no
+// block on the page carries a line.
+const TINT={'#2e7d32':'#E9F4EB','#e65100':'#FDF0E2','#b71c1c':'#FBEAEA','#8C1D40':'#F8ECF1','#f9a825':'#FDF2DA'};
+const tint=c=>TINT[c]||'#F1F1F4';
+/* ============================================================================
+   SMOTS live simulator.
+
+   Forward model  : orthographic camera over the mirror plane; every pixel is
+                    reflected off its mirror with r = u - 2(u.n)n and traced to
+                    the screen, where the sinusoidal pattern is sampled.
+   Retrieval      : per-segment digital aperture -> sheared Fourier analysis
+                    -> signed phase -> screen shift -> tilt angle.
+                    Same maths as the Python package in smots/.
+   ========================================================================== */
+
+const MIRROR=25.4, GAP=3.0, SW=344, NX=3840, PITCH=SW/NX;   // screen pitch, mm/px
+const SCREEN_H_PX=2160;
+const LEVER=19.05, STEP_NM=20;                               // KMSR + MPIA10
+const cfgs={'1x4':{c:4,r:1},'2x4':{c:4,r:2},'3x3':{c:3,r:3},'3x4':{c:4,r:3}};
+const NAP=64;                       // aperture samples per axis (power of 2 for the FFT)
+const MARGIN=5;                     // mm of empty frame around the array
+
+let cols=3, rows=3, tilts=[];       // tilts[i] = {x, y} in radians
+let selected=4;
+
+/* ---------------------------------- FFT ---------------------------------- */
+function fft(re, im){               // in-place radix-2, length a power of two
+  const n=re.length;
+  for(let i=1,j=0;i<n;i++){
+    let bit=n>>1;
+    for(;j&bit;bit>>=1) j^=bit;
+    j^=bit;
+    if(i<j){const tr=re[i];re[i]=re[j];re[j]=tr;const ti=im[i];im[i]=im[j];im[j]=ti;}
+  }
+  for(let len=2;len<=n;len<<=1){
+    const ang=-2*Math.PI/len, wr=Math.cos(ang), wi=Math.sin(ang);
+    for(let i=0;i<n;i+=len){
+      let cr=1, ci=0;
+      for(let k=0;k<len/2;k++){
+        const ur=re[i+k], ui=im[i+k];
+        const xr=re[i+k+len/2], xi=im[i+k+len/2];
+        const vr=xr*cr-xi*ci, vi=xr*ci+xi*cr;
+        re[i+k]=ur+vr; im[i+k]=ui+vi;
+        re[i+k+len/2]=ur-vr; im[i+k+len/2]=ui-vi;
+        const nr=cr*wr-ci*wi; ci=cr*wi+ci*wr; cr=nr;
+      }
+    }
+  }
+}
+function hann(n){const w=new Float64Array(n);for(let i=0;i<n;i++)w[i]=0.5*(1-Math.cos(2*Math.PI*i/(n-1)));return w}
+const HANN=hann(NAP);
+
+/* ------------------------------- geometry -------------------------------- */
+const pitchMM=()=>MIRROR+GAP;
+const spanX=()=>cols*MIRROR+(cols-1)*GAP+2*MARGIN;
+const spanY=()=>rows*MIRROR+(rows-1)*GAP+2*MARGIN;
+function centre(i){
+  const r=Math.floor(i/cols), c=i%cols;
+  return {x:(c-(cols-1)/2)*pitchMM(), y:((rows-1)/2-r)*pitchMM(), r, c};
+}
+const nameOf=i=>'M'+(i+1);
+
+// Reflected direction for a mirror tilted (tx, ty), with an orthographic view
+// direction u = (0,0,-1).  r = u - 2(u.n)n, which for this u is 2*n.z*n + u.
+function reflDir(tx,ty){
+  const sx=Math.sin(tx), sy=Math.sin(ty);
+  const nz=Math.sqrt(Math.max(0,1-sx*sx-sy*sy));
+  return {x:2*nz*sx, y:2*nz*sy, z:2*nz*nz-1};
+}
+
+/* -------------------------- the displayed pattern ------------------------- */
+function patternAt(sxPx, syPx, T){
+  return 128 + 50*Math.cos(2*Math.PI*sxPx/T) + 50*Math.cos(2*Math.PI*syPx/T);
+}
+
+// Screen point (mm) seen at mirror-plane point (x,y) through mirror `i`.
+function screenPoint(x,y,d,zd){
+  const t=zd/d.z;
+  return {x:x+t*d.x, y:y+t*d.y};
+}
+
+/* ------------------------- forward model: one frame ----------------------- */
+// useTilts=false renders the all-flat reference.
+function renderFrame(W,H,T,zd,useTilts,noise,seed){
+  const img=new Float64Array(W*H);
+  const sx_=spanX(), sy_=spanY(), half=MIRROR/2;
+  const dirs=tilts.map((t,i)=>reflDir(useTilts?t.x:0, useTilts?t.y:0));
+  let s=seed>>>0;
+  const rnd=()=>{ s^=s<<13;s>>>=0;s^=s>>17;s^=s<<5;s>>>=0; return s/4294967296-0.5; };
+  for(let py=0;py<H;py++){
+    const wy=sy_/2-(py+0.5)*sy_/H;
+    const rr=Math.round(((rows-1)/2)-wy/pitchMM());
+    for(let px=0;px<W;px++){
+      const wx=(px+0.5)*sx_/W-sx_/2;
+      const cc=Math.round(wx/pitchMM()+(cols-1)/2);
+      let v=0;
+      if(rr>=0&&rr<rows&&cc>=0&&cc<cols){
+        const i=rr*cols+cc, ctr=centre(i);
+        if(Math.abs(wx-ctr.x)<=half && Math.abs(wy-ctr.y)<=half){
+          const d=dirs[i];
+          if(d.z>1e-9){
+            const sp=screenPoint(wx,wy,d,zd);
+            v=patternAt(sp.x/PITCH+NX/2, sp.y/PITCH+SCREEN_H_PX/2, T);
+          }
+        }
+      }
+      if(noise&&v>0) v+=noise*rnd()*3.46;      // uniform with matching sigma
+      img[py*W+px]=v;
+    }
+  }
+  return img;
+}
+
+/* --------------------- retrieval: one segment, one axis ------------------- */
+// Samples the segment on an NAP x NAP grid for both reference and measured,
+// then runs the sheared Fourier analysis on the collapsed profiles.
+function sampleAperture(i,T,zd,useTilts,noise,seed){
+  const ctr=centre(i), half=MIRROR/2*0.72;     // inset, keeps mirror edges out
+  const d=reflDir(useTilts?tilts[i].x:0, useTilts?tilts[i].y:0);
+  const out=new Float64Array(NAP*NAP);
+  let s=(seed+i*7919)>>>0;
+  const rnd=()=>{ s^=s<<13;s>>>=0;s^=s>>17;s^=s<<5;s>>>=0; return s/4294967296-0.5; };
+  if(d.z<=1e-9) return out;
+  for(let iy=0;iy<NAP;iy++){
+    const wy=ctr.y+half-(2*half)*(iy+0.5)/NAP;   // row 0 = top = +y, like an image
+    for(let ix=0;ix<NAP;ix++){
+      const wx=ctr.x-half+(2*half)*(ix+0.5)/NAP;
+      const sp=screenPoint(wx,wy,d,zd);
+      let v=patternAt(sp.x/PITCH+NX/2, sp.y/PITCH+SCREEN_H_PX/2, T);
+      if(noise) v+=noise*rnd()*3.46;
+      out[iy*NAP+ix]=v;
+    }
+  }
+  return out;
+}
+
+// The ky=0 row of a 2-D spectrum equals the 1-D FFT of the column-summed image,
+// so each axis costs one length-64 transform instead of a full 2-D one.
+function profile(ap,axis){
+  const p=new Float64Array(NAP);
+  for(let a=0;a<NAP;a++){
+    let acc=0;
+    for(let b=0;b<NAP;b++) acc += axis==='x' ? ap[b*NAP+a] : ap[a*NAP+b];
+    p[a]=acc/NAP;
+  }
+  return p;
+}
+
+function shearPhase(refP, meaP){
+  const n=NAP;
+  let mr=0, mm=0;
+  for(let i=0;i<n;i++){mr+=refP[i];mm+=meaP[i];}
+  mr/=n; mm/=n;
+  const fr=new Float64Array(n), fi=new Float64Array(n);
+  const sr=new Float64Array(n), si=new Float64Array(n);
+  for(let i=0;i<n;i++){
+    fr[i]=(refP[i]-mr)*HANN[i];
+    sr[i]=((meaP[i]-mm)-(refP[i]-mr))*HANN[i];
+  }
+  fft(fr,fi); fft(sr,si);
+  let k=-1, best=0;
+  for(let i=2;i<n/2;i++){
+    const m=Math.hypot(fr[i],fi[i]);
+    if(m>best){best=m;k=i;}
+  }
+  if(k<0||best<=0) return {phase:NaN,k:-1,power:0};
+  const den=fr[k]*fr[k]+fi[k]*fi[k];
+  const rr=(sr[k]*fr[k]+si[k]*fi[k])/den;      // Re(S/F)
+  const ri=(si[k]*fr[k]-sr[k]*fi[k])/den;      // Im(S/F)
+  return {phase:Math.atan2(ri,1+rr), k, power:best};
+}
+
+function retrieve(T,zd,noise,seed){
+  const periodMM=T*PITCH;
+  const out=[];
+  for(let i=0;i<rows*cols;i++){
+    const ref=sampleAperture(i,T,zd,false,noise,seed);
+    const mea=sampleAperture(i,T,zd,true, noise,seed+101);
+    const px=shearPhase(profile(ref,'x'), profile(mea,'x'));
+    const py=shearPhase(profile(ref,'y'), profile(mea,'y'));
+    let dx=px.phase/(2*Math.PI)*periodMM;
+    let dy=py.phase/(2*Math.PI)*periodMM;
+    dy=-dy;                                     // image rows run against world +y
+    const thx=0.5*Math.atan2(dx,zd);            // Eq. (6), readable sign
+    const thy=0.5*Math.atan2(dy,zd);
+    out.push({i, thx, thy, dx, dy, k:px.k});
+  }
+  return out;
+}
+
+/* --------------------------------- draw ---------------------------------- */
+let pending=null;
+function draw(){ if(pending) cancelAnimationFrame(pending); pending=requestAnimationFrame(render); }
+
+function render(){
+  pending=null;
+  const T=+document.getElementById('per').value;
+  const zd=+document.getElementById('zd').value;
+  const noise=+document.getElementById('noise').value;
+  document.getElementById('per-v').textContent=T+' px';
+  document.getElementById('zd-v').textContent=zd+' mm';
+  document.getElementById('noise-v').textContent=noise.toFixed(1)+' DN';
+
+  const stepRad=(STEP_NM*1e-6)/LEVER;
+  document.getElementById('step-note').innerHTML=
+    `One MPIA10 step &asymp; <span>${(stepRad*1e6).toFixed(2)} &micro;rad</span> of mirror tilt `+
+    `(${STEP_NM} nm at a ${LEVER} mm lever), moving the screen spot `+
+    `<span>${(2*stepRad*zd*1000).toFixed(1)} &micro;m</span>.`;
+
+  const cam=document.getElementById('cam'), aux=document.getElementById('aux');
+  const W=cam.width, H=cam.height;
+  const meas=renderFrame(W,H,T,zd,true,noise,12345);
+  const ref =renderFrame(W,H,T,zd,false,noise,999);
+
+  paint(cam, meas, W, H, v=>v);
+  const mode=document.getElementById('view').value;
+  if(mode==='ref'){
+    document.getElementById('rp-head').textContent='Reference frame';
+    document.getElementById('rp-sub').textContent='all nodes flat — captured once, every measurement is relative to it';
+    paint(aux, ref, W, H, v=>v);
+  }else if(mode==='shear'){
+    document.getElementById('rp-head').textContent='Sheared pattern';
+    document.getElementById('rp-sub').textContent='measured − reference — this is what the FFT sees; flat nodes go black';
+    const sh=new Float64Array(W*H);
+    for(let i=0;i<sh.length;i++) sh[i]=(meas[i]||ref[i])?128+2.2*(meas[i]-ref[i]):0;
+    paint(aux, sh, W, H, v=>v);
+  }else{
+    document.getElementById('rp-head').textContent='Carrier spectrum';
+    document.getElementById('rp-sub').textContent='reference vs sheared, along x, for the selected node';
+    drawSpectrum(aux,T,zd,noise);
+  }
+
+  const res=retrieve(T,zd,noise,7);
+  report(res,T,zd,stepRad);
+  drawOverlay(cam,res);
+}
+
+function paint(cv, buf, W, H, f){
+  const ctx=cv.getContext('2d');
+  const img=ctx.createImageData(W,H);
+  for(let i=0;i<W*H;i++){
+    const v=Math.max(0,Math.min(255,Math.round(f(buf[i]))));
+    img.data[i*4]=v; img.data[i*4+1]=v; img.data[i*4+2]=v; img.data[i*4+3]=255;
+  }
+  ctx.putImageData(img,0,0);
+}
+
+// Label each mirror on the camera view and ring the selected one.
+function drawOverlay(cv,res){
+  const ctx=cv.getContext('2d'), W=cv.width, H=cv.height;
+  const sx_=spanX(), sy_=spanY(), half=MIRROR/2;
+  ctx.lineWidth=2; ctx.font='bold 11px Arial'; ctx.textAlign='center';
+  for(let i=0;i<rows*cols;i++){
+    const c=centre(i);
+    const px=(c.x+sx_/2)/sx_*W, py=(sy_/2-c.y)/sy_*H;
+    const hw=half/sx_*W;
+    if(i===selected){
+      ctx.strokeStyle='#FFC627'; ctx.strokeRect(px-hw,py-hw,2*hw,2*hw);
+    }
+    ctx.fillStyle=i===selected?'#FFC627':'rgba(255,255,255,.72)';
+    ctx.fillText(nameOf(i), px, py-hw+13);
+  }
+}
+
+function drawSpectrum(cv,T,zd,noise){
+  const ctx=cv.getContext('2d'), W=cv.width, H=cv.height;
+  ctx.fillStyle='#FAFAFA'; ctx.fillRect(0,0,W,H);
+  const i=selected;
+  const ref=sampleAperture(i,T,zd,false,noise,7);
+  const mea=sampleAperture(i,T,zd,true, noise,108);
+  const rp=profile(ref,'x'), mp=profile(mea,'x');
+  const n=NAP;
+  let mr=0,mm=0; for(let a=0;a<n;a++){mr+=rp[a];mm+=mp[a];} mr/=n; mm/=n;
+  const fr=new Float64Array(n), fi=new Float64Array(n), sr=new Float64Array(n), si=new Float64Array(n);
+  for(let a=0;a<n;a++){fr[a]=(rp[a]-mr)*HANN[a]; sr[a]=((mp[a]-mm)-(rp[a]-mr))*HANN[a];}
+  fft(fr,fi); fft(sr,si);
+  const half=n/2, pad=42;
+  let mx=0; for(let a=1;a<half;a++) mx=Math.max(mx,Math.hypot(fr[a],fi[a]));
+  if(mx<=0) mx=1;
+  const bw=(W-2*pad)/half;
+  for(let a=1;a<half;a++){
+    const hR=Math.hypot(fr[a],fi[a])/mx*(H-2*pad);
+    const hS=Math.hypot(sr[a],si[a])/mx*(H-2*pad);
+    ctx.fillStyle='rgba(140,29,64,.85)';
+    ctx.fillRect(pad+a*bw-bw*0.42, H-pad-hR, bw*0.42, hR);
+    ctx.fillStyle='rgba(230,81,0,.85)';
+    ctx.fillRect(pad+a*bw, H-pad-hS, bw*0.42, hS);
+  }
+  ctx.fillStyle='#3E3E3E'; ctx.font='11px Arial'; ctx.textAlign='left';
+  ctx.fillText('maroon = reference F(f)', pad, 22);
+  ctx.fillText('orange = sheared S(f) — grows with the shift', pad, 38);
+  ctx.fillText('FFT bin (aperture / period)', pad, H-14);
+  ctx.textAlign='center';
+  ctx.fillText(nameOf(selected), W/2, 22);
+}
+
+/* ------------------------------- reporting -------------------------------- */
+function report(res,T,zd,stepRad){
+  const periodMM=T*PITCH;
+  const wrap=periodMM/(4*zd);                    // single-carrier half-range, rad
+  let worst=0, worstName='';
+  const rows_=res.map(r=>{
+    const cx=tilts[r.i].x, cy=tilts[r.i].y;
+    const ex=(r.thx-cx)*1e6, ey=(r.thy-cy)*1e6;
+    const e=Math.hypot(ex,ey);
+    const over=Math.max(Math.abs(cx),Math.abs(cy))>wrap;
+    if(!over && e>worst){worst=e; worstName=nameOf(r.i);}
+    const cls=over?'b':e>5?'m':'g';
+    return `<tr class="${r.i===selected?'sel':''}" style="cursor:pointer" onclick="pick(${r.i})">`+
+      `<td>${nameOf(r.i)}</td>`+
+      `<td>${(cx*1e6).toFixed(1)} / ${(cy*1e6).toFixed(1)}</td>`+
+      `<td>${(r.thx*1e6).toFixed(1)} / ${(r.thy*1e6).toFixed(1)}</td>`+
+      `<td class="${cls}">${over?'wrapped':e.toFixed(2)}</td></tr>`;
+  }).join('');
+  document.getElementById('tbl').innerHTML=
+    `<div style="max-height:250px;overflow-y:auto"><table class="comp-table">`+
+    `<tr><th style="width:15%">Node</th><th>Commanded &theta;<sub>x</sub>/&theta;<sub>y</sub></th>`+
+    `<th>Recovered</th><th style="width:22%">Error (&micro;rad)</th></tr>${rows_}</table></div>`+
+    `<p class="mvar2" style="margin-top:5px">All values &micro;rad. Click a row to select that node. `+
+    `"wrapped" means the commanded tilt exceeds the single-carrier range of &plusmn;${(wrap*1e6).toFixed(0)} &micro;rad &mdash; `+
+    `the multiplexed pattern in the Python package is what lifts that limit.</p>`;
+
+  const sel=res[selected];
+  const wrapped=Math.max(Math.abs(tilts[selected].x),Math.abs(tilts[selected].y))>wrap;
+  const err=Math.hypot((sel.thx-tilts[selected].x)*1e6,(sel.thy-tilts[selected].y)*1e6);
+
+  document.getElementById('metrics').innerHTML=`
+    <div class="metric"><div class="ml">Carrier</div><div class="mv">${periodMM.toFixed(2)} mm</div><div class="ms">${T} px on screen</div></div>
+    <div class="metric"><div class="ml">Screen shift</div><div class="mv">${(sel.dx*1000).toFixed(0)} &micro;m</div><div class="ms">${nameOf(selected)} in x</div></div>
+    <div class="metric"><div class="ml">Commanded</div><div class="mv">${(tilts[selected].x*1e6).toFixed(1)}</div><div class="ms">&micro;rad &theta;<sub>x</sub></div></div>
+    <div class="metric"><div class="ml">Recovered</div><div class="mv">${(sel.thx*1e6).toFixed(1)}</div><div class="ms">&micro;rad &theta;<sub>x</sub></div></div>
+    <div class="metric" style="background:${tint(wrapped?'#b71c1c':err>5?'#e65100':'#2e7d32')}"><div class="ml">Error</div><div class="mv" style="color:${wrapped?'#b71c1c':err>5?'#e65100':'#2e7d32'}">${wrapped?'wrap':err.toFixed(2)}</div><div class="ms">&micro;rad on ${nameOf(selected)}</div></div>
+    <div class="metric"><div class="ml">Unambiguous</div><div class="mv">&plusmn;${(wrap*1e6).toFixed(0)}</div><div class="ms">&micro;rad, one carrier</div></div>`;
+
+  let vc='verdict-good', vt='';
+  if(wrapped){
+    vc='verdict-bad';
+    vt=`${nameOf(selected)} is commanded past the single-carrier range of &plusmn;${(wrap*1e6).toFixed(0)} &micro;rad, so the phase has wrapped and the recovered angle folds back. Shorten the standoff, use a coarser carrier, or run the multiplexed two-carrier pattern.`;
+  }else if(worst>5){
+    vc='verdict-warn';
+    vt=`Recovered to ${worst.toFixed(2)} &micro;rad worst-case (${worstName}) &mdash; noise-limited. Drop &sigma;<sub>I</sub>, average frames, or use a finer carrier for more phase per microradian.`;
+  }else{
+    vt=`All ${res.length} nodes recovered from one frame pair, worst error ${worst.toFixed(2)} &micro;rad${worstName?' ('+worstName+')':''}. One MPIA10 step is ${(stepRad*1e6).toFixed(2)} &micro;rad, so the retrieval resolves ${(stepRad*1e6/Math.max(worst,1e-6)).toFixed(1)}&times; finer than the actuator can move.`;
+  }
+  document.getElementById('verdict').className=vc;
+  document.getElementById('verdict').innerHTML=vt;
+
+  document.getElementById('math').innerHTML=`
+    <div class="math-block">
+      <div class="math-title">&sect;1 Sheared pattern <span class="live">Eq. (3)</span></div>
+      <div class="formula">FT[f(x+&Delta;) &minus; f(x)] = (e^{i&psi;} &minus; 1)&middot;F(f)</div>
+      <div class="mvar2">Subtracting the reference leaves only what moved</div>
+    </div>
+    <div class="math-block">
+      <div class="math-title">&sect;2 Signed phase <span class="live">&psi; = ${(sel.dx/periodMM*2*Math.PI).toFixed(3)} rad</span></div>
+      <div class="formula">&psi; = atan2( Im(S/F), 1 + Re(S/F) )</div>
+      <div class="mvar2">Eq. (4) uses only |S/F| and needs a separate sign step; the complex ratio carries both</div>
+    </div>
+    <div class="math-block">
+      <div class="math-title">&sect;3 Shift on the screen <span class="live">${(sel.dx*1000).toFixed(1)} &micro;m</span></div>
+      <div class="formula">&Delta; = &psi;/2&pi; &times; P = &psi;/2&pi; &times; ${periodMM.toFixed(3)} mm</div>
+      <div class="mvar2">A phase fraction is magnification-invariant &mdash; the camera's scale never enters</div>
+    </div>
+    <div class="math-block">
+      <div class="math-title">&sect;4 Tilt angle <span class="live">${(sel.thx*1e6).toFixed(2)} &micro;rad</span></div>
+      <div class="formula">&theta; = &frac12;&middot;arctan(&Delta; / z&#8202;d) = &frac12;&middot;arctan(${sel.dx.toFixed(4)} / ${zd})</div>
+      <div class="mvar2">Eq. (6). The &frac12; is the physics: a mirror tilted &theta; swings the ray by <span>2&theta;</span></div>
+    </div>
+    <div class="math-block">
+      <div class="math-title">&sect;5 Digital aperture <span class="live">${NAP}&times;${NAP}</span></div>
+      <div class="formula">one mask per segment &rarr; ${rows*cols} independent solutions</div>
+      <div class="mvar2">Why it is simultaneous: every node is solved from the same pair of frames</div>
+    </div>`;
+}
+
+/* -------------------------------- controls -------------------------------- */
+function pick(i){ selected=i; document.getElementById('sel').value=String(i); refreshTiltUI(); draw(); }
+function refreshTiltUI(){
+  selected=+document.getElementById('sel').value;
+  document.getElementById('tx').value=Math.round(tilts[selected].x*1e6);
+  document.getElementById('ty').value=Math.round(tilts[selected].y*1e6);
+  document.getElementById('tx-v').textContent=(tilts[selected].x*1e6>=0?'+':'')+Math.round(tilts[selected].x*1e6)+' µrad';
+  document.getElementById('ty-v').textContent=(tilts[selected].y*1e6>=0?'+':'')+Math.round(tilts[selected].y*1e6)+' µrad';
+}
+function setTilt(){
+  tilts[selected].x=+document.getElementById('tx').value*1e-6;
+  tilts[selected].y=+document.getElementById('ty').value*1e-6;
+  refreshTiltUI(); draw();
+}
+function nudge(sign){
+  const stepRad=(STEP_NM*1e-6)/LEVER;
+  tilts[selected].x+=sign*stepRad;
+  document.getElementById('tx').value=(tilts[selected].x*1e6).toFixed(0);
+  refreshTiltUI(); draw();
+}
+function scatter(){
+  tilts=tilts.map(()=>({x:(Math.random()-0.5)*400e-6, y:(Math.random()-0.5)*400e-6}));
+  refreshTiltUI(); draw();
+}
+function resetAll(){ tilts=tilts.map(()=>({x:0,y:0})); refreshTiltUI(); draw(); }
+
+function rebuild(){
+  const k=document.getElementById('arr').value;
+  cols=cfgs[k].c; rows=cfgs[k].r;
+  tilts=Array.from({length:rows*cols},()=>({x:0,y:0}));
+  selected=Math.min(Math.floor(rows*cols/2), rows*cols-1);
+  tilts[selected]={x:150e-6,y:0};
+  const sel=document.getElementById('sel');
+  sel.innerHTML=tilts.map((_,i)=>`<option value="${i}">${nameOf(i)}</option>`).join('');
+  sel.value=String(selected);
+  const cv=document.getElementById('cam'), ax=document.getElementById('aux');
+  const ar=spanY()/spanX();
+  cv.height=ax.height=Math.round(430*ar);
+  refreshTiltUI(); draw();
+}
+
+document.getElementById('cam').addEventListener('click', ev=>{
+  const cv=ev.currentTarget, rect=cv.getBoundingClientRect();
+  const wx=((ev.clientX-rect.left)/rect.width)*spanX()-spanX()/2;
+  const wy=spanY()/2-((ev.clientY-rect.top)/rect.height)*spanY();
+  const rr=Math.round(((rows-1)/2)-wy/pitchMM()), cc=Math.round(wx/pitchMM()+(cols-1)/2);
+  if(rr>=0&&rr<rows&&cc>=0&&cc<cols) pick(rr*cols+cc);
+});
+
+rebuild();
+</script>
+</body>
+</html>

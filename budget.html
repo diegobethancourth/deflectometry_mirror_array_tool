@@ -3,60 +3,67 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ASU Deflectometry — Measurement Error Budget</title>
+<title>Measurement Error Budget — Diego Bethancourth | ASU Deflectometry</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Arial,Helvetica,sans-serif;background:#FAFAFA;color:#191919;font-size:14px}
+body{font-family:Arial,Helvetica,sans-serif;background:#F2F2F5;color:#191919;font-size:14px}
 .nav{background:#8C1D40;display:flex;align-items:center;gap:14px;padding:0 24px;height:52px;flex-wrap:wrap}
-.asu-mark{background:#FFC627;width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:3px;flex-shrink:0}
-.asu-mark span{color:#8C1D40;font-weight:900;font-size:17px;letter-spacing:-1px;font-family:Arial,sans-serif}
-.nav-text{color:#fff}.nav-text .t1{font-size:14px;font-weight:700;line-height:1.2}.nav-text .t2{font-size:11px;color:rgba(255,255,255,0.7)}
 .nav-links{margin-left:auto;display:flex;gap:3px;flex-wrap:wrap}
 .nav-links a{color:rgba(255,255,255,.85);text-decoration:none;font-size:12px;font-weight:700;padding:6px 11px;border-radius:3px;white-space:nowrap}
 .nav-links a:hover{background:rgba(255,255,255,.14);color:#fff}
 .nav-links a.active{background:#FFC627;color:#8C1D40}
 .gold-bar{height:4px;background:#FFC627}
-.page-hdr{background:#fff;border-bottom:1px solid #E8E8E8;padding:10px 24px;display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+.brandbar{background:#fff;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:7px 24px;flex-wrap:wrap}
+.brandbar img{display:block}
+.logo-asu{height:30px;width:auto}
+.logo-lab{height:52px;width:auto;mix-blend-mode:multiply}
+.nav-title .t1{font-size:14px;font-weight:700;line-height:1.2;color:#fff}
+.nav-title .t2{font-size:11px;color:rgba(255,255,255,0.72)}
+.byline{font-size:12px;color:#747474}
+.byline strong{color:#8C1D40}
+@media(max-width:760px){.logo-asu{height:22px}.logo-lab{height:32px}}
+.page-hdr{background:#fff;padding:10px 24px;display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
 .page-hdr h1{font-size:17px;font-weight:700;color:#8C1D40}.page-hdr p{font-size:12px;color:#747474}
 .app{display:grid;grid-template-columns:260px 1fr;gap:0;min-height:calc(100vh - 80px)}
-.left-col{background:#fff;border-right:1px solid #E8E8E8;padding:14px;display:flex;flex-direction:column;gap:12px}
+.left-col{background:#fff;padding:14px;display:flex;flex-direction:column;gap:12px}
 .right-col{padding:12px;display:flex;flex-direction:column;gap:10px}
-.sec-lbl{font-size:10px;font-weight:700;color:#8C1D40;text-transform:uppercase;letter-spacing:.07em;border-left:3px solid #FFC627;padding-left:8px;margin-bottom:7px}
+.sec-lbl{font-size:10px;font-weight:700;color:#8C1D40;text-transform:uppercase;letter-spacing:.07em;margin-bottom:7px}
 .ctrl-group{display:flex;flex-direction:column;gap:4px}
 .ctrl-group label{font-size:10px;font-weight:700;color:#747474;text-transform:uppercase;letter-spacing:.04em}
-.ctrl-group select,.ctrl-group input[type=number]{width:100%;font-size:13px;color:#191919;border:1px solid #BFBFBF;border-radius:4px;padding:4px 6px;background:#FAFAFA}
+.ctrl-group label .u{text-transform:none;letter-spacing:0}
+.ctrl-group select,.ctrl-group input[type=number]{width:100%;font-size:13px;color:#191919;border:none;border-radius:6px;padding:6px 8px;background:#F1F1F4}
 .ctrl-group input[type=range]{width:100%;accent-color:#8C1D40}
 .ctrl-val{font-size:16px;font-weight:700;color:#8C1D40}
-.explainer{background:#FFF5D0;border-left:3px solid #FFC627;padding:8px 10px;font-size:11px;color:#3E3E3E;line-height:1.55;border-radius:0 4px 4px 0}
+.explainer{background:#FFF4D6;padding:10px 12px;font-size:11px;color:#3E3E3E;line-height:1.55;border-radius:8px}
 .explainer strong{color:#8C1D40}
-.fixed-box{background:#FAFAFA;border:1px solid #E8E8E8;border-radius:5px;padding:9px 11px}
+.fixed-box{background:#F1F1F4;border-radius:8px;padding:10px 12px}
 .mvar{font-size:11px;color:#747474;line-height:1.8}.mvar span{color:#191919;font-weight:700}
 .metrics-row{display:grid;grid-template-columns:repeat(6,1fr);gap:7px}
-.metric{background:#fff;border:1px solid #E8E8E8;border-radius:5px;padding:8px 10px}
+.metric{background:#fff;border-radius:8px;padding:10px 12px}
 .metric .ml{font-size:10px;color:#747474;text-transform:uppercase;letter-spacing:.03em;margin-bottom:2px}
 .metric .mv{font-size:17px;font-weight:700;color:#8C1D40}.metric .ms{font-size:10px;color:#747474;margin-top:1px}
 .mid-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.panel{background:#fff;border:1px solid #E8E8E8;border-radius:6px;padding:12px}
+.panel{background:#fff;border-radius:10px;padding:14px}
 .panel-heading{font-size:13px;font-weight:700;color:#8C1D40;margin-bottom:3px}
 .panel-sub{font-size:10px;color:#747474;margin-bottom:8px}
 .bottom-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.card{background:#fff;border:1px solid #E8E8E8;border-radius:6px;padding:11px}
+.card{background:#fff;border-radius:10px;padding:13px}
 .comp-table{width:100%;border-collapse:collapse;font-size:11px;table-layout:fixed}
-.comp-table th{background:#8C1D40;color:#fff;padding:5px 6px;text-align:left;font-size:10px;font-weight:700}
-.comp-table td{padding:4px 6px;border-bottom:1px solid #E8E8E8}
-.comp-table tr:nth-child(even) td{background:#FAFAFA}
-.comp-table tr.tot td{background:#FFF5D0;font-weight:700;border-top:2px solid #FFC627}
+.comp-table th{background:#8C1D40;color:#fff;padding:6px;text-align:left;font-size:10px;font-weight:700}
+.comp-table td{padding:6px}
+.comp-table tr:nth-child(even) td{background:#F6F6F9}
+.comp-table tr.tot td{background:#FFF4D6;font-weight:700}
 .g{color:#2e7d32;font-weight:700}.m{color:#e65100;font-weight:700}.b{color:#b71c1c;font-weight:700}
-.math-block{margin-bottom:9px;padding-bottom:9px;border-bottom:1px solid #F0F0F0}
-.math-block:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.math-block{margin-bottom:10px;padding-bottom:0}
+.math-block:last-child{margin-bottom:0}
 .math-title{font-size:11px;font-weight:700;color:#8C1D40;margin-bottom:3px;display:flex;justify-content:space-between;align-items:center;gap:6px}
 .live{background:#8C1D40;color:#fff;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;white-space:nowrap}
-.formula{background:#F7F7F7;border:1px solid #E8E8E8;border-radius:3px;padding:4px 7px;font-family:"Courier New",monospace;font-size:11px;color:#3E3E3E;margin:3px 0}
+.formula{background:#F1F1F4;border-radius:6px;padding:5px 8px;font-family:"Courier New",monospace;font-size:11px;color:#3E3E3E;margin:3px 0}
 .mvar2{font-size:10px;color:#747474;line-height:1.6}.mvar2 span{color:#191919;font-weight:700}
-.verdict-good{background:#edf7ed;border-left:4px solid #2e7d32;border-radius:0 6px 6px 0;padding:9px 14px;font-size:12px;color:#1b5e20;font-weight:500}
-.verdict-warn{background:#fff8e1;border-left:4px solid #f9a825;border-radius:0 6px 6px 0;padding:9px 14px;font-size:12px;color:#6d4c00;font-weight:500}
-.verdict-bad{background:#fdecea;border-left:4px solid #b71c1c;border-radius:0 6px 6px 0;padding:9px 14px;font-size:12px;color:#7f0000;font-weight:500}
-.caveat{font-size:10px;color:#747474;line-height:1.5;background:#FAFAFA;border:1px dashed #D8D8D8;border-radius:4px;padding:7px 9px}
+.verdict-good{background:#E9F4EB;border-radius:8px;padding:11px 16px;font-size:12px;color:#1b5e20;font-weight:500}
+.verdict-warn{background:#FDF2DA;border-radius:8px;padding:11px 16px;font-size:12px;color:#6d4c00;font-weight:500}
+.verdict-bad{background:#FBEAEA;border-radius:8px;padding:11px 16px;font-size:12px;color:#7f0000;font-weight:500}
+.caveat{font-size:10px;color:#747474;line-height:1.5;background:#F1F1F4;border-radius:8px;padding:9px 11px}
 .caveat b{color:#8C1D40}
 .chk{display:flex;align-items:center;gap:6px;font-size:11px;color:#3E3E3E;font-weight:700;text-transform:none;letter-spacing:0}
 .chk input{accent-color:#8C1D40;flex-shrink:0}
@@ -67,24 +74,28 @@ body{font-family:Arial,Helvetica,sans-serif;background:#FAFAFA;color:#191919;fon
 </head>
 <body>
 
+<div class="brandbar">
+  <img class="logo-asu" src="logos/ASU%20Logo%20School.png" alt="Arizona State University — Ira A. Fulton Schools of Engineering, School of Manufacturing Systems and Networks">
+  <img class="logo-lab" src="logos/SOLAR%20LAB%20LOGO.png" alt="SOLAR — Sensing, Optics, Laser Application Research">
+</div>
 <div class="nav">
-  <div class="asu-mark"><span>ASU</span></div>
-  <div class="nav-text">
-    <div class="t1">Deflectometry Research</div>
-    <div class="t2">School of Manufacturing Systems and Networks &nbsp;·&nbsp; Dr. Xiangyu Guo</div>
+  <div class="nav-title">
+    <div class="t1">Deflectometry Mirror-Array Toolkit</div>
+    <div class="t2">SMOTS &mdash; Simultaneous Multi-segmented mirror Orientation Test System</div>
   </div>
   <nav class="nav-links">
     <a href="index.html">Array Config</a>
     <a href="fringes.html">Fringe Generator</a>
     <a href="piezo.html">Tilt &amp; Actuation</a>
     <a href="budget.html" class="active">Error Budget</a>
+    <a href="simulator.html">SMOTS Simulator</a>
   </nav>
 </div>
 <div class="gold-bar"></div>
 
 <div class="page-hdr">
   <h1>Measurement Error Budget</h1>
-  <p>Phase &rarr; slope &rarr; height propagation &nbsp;·&nbsp; Diego Bethancourth &nbsp;·&nbsp; Arizona State University</p>
+  <p class="byline"><strong>Diego Bethancourth</strong> &nbsp;&middot;&nbsp; Advisor: Dr. Xiangyu Guo &nbsp;&middot;&nbsp; Systems, Optics and Laser Application Research Lab &nbsp;&middot;&nbsp; Arizona State University</p>
 </div>
 
 <div class="app">
@@ -196,7 +207,7 @@ body{font-family:Arial,Helvetica,sans-serif;background:#FAFAFA;color:#191919;fon
     <div>
       <div class="sec-lbl">Spec</div>
       <div class="ctrl-group" style="margin-bottom:8px">
-        <label>Slope target (&micro;rad RMS)</label>
+        <label>Slope target <span class="u">(&micro;rad RMS)</span></label>
         <input type="range" id="starget" min="1" max="200" value="50" step="1" oninput="update()">
         <span class="ctrl-val" id="starget-v">50 &micro;rad</span>
       </div>
@@ -263,11 +274,14 @@ body{font-family:Arial,Helvetica,sans-serif;background:#FAFAFA;color:#191919;fon
 </div>
 
 <div class="footer">
-  <span>Arizona State University</span> &nbsp;&middot;&nbsp; School of Manufacturing Systems and Networks &nbsp;&middot;&nbsp;
-  Deflectometry Research &nbsp;&middot;&nbsp; Diego Bethancourth &nbsp;&middot;&nbsp; Advisor: Dr. Xiangyu Guo
+  <span>Arizona State University</span> &nbsp;&middot;&nbsp; School of Manufacturing Systems and Networks &nbsp;&middot;&nbsp; SOLAR Lab &nbsp;&middot;&nbsp; Diego Bethancourth &nbsp;&middot;&nbsp; Advisor: Dr. Xiangyu Guo
 </div>
 
 <script>
+// Highlighted metrics use a soft pastel wash rather than an accent rule, so no
+// block on the page carries a line.
+const TINT={'#2e7d32':'#E9F4EB','#e65100':'#FDF0E2','#b71c1c':'#FBEAEA','#8C1D40':'#F8ECF1','#f9a825':'#FDF2DA'};
+const tint=c=>TINT[c]||'#F1F1F4';
 const MIRROR=25.4, SW=344, NX=3840, PP=SW/NX;
 const cfgs={'1x4':{c:4,r:1},'1x5':{c:5,r:1},'2x4':{c:4,r:2},'3x3':{c:3,r:3},'2x5':{c:5,r:2},'3x4':{c:4,r:3}};
 
@@ -380,7 +394,7 @@ function update(){
     <div class="metric"><div class="ml">Phase noise &sigma;<sub>&phi;</sub></div><div class="mv">${(sigPhi*1000).toFixed(2)}</div><div class="ms">mrad &middot; ${s.N}-step, ${s.avg}&times; avg</div></div>
     <div class="metric"><div class="ml">Screen point err</div><div class="mv">${(xPhase*1000).toFixed(1)} &micro;m</div><div class="ms">of ${Pf.toFixed(2)} mm fringe</div></div>
     <div class="metric"><div class="ml">Slope err (RSS)</div><div class="mv" style="color:${sc}">${urad(sRes).toFixed(1)}</div><div class="ms">&micro;rad RMS${s.lowo?', low-order out':''}</div></div>
-    <div class="metric" style="border-left:3px solid ${sc}"><div class="ml">Slope margin</div><div class="mv" style="color:${sc}">${sMargin.toFixed(2)}&times;</div><div class="ms">target ${(s.tgt*1e6).toFixed(0)} &micro;rad</div></div>
+    <div class="metric" style="background:${tint(sc)}"><div class="ml">Slope margin</div><div class="mv" style="color:${sc}">${sMargin.toFixed(2)}&times;</div><div class="ms">target ${(s.tgt*1e6).toFixed(0)} &micro;rad</div></div>
     <div class="metric"><div class="ml">Height err &delta;z</div><div class="mv" style="color:${zc}">${fzn(zTot)}</div><div class="ms">${fzu(zTot)} RMS over ${Math.round(L)} mm</div></div>
     <div class="metric"><div class="ml">vs &lambda;/10</div><div class="mv" style="color:${zc}">${(spec/zTot).toFixed(2)}&times;</div><div class="ms">&lambda;/10 = ${(spec*1e6).toFixed(1)} nm</div></div>`;
 
@@ -474,8 +488,8 @@ function drawBars(terms,varRes,st){
     const sh=varRes>0?100*t.res*t.res/varRes:0;
     const col=off?'#BFBFBF':sh>50?'#b71c1c':sh>25?'#e65100':'#8C1D40';
     h+=`<text x="${pl-6}" y="${(y+bh/2+3).toFixed(1)}" text-anchor="end" font-family="Arial" font-size="9.5" fill="${off?'#A8A8A8':'#3E3E3E'}">${t.lbl}</text>`;
-    h+=`<rect x="${pl}" y="${y.toFixed(1)}" width="${iw}" height="${bh.toFixed(1)}" fill="#FAFAFA" stroke="#F0F0F0"/>`;
-    if(!off) h+=`<rect x="${pl}" y="${y.toFixed(1)}" width="${w.toFixed(1)}" height="${bh.toFixed(1)}" fill="${col}" rx="1"/>`;
+    h+=`<rect x="${pl}" y="${y.toFixed(1)}" width="${iw}" height="${bh.toFixed(1)}" rx="5" fill="#F1F1F4"/>`;
+    if(!off) h+=`<rect x="${pl}" y="${y.toFixed(1)}" width="${w.toFixed(1)}" height="${bh.toFixed(1)}" fill="${col}" rx="5"/>`;
     h+=`<text x="${(pl+iw+4).toFixed(1)}" y="${(y+bh/2+3).toFixed(1)}" font-family="Arial" font-size="9" fill="${col}" font-weight="700">${off?'removed':sh.toFixed(0)+'%'}</text>`;
     h+=`<text x="${(pl+6).toFixed(1)}" y="${(y+bh/2+3).toFixed(1)}" font-family="Arial" font-size="8.5" fill="${w>64?'#fff':'#747474'}">${(t.s*1e6).toFixed(2)} &#181;rad ${off?'(tilt)':''}</text>`;
   });
@@ -486,18 +500,17 @@ function drawBars(terms,varRes,st){
 function drawChain(s,v){
   const W=320,H=200;
   const steps=[
-    {t:'Displayed fringe', v:`P f = ${v.Pf.toFixed(2)} mm`, c:'#FFC627', tc:'#8a6d00'},
-    {t:'Retrieved phase',  v:`σφ → ${(v.xPhase*1000).toFixed(1)} µm on screen`, c:'#1565C0', tc:'#1565C0'},
-    {t:'Surface slope',    v:`δs = ${(v.sRes*1e6).toFixed(1)} µrad`, c:'#E65100', tc:'#E65100'},
-    {t:'Reconstructed height', v:`δz = ${fz(v.zTot)}`, c:'#8C1D40', tc:'#8C1D40'}
+    {t:'Displayed fringe', v:`P f = ${v.Pf.toFixed(2)} mm`, c:'#FFF4D6', tc:'#8a6d00'},
+    {t:'Retrieved phase',  v:`σφ → ${(v.xPhase*1000).toFixed(1)} µm on screen`, c:'#E7EFF9', tc:'#12508F'},
+    {t:'Surface slope',    v:`δs = ${(v.sRes*1e6).toFixed(1)} µrad`, c:'#FDF0E2', tc:'#B54A00'},
+    {t:'Reconstructed height', v:`δz = ${fz(v.zTot)}`, c:'#F8ECF1', tc:'#8C1D40'}
   ];
   const lbls=['× P f / 2π','÷ 2d = '+(2*s.d)+' mm','× √(L·Δx) or L'];
   const bh=32, gap=(H-18-steps.length*bh)/(steps.length-1);
   let h='';
   steps.forEach((st,i)=>{
     const y=8+i*(bh+gap);
-    h+=`<rect x="14" y="${y}" width="292" height="${bh}" rx="4" fill="#fff" stroke="${st.c}" stroke-width="1.6"/>`;
-    h+=`<rect x="14" y="${y}" width="5" height="${bh}" rx="2" fill="${st.c}"/>`;
+    h+=`<rect x="14" y="${y}" width="292" height="${bh}" rx="8" fill="${st.c}"/>`;
     h+=`<text x="28" y="${y+13}" font-family="Arial" font-size="10" fill="${st.tc}" font-weight="700">${st.t}</text>`;
     h+=`<text x="28" y="${y+25}" font-family="Arial" font-size="9.5" fill="#3E3E3E">${st.v}</text>`;
     if(i<steps.length-1){
