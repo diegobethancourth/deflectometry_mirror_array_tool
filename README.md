@@ -17,7 +17,22 @@ mathematics panel simultaneously.
 | [`piezo.html`](piezo.html) — **Tilt & Actuation** | Can the mounts actually point each mirror? Per-mirror law-of-reflection solution, piezo displacement, angular resolution and range budget. |
 | [`budget.html`](budget.html) — **Error Budget** | How accurate will the measurement be? Phase → slope → height propagation with each term integrated by its spatial character. |
 | [`simulator.html`](simulator.html) — **SMOTS Simulator** | Does the algorithm actually work? Ray-traces the camera image, runs the full SMOTS retrieval on it live, and compares recovered tilt against commanded tilt. |
-| [`smots/`](smots/) — **Python package** | The measurement algorithm for the experimental work: sheared Fourier analysis, per-segment apertures, 2π unwrapping, with a validated forward model and 40 tests. |
+| [`smots/`](smots/) — **Python package** | The measurement algorithm for the experimental work: sheared Fourier analysis, per-segment apertures, 2π unwrapping, screen-pose calibration, with a validated forward model and 63 tests. |
+| [`docs/`](docs/math-reference.html) — **Math Reference** | Every equation in the toolkit, derived and explained in one printable document. |
+
+## Mathematical reference
+
+**[Download the PDF](docs/Deflectometry-Math-Reference.pdf)** — 20 pages, or
+[read it in the browser](docs/math-reference.html).
+
+A single study and presentation document collecting every equation the toolkit
+implements: array sizing, fringe coding and phase-shift retrieval, the SMOTS
+sheared-Fourier derivation, mirror pointing and actuation, the error budget with
+its four integration rules, and screen-pose calibration. It includes a symbol
+glossary, the three sign conventions that silently invert angles, and references.
+
+Each section names the file that implements it, so the document and the code stay
+in step.
 
 ## Governing relations
 

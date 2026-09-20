@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" href="../asu_icon.ico" sizes="any">
+<title>Mathematical Reference — Deflectometry Mirror-Array Toolkit</title>
+<style>
+@page{size:Letter;margin:17mm 16mm 16mm 16mm}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Times New Roman",Times,serif;color:#1A1A1A;font-size:10.6pt;line-height:1.5}
+.sans{font-family:Arial,Helvetica,sans-serif}
+
+/* ---- title page ---- */
+.cover{height:247mm;display:flex;flex-direction:column;page-break-after:always}
+.cover .marks{display:flex;align-items:center;justify-content:space-between;gap:20px}
+.cover .marks img{display:block}
+.cover .asu{height:34px}
+.cover .lab{height:58px;mix-blend-mode:multiply}
+.cover .mid{margin-top:52mm}
+.cover h1{font-size:27pt;line-height:1.15;color:#8C1D40;font-weight:700;letter-spacing:-.4px}
+.cover h2{font-size:14pt;font-weight:400;color:#3E3E3E;margin-top:9px;font-style:italic}
+.cover .rule{height:5px;background:#FFC627;width:82mm;margin:16px 0 22px}
+.cover .who{font-size:11.5pt;line-height:1.8}
+.cover .who b{color:#8C1D40}
+.cover .foot{margin-top:auto;font-size:9pt;color:#6A6A6A;line-height:1.7}
+
+/* ---- contents ---- */
+.toc{page-break-after:always}
+.toc ol{list-style:none;counter-reset:s}
+.toc>ol>li{counter-increment:s;margin:7px 0;font-size:11pt}
+.toc>ol>li::before{content:counter(s) ".";color:#8C1D40;font-weight:700;display:inline-block;width:22px}
+.toc ul{list-style:none;margin:2px 0 8px 22px;color:#4A4A4A;font-size:9.6pt;line-height:1.65}
+
+/* ---- headings ---- */
+h2.sec{font-family:Arial,Helvetica,sans-serif;font-size:14pt;color:#8C1D40;margin:0 0 4px;
+       page-break-after:avoid;page-break-before:always;padding-top:2px}
+h2.sec .num{color:#C9A227}
+h3{font-family:Arial,Helvetica,sans-serif;font-size:11pt;color:#1A1A1A;margin:15px 0 5px;page-break-after:avoid}
+.lead{color:#4A4A4A;font-size:10pt;margin-bottom:12px;font-style:italic}
+p{margin:7px 0;text-align:justify}
+
+/* ---- equations ---- */
+.eq{display:flex;align-items:baseline;gap:12px;margin:10px 0;page-break-inside:avoid}
+.eq .body{flex:1;background:#F4F4F7;border-radius:7px;padding:8px 13px;font-size:11pt}
+.eq .n{width:34px;text-align:right;color:#8C1D40;font-size:9.5pt;font-family:Arial,Helvetica,sans-serif}
+var,.v{font-style:italic;font-family:"Times New Roman",Times,serif}
+.where{font-size:9.4pt;color:#4A4A4A;margin:4px 0 10px 0;line-height:1.6}
+.where b{color:#1A1A1A;font-weight:700;font-style:normal}
+
+/* ---- callouts: pastel, no lines ---- */
+.note{background:#FFF4D6;border-radius:8px;padding:9px 13px;margin:11px 0;font-size:9.8pt;
+      line-height:1.55;page-break-inside:avoid}
+.warn{background:#FBEAEA;border-radius:8px;padding:9px 13px;margin:11px 0;font-size:9.8pt;
+      line-height:1.55;page-break-inside:avoid}
+.ok{background:#E9F4EB;border-radius:8px;padding:9px 13px;margin:11px 0;font-size:9.8pt;
+    line-height:1.55;page-break-inside:avoid}
+.note b,.warn b,.ok b{font-family:Arial,Helvetica,sans-serif;font-size:9.4pt}
+
+/* ---- tables ---- */
+table{width:100%;border-collapse:collapse;font-size:9.5pt;margin:10px 0;page-break-inside:avoid}
+th{background:#8C1D40;color:#fff;text-align:left;padding:5px 7px;font-family:Arial,Helvetica,sans-serif;font-size:8.8pt}
+td{padding:4px 7px;vertical-align:top}
+tbody tr:nth-child(even) td{background:#F6F6F9}
+td.sym{font-style:italic;white-space:nowrap;width:74px}
+td.u{white-space:nowrap;width:74px;color:#4A4A4A}
+caption{caption-side:bottom;font-size:8.8pt;color:#6A6A6A;text-align:left;padding-top:4px}
+
+/* screen-only chrome: never printed */
+@media screen{
+ body{background:#F2F2F5;padding:0 0 40px}
+ .sheet{max-width:196mm;margin:0 auto;background:#fff;padding:20mm 18mm;border-radius:10px}
+ .bar{max-width:196mm;margin:0 auto 14px;padding:14px 18mm 0;display:flex;gap:10px;
+      align-items:center;flex-wrap:wrap;font-family:Arial,Helvetica,sans-serif;font-size:11px}
+ .bar a{text-decoration:none;font-weight:700;padding:8px 13px;border-radius:6px}
+ .bar .dl{background:#8C1D40;color:#fff}
+ .bar .back{background:#F6E7EE;color:#8C1D40}
+ .bar span{color:#6A6A6A}
+ .cover{height:auto;min-height:220mm}
+}
+@media print{.bar{display:none}.sheet{padding:0;max-width:none}}
+code{font-family:"Courier New",monospace;font-size:9.3pt;background:#F1F1F4;border-radius:4px;padding:1px 4px}
+.src{font-size:8.8pt;color:#6A6A6A;font-family:Arial,Helvetica,sans-serif;margin-top:3px}
+ul.tight{margin:7px 0 7px 17px;font-size:10pt;line-height:1.6}
+ul.tight li{margin:3px 0}
+.refs{font-size:9.6pt;line-height:1.7}
+.refs li{margin:7px 0 7px 17px}
+</style>
+</head>
+<body>
+<div class="bar">
+  <a class="dl" href="Deflectometry-Math-Reference.pdf" download>Download PDF &mdash; 20 pages</a>
+  <a class="back" href="../index.html">&larr; Back to the toolkit</a>
+  <span>Every equation below is implemented and tested in the toolkit.</span>
+</div>
+<div class="sheet">
+
+<!-- ================= COVER ================= -->
+<div class="cover">
+  <div class="marks">
+    <img class="asu" src="../logos/ASU%20Logo%20School.png" alt="Arizona State University, School of Manufacturing Systems and Networks">
+    <img class="lab" src="../logos/SOLAR%20LAB%20LOGO.png" alt="SOLAR — Sensing, Optics, Laser Application Research">
+  </div>
+  <div class="mid">
+    <h1>Deflectometry Mirror-Array<br>Mathematical Reference</h1>
+    <h2>Array sizing, fringe coding, SMOTS tilt retrieval,<br>error budget and screen-pose calibration</h2>
+    <div class="rule"></div>
+    <div class="who">
+      <b>Diego Bethancourth</b><br>
+      Advisor: Dr. Xiangyu Guo<br>
+      Systems, Optics and Laser Application Research Lab<br>
+      School of Manufacturing Systems and Networks<br>
+      Ira A. Fulton Schools of Engineering, Arizona State University
+    </div>
+  </div>
+  <div class="foot">
+    Companion reference to the Deflectometry Mirror-Array Toolkit and the
+    <code>smots</code> Python package.<br>
+    Every equation here is implemented and exercised by the toolkit; section headings name the file that implements it.<br>
+    Revision 1 &nbsp;·&nbsp; 20 September 2026
+  </div>
+</div>
+
+<!-- ================= CONTENTS ================= -->
+<div class="toc">
+  <h2 class="sans" style="font-size:15pt;color:#8C1D40;margin-bottom:14px">Contents</h2>
+  <ol>
+    <li>Notation and coordinate frames
+      <ul><li>Symbols · frames · the three sign conventions</li></ul></li>
+    <li>The bench
+      <ul><li>Array, screen, camera, actuation · which numbers are unverified</li></ul></li>
+    <li>Array configuration
+      <ul><li>Pixel pitch · fringe pitch · array extent · fringe count · screen FOV · camera AOV</li></ul></li>
+    <li>Fringe generation and phase-shift coding
+      <ul><li>Projected intensity · N-step retrieval · phase uncertainty · gamma</li></ul></li>
+    <li>SMOTS: sheared Fourier tilt retrieval
+      <ul><li>Shear theorem · phase estimators · phase to length to angle · ambiguity and multiplexing · digital apertures · common-mode rejection</li></ul></li>
+    <li>Mirror tilt and piezo actuation
+      <ul><li>Law of reflection · pointing solution · baseplate split · actuator displacement, resolution and range</li></ul></li>
+    <li>Measurement error budget
+      <ul><li>Phase to slope to height · spatial character · quadrature sum · surface spec</li></ul></li>
+    <li>Screen-pose calibration through the mirrors
+      <ul><li>Plane reflection · ray correspondence · linear and nonlinear solution · conditioning · pitch diagnostic</li></ul></li>
+    <li>Sign conventions: three traps, collected</li>
+    <li>Symbol glossary</li>
+    <li>References</li>
+  </ol>
+</div>
+
+<!-- ================= 1. NOTATION ================= -->
+<h2 class="sec"><span class="num">1.</span> Notation and coordinate frames</h2>
+<p class="lead">Read this page first. Two of the three sign conventions below are places where a printed
+equation and a standard software convention disagree, and each one silently inverts an angle.</p>
+
+<h3>1.1 Coordinate frames</h3>
+<p>The mirror array lies in the plane <var>z</var> = 0 with nominal surface normals along +<var>z</var>.
+The screen is a plane in front of it, nominally parallel, at perpendicular distance
+<var>z</var><sub>d</sub>. The camera looks back along &minus;<var>z</var>. Node labels run in reading
+order, so the centre of a 3&times;3 array is M5 &mdash; matching the mechanical assembly drawings.</p>
+<p>A tilt component is named after the screen axis it moves: <var>&theta;</var><sub>x</sub> rotates the
+surface normal toward +<var>x</var> and therefore shifts the observed pattern along the screen's
+<var>x</var> axis. Keeping that naming consistent end to end is what lets you put
+<var>&theta;</var><sub>x</sub> in and get <var>&theta;</var><sub>x</sub> back out.</p>
+
+<h3>1.2 The three sign conventions</h3>
+<table>
+  <thead><tr><th style="width:24%">Where</th><th>What is written</th><th>What this work uses</th></tr></thead>
+  <tbody>
+  <tr><td>Fourier shift<br>theorem</td>
+      <td>Eq. (5.2) is printed as <var>e</var><sup>&minus;<var>i</var>2&pi;<var>f</var>&Delta;</sup><var>F</var>(<var>f</var>)</td>
+      <td>The standard forward transform gives <var>e</var><sup>+<var>i</var>2&pi;<var>f</var>&Delta;</sup><var>F</var>(<var>f</var>) for that same shift. Positive phase here means the pattern moved toward +<var>x</var>.</td></tr>
+  <tr><td>Tilt from<br>screen shift</td>
+      <td>Eq. (5.12) as printed subtracts the final arctangent from the initial one</td>
+      <td>That order returns a <i>negative</i> angle for a normal rotating toward +<var>x</var>. The order is reversed here so the sign reads naturally.</td></tr>
+  <tr><td>Image row<br>direction</td>
+      <td>&mdash;</td>
+      <td>Camera frames store row 0 at the top, so the row index runs <i>against</i> world +<var>y</var>. The <var>y</var> shift is negated. Omit this and <var>x</var> reads correctly while <var>y</var> inverts.</td></tr>
+  </tbody>
+</table>
+<div class="warn"><b>Why this matters.</b> None of the three changes any magnitude, so no residual, no RMS
+and no consistency check will catch them. A mirror tilted one way is simply reported as tilted the other.
+Confirm the signs against a commanded actuator move before trusting any measurement.</div>
+
+<!-- ================= 2. THE BENCH ================= -->
+<h2 class="sec"><span class="num">2.</span> The bench</h2>
+<p class="lead">The as-built 9-node hybrid assembly: a 3&times;3 array of 1&Prime; square mirrors, the
+centre node motorised, the other eight hand-set references.</p>
+
+<table>
+  <thead><tr><th style="width:30%">Quantity</th><th style="width:22%">Value</th><th>Note</th></tr></thead>
+  <tbody>
+  <tr><td>Mirror</td><td>25.4 mm square</td><td>PFSQ10-03-G01, &lambda;/10 surface flatness</td></tr>
+  <tr><td>Array</td><td>3 &times; 3, 3 mm gap</td><td>82.2 &times; 82.2 mm overall</td></tr>
+  <tr><td>Mount</td><td>KMSR</td><td>&Oslash;1&Prime; kinematic, one actuator per tilt axis</td></tr>
+  <tr><td>Actuator</td><td>2 &times; MPIA10</td><td>Centre node M5 only; piezo inertia, tip and tilt</td></tr>
+  <tr><td>Controller</td><td>KIM101</td><td>4 channels; a tip/tilt node uses 2, so 2 nodes maximum</td></tr>
+  <tr><td>Reference nodes</td><td>TR1.5 / PH1.5</td><td>Eight peripheral nodes, height set by hand</td></tr>
+  <tr><td>Screen</td><td>344 mm, 3840 px</td><td>Nominal pitch 89.6 &micro;m</td></tr>
+  </tbody>
+</table>
+
+<div class="warn"><b>Unverified inputs.</b> Five numbers scale the result and are <i>not</i> datasheet
+values in the toolkit: the screen pixel pitch, the mirror-to-screen distance <var>z</var><sub>d</sub>,
+the mount lever arm <var>L</var>, the actuator travel and the actuator step size. The first two scale
+every reported angle directly &mdash; &sect;&nbsp;5.6 and &sect;&nbsp;5.7 show how. Measure them; do not
+inherit them from this document.</div>
+
+<!-- ================= 3. ARRAY CONFIGURATION ================= -->
+<h2 class="sec"><span class="num">3.</span> Array configuration</h2>
+<p class="lead">Sizing the array against the screen and the camera. Implemented in <code>index.html</code>.</p>
+
+<h3>3.1 Screen pixel pitch</h3>
+<div class="eq"><div class="body"><var>p</var> = <var>W</var> / <var>N</var><sub>x</sub></div><div class="n">(3.1)</div></div>
+<div class="where"><b>W</b> screen width &nbsp;·&nbsp; <b>N<sub>x</sub></b> horizontal pixel count.
+Nominally 344 mm / 3840 = 89.6 &micro;m. This number multiplies every angle the system reports
+(&sect;&nbsp;5.6), which is why it is worth measuring under a microscope rather than dividing
+datasheet figures.</div>
+
+<h3>3.2 Fringe pitch</h3>
+<div class="eq"><div class="body"><var>P</var><sub>f</sub> = <var>n</var> &middot; <var>p</var></div><div class="n">(3.2)</div></div>
+<div class="where"><b>n</b> pixels per fringe. The physical period of the pattern on the screen, in mm.</div>
+
+<h3>3.3 Array extent</h3>
+<div class="eq"><div class="body"><var>L</var> = <var>n</var><sub>c</sub> <var>a</var> + (<var>n</var><sub>c</sub> &minus; 1) <var>g</var></div><div class="n">(3.3)</div></div>
+<div class="where"><b>n<sub>c</sub></b> columns &nbsp;·&nbsp; <b>a</b> mirror side &nbsp;·&nbsp;
+<b>g</b> inter-mirror gap. The same form gives the height from the row count.</div>
+
+<h3>3.4 Fringes across the array</h3>
+<div class="eq"><div class="body"><var>N</var><sub>f</sub> = <var>L</var> / <var>P</var><sub>f</sub></div><div class="n">(3.4)</div></div>
+<div class="where">Target <b>N<sub>f</sub> &ge; 60</b> for reliable phase extraction; below about 40 the
+measurement degrades. This is the headline sizing constraint.</div>
+
+<h3>3.5 Screen angular field</h3>
+<div class="eq"><div class="body"><var>&theta;</var> = 2 arctan( <var>W</var><sub>s</sub> / 2<var>d</var> )</div><div class="n">(3.5)</div></div>
+<div class="where">The angular extent the screen subtends from the array at distance <var>d</var>. The
+array must fall inside it, or the outer mirrors reflect past the panel edge.</div>
+
+<h3>3.6 Camera angular field</h3>
+<div class="eq"><div class="body">AOV = 2 arctan( <var>s</var> / 2<var>f</var> ) &nbsp;&nbsp;&nbsp;
+FOV(<var>d</var>) = 2<var>d</var> tan(AOV/2)</div><div class="n">(3.6)</div></div>
+<div class="where"><b>s</b> sensor dimension &nbsp;·&nbsp; <b>f</b> focal length. The covered field at the
+mirror plane must exceed the array extent from (3.3), else the outer nodes fall outside the frame.</div>
+
+<h3>3.7 Surface flatness</h3>
+<div class="eq"><div class="body">&Delta;<var>z</var> &le; &lambda;/4 &nbsp;&rarr;&nbsp; &le; 137 nm &nbsp;&nbsp;(actual &le; 55 nm at &lambda;/10)</div><div class="n">(3.7)</div></div>
+<div class="where">A property of the mirrors, not of the measurement. It sets the floor the measurement
+is trying to certify; the measurement's own error must sit well below it (&sect;&nbsp;7.8).</div>
+
+<!-- ================= 4. FRINGE GENERATION ================= -->
+<h2 class="sec"><span class="num">4.</span> Fringe generation and phase-shift coding</h2>
+<p class="lead">What is displayed on the screen, and what a conventional N-step measurement extracts
+from it. Implemented in <code>fringes.html</code>.</p>
+
+<h3>4.1 Projected intensity</h3>
+<div class="eq"><div class="body"><var>I</var><sub>k</sub>(<var>x</var>) = <var>A</var> + <var>B</var> cos( 2&pi;<var>x</var>/<var>n</var> &minus; 2&pi;<var>k</var>/<var>N</var> )</div><div class="n">(4.1)</div></div>
+<div class="where"><b>A</b> bias (mean grey level) &nbsp;·&nbsp; <b>B</b> modulation amplitude &nbsp;·&nbsp;
+<b>k</b> = 0 &hellip; <var>N</var>&minus;1 the step index. Requires <var>A</var> &plusmn; <var>B</var> to
+stay inside 0&ndash;255: a clipped sinusoid is no longer sinusoidal, and the clipping biases the
+retrieved phase rather than merely adding noise.</div>
+
+<h3>4.2 N-step phase retrieval</h3>
+<div class="eq"><div class="body">&phi; = arctan2( &Sigma;<sub>k</sub> <var>I</var><sub>k</sub> sin(2&pi;<var>k</var>/<var>N</var>) , &nbsp; &Sigma;<sub>k</sub> <var>I</var><sub>k</sub> cos(2&pi;<var>k</var>/<var>N</var>) )</div><div class="n">(4.2)</div></div>
+<div class="where">Wrapped to (&minus;&pi;, &pi;]. This is the classical approach and it needs
+<var>N</var> captured frames per measurement. SMOTS (&sect;&nbsp;5) does not use it &mdash; that is the
+central difference between the two methods and the reason SMOTS is fast.</div>
+
+<h3>4.3 Phase uncertainty</h3>
+<div class="eq"><div class="body">&sigma;<sub>&phi;</sub> = &radic;(2/<var>N</var>) &middot; &sigma;<sub>I</sub> / <var>B</var> / &radic;<var>M</var></div><div class="n">(4.3)</div></div>
+<div class="where"><b>&sigma;<sub>I</sub></b> per-pixel intensity noise in grey levels &nbsp;·&nbsp;
+<b>M</b> frames averaged. More steps, more modulation and more averaging all help, and all cost time.
+This feeds the error budget as its only genuinely random term.</div>
+
+<h3>4.4 Screen-position error from phase noise</h3>
+<div class="eq"><div class="body">&delta;<var>x</var><sub>s</sub> = &sigma;<sub>&phi;</sub> &middot; <var>P</var><sub>f</sub> / 2&pi;</div><div class="n">(4.4)</div></div>
+<div class="where">A coarser fringe turns the same phase noise into a larger position error, which is the
+resolution half of the resolution-versus-range trade that &sect;&nbsp;5.9 formalises.</div>
+
+<h3>4.5 Gamma pre-compensation</h3>
+<div class="eq"><div class="body"><var>I</var><sub>out</sub> = 255 &middot; ( <var>I</var><sub>lin</sub> / 255 )<sup>1/&gamma;</sup></div><div class="n">(4.5)</div></div>
+<div class="where">Panels apply a transfer curve of roughly &gamma; &asymp; 2.2. Pre-compensating makes the
+<i>emitted irradiance</i> sinusoidal rather than the commanded grey level. Left uncorrected, &gamma;
+injects a second harmonic that lands directly in the retrieved phase.</div>
+
+<!-- ================= 5. SMOTS ================= -->
+<h2 class="sec"><span class="num">5.</span> SMOTS: sheared Fourier tilt retrieval</h2>
+<p class="lead">The method this research is built on. One pattern is displayed and never moved; one
+reference frame is captured; every later frame is compared against it. Implemented in
+<code>smots/analysis.py</code> and <code>smots/geometry.py</code>, after Choi et&nbsp;al. [1].</p>
+
+<div class="ok"><b>The idea in one sentence.</b> Subtract the reference image from the measured image, and
+the amplitude of what is left tells you how far the pattern moved &mdash; because subtracting two copies
+of the same sinusoid offset by &Delta; leaves a sinusoid whose amplitude grows with &Delta;.</div>
+
+<h3>5.1 The shear theorem</h3>
+<div class="eq"><div class="body">FT[ <var>f</var>(<var>x</var>) ] = <var>F</var>(<var>f</var>)</div><div class="n">(5.1)</div></div>
+<div class="eq"><div class="body">FT[ <var>f</var>(<var>x</var>+&Delta;) ] = <var>e</var><sup><var>i&psi;</var></sup> <var>F</var>(<var>f</var>), &nbsp;&nbsp; <var>&psi;</var> = 2&pi;<var>f</var>&Delta;</div><div class="n">(5.2)</div></div>
+<div class="eq"><div class="body"><var>S</var>(<var>f</var>) = FT[ <var>f</var>(<var>x</var>+&Delta;) &minus; <var>f</var>(<var>x</var>) ] = ( <var>e</var><sup><var>i&psi;</var></sup> &minus; 1 ) <var>F</var>(<var>f</var>)</div><div class="n">(5.3)</div></div>
+<div class="where">A shift is a phase ramp in the Fourier domain, so the <i>sheared</i> pattern &mdash; the
+difference of the two frames &mdash; has the same frequency as the original but an amplitude set by the
+shift. Everything else follows from (5.3).</div>
+
+<h3>5.2 Phase from the magnitude ratio (as published)</h3>
+<div class="eq"><div class="body">| <var>S</var>/<var>F</var> |<sup>2</sup> = 2 &minus; 2 cos <var>&psi;</var> &nbsp;&rarr;&nbsp;
+<var>&psi;</var> = arccos[ 1 &minus; &frac12; | <var>S</var>/<var>F</var> |<sup>2</sup> ]</div><div class="n">(5.4)</div></div>
+<div class="where">Uses only magnitudes, so it returns an <i>unsigned</i> angle in [0, &pi;]. The
+direction has to be recovered separately, from the sign of the imaginary part.</div>
+
+<h3>5.3 Phase from the complex ratio (recommended)</h3>
+<div class="eq"><div class="body"><var>S</var>/<var>F</var> = <var>e</var><sup><var>i&psi;</var></sup> &minus; 1 &nbsp;&rarr;&nbsp;
+Re = cos <var>&psi;</var> &minus; 1, &nbsp; Im = sin <var>&psi;</var></div><div class="n">(5.5)</div></div>
+<div class="eq"><div class="body"><var>&psi;</var> = arctan2( Im(<var>S</var>/<var>F</var>) , &nbsp; 1 + Re(<var>S</var>/<var>F</var>) )</div><div class="n">(5.6)</div></div>
+<div class="ok"><b>Why prefer (5.6).</b> It is signed, spans the full (&minus;&pi;, &pi;] without a separate
+sign step, and stays well conditioned where (5.4) does not. The derivative of arccos is unbounded at
+<var>&psi;</var> &rarr; 0 and <var>&psi;</var> &rarr; &pi; &mdash; precisely where small shifts and
+near-wrapping shifts live. Both are implemented; they agree away from those corners, and the test suite
+checks that they do.</div>
+
+<h3>5.4 Locating the carrier</h3>
+<p>The carrier is found in the camera's own spectrum rather than assumed. Its bin index is
+<var>aperture</var> / <var>period</var>, both measured in the same units, so the camera magnification
+never enters &mdash; which is what makes the method robust to an uncalibrated imaging scale.</p>
+
+<h3>5.5 Phase to length on the screen</h3>
+<div class="eq"><div class="body">&Delta; = ( <var>&psi;</var> / 2&pi; ) &middot; <var>P</var><sub>f</sub></div><div class="n">(5.7)</div></div>
+<div class="where">A phase <i>fraction of a period</i> is invariant under magnification; multiplying by the
+physical period on the screen converts it to millimetres. This is the step where the screen pixel pitch
+(3.1) enters, and the only place it does.</div>
+
+<h3>5.6 Screen point seen through the mirror</h3>
+<div class="eq"><div class="body"><var>x</var><sub>f</sub> = <var>x</var><sub>i</sub> + &Delta;</div><div class="n">(5.8)</div></div>
+<div class="where"><b>x<sub>i</sub></b> the screen point seen in the reference frame &nbsp;·&nbsp;
+<b>x<sub>f</sub></b> the point seen now.</div>
+
+<h3>5.7 Tilt angle</h3>
+<div class="eq"><div class="body"><var>&theta;</var> = &frac12; [ arctan( (<var>x</var><sub>f</sub> &minus; <var>x</var><sub>0</sub>) / <var>z</var><sub>d</sub> ) &minus; arctan( (<var>x</var><sub>i</sub> &minus; <var>x</var><sub>0</sub>) / <var>z</var><sub>d</sub> ) ]</div><div class="n">(5.9)</div></div>
+<div class="where"><b>x<sub>0</sub></b> the mirror's own position along the axis &nbsp;·&nbsp;
+<b>z<sub>d</sub></b> mirror-to-screen distance. The factor of &frac12; <i>is</i> the physics: rotating a
+mirror by <var>&theta;</var> swings the reflected ray by 2<var>&theta;</var>, so the observed motion is
+twice the angle you are measuring.</div>
+
+<h3>5.8 Paraxial form</h3>
+<div class="eq"><div class="body"><var>&theta;</var> &asymp; &Delta; / ( 2 <var>z</var><sub>d</sub> )</div><div class="n">(5.10)</div></div>
+<div class="where">Valid near the axis and for small angles; agrees with (5.9) to better than 0.1&nbsp;%
+for a mirror within a few percent of <var>z</var><sub>d</sub> off axis. Useful as an independent check
+that the full form is wired up correctly.</div>
+
+<h3>5.9 Resolution and unambiguous range</h3>
+<div class="eq"><div class="body">&delta;<var>&theta;</var> = ( &sigma;<sub>&phi;</sub> / 2&pi; ) <var>P</var><sub>f</sub> / ( 2 <var>z</var><sub>d</sub> ) &nbsp;&nbsp;&nbsp;
+<var>&theta;</var><sub>max</sub> = &plusmn; <var>P</var><sub>f</sub> / ( 4 <var>z</var><sub>d</sub> )</div><div class="n">(5.11)</div></div>
+<div class="where">The trade in one line: a finer fringe buys resolution and costs range, in exact
+proportion. The shift wraps at &plusmn;<var>P</var><sub>f</sub>/2, hence the factor 4.</div>
+
+<h3>5.10 Breaking the 2&pi; ambiguity</h3>
+<p>Two carriers of different period are displayed at once. Each reports its shift only modulo its own
+period, and the true shift is the one both agree on. The pair realigns at the <i>least common multiple</i>
+of the two periods, so consistent solutions repeat forever at that spacing &mdash; taking the
+globally best-agreeing candidate returns an arbitrary alias. The correct rule is to keep every candidate
+that agrees within tolerance and select the one nearest a prior (zero, or the previous measurement).</p>
+<div class="eq"><div class="body">&Lambda;<sub>beat</sub> = <var>P</var><sub>1</sub><var>P</var><sub>2</sub> / | <var>P</var><sub>1</sub> &minus; <var>P</var><sub>2</sub> |</div><div class="n">(5.12)</div></div>
+<div class="note"><b>Beat period is not the repeat.</b> Writing <var>P</var><sub>2</sub>/<var>P</var><sub>1</sub>
+= <var>p</var>/<var>q</var> in lowest terms, solutions actually repeat at <var>p</var><var>P</var><sub>1</sub>
+= (<var>p</var>&minus;<var>q</var>) &Lambda;<sub>beat</sub>. So a 4:3 pair repeats exactly at the beat, while a
+5:3 pair repeats at twice it. Quoting the beat under-claims the range, which is the safe direction.
+<br><br>Choosing the periods is a real trade: closer periods lengthen the range, but a carrier's FFT bin
+index is <var>aperture</var>/<var>period</var>, so nearly equal periods land in nearly the same bin and
+cannot be separated at all.</div>
+
+<h3>5.11 Digital apertures</h3>
+<p>A binary mask is applied per mirror segment, and the analysis runs independently inside each. This is
+what makes the measurement <i>simultaneous</i>: every segment is its own small interferogram inside one
+camera frame, and all of them are solved from the same pair of images. The averaged result within an
+aperture is analogous to a Shack&ndash;Hartmann lenslet averaging the wavefront over its own footprint.</p>
+<div class="eq"><div class="body">aperture width / <var>P</var><sub>f</sub> &nbsp;&ge;&nbsp; 3 periods</div><div class="n">(5.13)</div></div>
+<div class="where">Below roughly three periods across an aperture the Fourier peak is too broad to locate
+reliably, and the segment should be treated as unmeasured rather than trusted.</div>
+
+<h3>5.12 Common-mode rejection</h3>
+<div class="eq"><div class="body">&Delta;<var>&theta;</var><sub>i</sub> = <var>&theta;</var><sub>i</sub> &minus; median<sub>j</sub>( <var>&theta;</var><sub>j</sub> )</div><div class="n">(5.14)</div></div>
+<div class="where">Watching every segment at once means a global disturbance &mdash; the bench drifting,
+someone leaning on the table &mdash; appears as common motion across all of them and can be subtracted,
+leaving the genuine relative change on the node that actually moved.</div>
+
+<div class="note"><b>Relative, not absolute.</b> Every angle from (5.9) is measured <i>against the
+reference capture</i>. Absolute orientation requires a separate absolute reference, which is why the
+original work cross-checked against an autocollimator. Screen-pose calibration (&sect;&nbsp;8) likewise
+needs absolute screen coordinates, so unwrapped phase, not the relative shift.</div>
+
+<!-- ================= 6. TILT AND ACTUATION ================= -->
+<h2 class="sec"><span class="num">6.</span> Mirror tilt and piezo actuation</h2>
+<p class="lead">Where each mirror has to point, and whether the hardware can get it there. Implemented in
+<code>piezo.html</code>.</p>
+
+<h3>6.1 Incident and reflected directions</h3>
+<div class="eq"><div class="body">&ucirc; = ( <b>M</b> &minus; <b>C</b> ) / &#8214; <b>M</b> &minus; <b>C</b> &#8214; &nbsp;&nbsp;&nbsp;
+v&#770; = ( <b>S</b> &minus; <b>M</b> ) / &#8214; <b>S</b> &minus; <b>M</b> &#8214;</div><div class="n">(6.1)</div></div>
+<div class="where"><b>C</b> camera &nbsp;·&nbsp; <b>M</b> mirror centre &nbsp;·&nbsp; <b>S</b> screen centre.
+&ucirc; runs from camera to mirror, v&#770; from mirror to screen.</div>
+
+<h3>6.2 Law of reflection, solved for the normal</h3>
+<div class="eq"><div class="body">v&#770; = &ucirc; &minus; 2 ( &ucirc; &middot; n&#770; ) n&#770; &nbsp;&rArr;&nbsp; v&#770; &minus; &ucirc; = &minus;2 ( &ucirc; &middot; n&#770; ) n&#770; &nbsp;&rArr;&nbsp; n&#770; &prop; v&#770; &minus; &ucirc;</div><div class="n">(6.2)</div></div>
+<div class="where">The usual statement of reflection is a forward model; rearranged, it inverts directly.
+The surface normal <i>bisects</i> the incoming and outgoing rays, so a mirror's required orientation
+follows in closed form &mdash; no iteration. The sign of n&#770; is fixed by requiring it to face the camera.</div>
+
+<h3>6.3 Tilt components from the normal</h3>
+<div class="eq"><div class="body"><var>&theta;</var><sub>x</sub> = arctan( <var>n</var><sub>x</sub> / <var>n</var><sub>z</sub> ) &nbsp;&nbsp;&nbsp;
+<var>&theta;</var><sub>y</sub> = arctan( <var>n</var><sub>y</sub> / <var>n</var><sub>z</sub> ) &nbsp;&nbsp;&nbsp;
+<var>&theta;</var><sub>tot</sub> = arccos( <var>n</var><sub>z</sub> )</div><div class="n">(6.3)</div></div>
+
+<h3>6.4 Splitting the baseplate from the piezos</h3>
+<div class="eq"><div class="body"><var>&theta;</var><sub>base</sub> = mean<sub>i</sub>( <var>&theta;</var><sub>i</sub> ) &nbsp;&nbsp;&nbsp;
+<var>&theta;</var><sub>piezo,i</sub> = <var>&theta;</var><sub>i</sub> &minus; <var>&theta;</var><sub>base</sub></div><div class="n">(6.4)</div></div>
+<div class="ok"><b>This split is the design.</b> Every mirror needs a large, nearly identical fold angle to
+route the camera onto the screen, plus a small differential that varies across the array. The common part
+is set once, mechanically, by how the baseplate is bolted. Only the differential has to come from the
+actuators. Charging the piezos for the whole fold overstates their job by several times and makes an
+otherwise feasible design look impossible.</div>
+
+<h3>6.5 Actuator displacement</h3>
+<div class="eq"><div class="body">&Delta; = <var>L</var> tan <var>&theta;</var><sub>piezo</sub></div><div class="n">(6.5)</div></div>
+<div class="where"><b>L</b> lever arm from mount pivot to actuator. One actuator per axis.</div>
+
+<h3>6.6 Angular resolution</h3>
+<div class="eq"><div class="body">&delta;<var>&theta;</var> = &delta;&Delta; / <var>L</var> &nbsp;&nbsp;&nbsp;
+&delta;<var>s</var> = 2 &delta;<var>&theta;</var> <var>d</var></div><div class="n">(6.6)</div></div>
+<div class="where">One actuator step of &delta;&Delta; tilts the mirror by &delta;&theta; and walks the
+reflected spot &delta;<var>s</var> on the screen &mdash; again the factor 2 from &sect;&nbsp;5.7. Compare
+&delta;<var>s</var> against the fringe pitch to see whether a single step is even resolvable.</div>
+
+<h3>6.7 Range budget</h3>
+<div class="eq"><div class="body"><var>&theta;</var><sub>max</sub> = min[ <var>&theta;</var><sub>mount</sub> , &nbsp; arctan( <var>T</var> / 2<var>L</var> ) ]</div><div class="n">(6.7)</div></div>
+<div class="where"><b>T</b> total actuator travel. Whichever limit binds first is the real one. A motorised
+node is capped by both; a hand-set reference node only by the mount's own adjuster range, since nothing
+is driving it.</div>
+
+<h3>6.8 Controller channel budget</h3>
+<div class="eq"><div class="body"><var>N</var><sub>motorised</sub> &le; &lfloor; channels / 2 &rfloor;</div><div class="n">(6.8)</div></div>
+<div class="where">A tip/tilt node consumes two channels. A KIM101 offers four, so <b>one controller drives
+at most two nodes</b> &mdash; a hard constraint on how much of the array can ever be actuated.</div>
+
+<!-- ================= 7. ERROR BUDGET ================= -->
+<h2 class="sec"><span class="num">7.</span> Measurement error budget</h2>
+<p class="lead">Propagating every screen-side uncertainty into a slope error, then into a height error.
+Implemented in <code>budget.html</code>.</p>
+
+<h3>7.1 Slope sensitivity</h3>
+<div class="eq"><div class="body">&delta;<var>s</var> = &delta;<var>x</var><sub>s</sub> / ( 2 <var>d</var> )</div><div class="n">(7.1)</div></div>
+<div class="where">A slope change <var>&delta;s</var> rotates the reflected ray by 2<var>&delta;s</var>,
+walking the screen point by 2<var>&delta;s d</var>. Inverting gives the sensitivity: every screen-position
+error divides by 2<var>d</var> to become a slope error. Longer standoff is free accuracy here.</div>
+
+<h3>7.2 Contributors</h3>
+<table>
+  <thead><tr><th style="width:26%">Term</th><th style="width:30%">Slope error</th><th>Character</th></tr></thead>
+  <tbody>
+  <tr><td>Phase noise</td><td>&delta;<var>x</var><sub>s</sub> / 2<var>d</var>, from (4.4)</td><td><b>random</b> &mdash; uncorrelated pixel to pixel</td></tr>
+  <tr><td>Screen pose</td><td>&delta;<var>x</var><sub>cal</sub> / 2<var>d</var></td><td><b>tilt-like</b> &mdash; uniform across the aperture</td></tr>
+  <tr><td>Screen planarity</td><td>&delta;<var>x</var><sub>plan</sub> / 2<var>d</var></td><td><b>figure</b> &mdash; correlated across the aperture</td></tr>
+  <tr><td>Distance error</td><td><var>s</var> &middot; &delta;<var>d</var> / <var>d</var></td><td><b>scale</b> &mdash; proportional to the true slope</td></tr>
+  </tbody>
+</table>
+
+<h3>7.3 Quadrature sum</h3>
+<div class="eq"><div class="body">&delta;<var>s</var><sub>RSS</sub> = &radic;( &Sigma;<sub>i</sub> &delta;<var>s</var><sub>i</sub><sup>2</sup> )</div><div class="n">(7.2)</div></div>
+<div class="where">Valid while the terms are independent. A common-mode calibration error shared between
+them would add linearly instead, and this would understate it.</div>
+
+<h3>7.4 Integration into height &mdash; one rule per character</h3>
+<div class="eq"><div class="body">random: &nbsp; &delta;<var>z</var> = &delta;<var>s</var> &radic;( <var>L</var> &middot; &Delta;<var>x</var> )</div><div class="n">(7.3)</div></div>
+<div class="eq"><div class="body">figure: &nbsp; &delta;<var>z</var> = &delta;<var>s</var> &middot; <var>L</var></div><div class="n">(7.4)</div></div>
+<div class="eq"><div class="body">tilt-like: &nbsp; &delta;<var>z</var> = 0 &nbsp;(removed by the piston-and-tilt fit)</div><div class="n">(7.5)</div></div>
+<div class="eq"><div class="body">scale: &nbsp; &delta;<var>z</var> = sag &middot; &delta;<var>d</var> / <var>d</var></div><div class="n">(7.6)</div></div>
+<div class="warn"><b>Do not integrate every term the same way.</b> Slope errors do not share a single
+propagation rule, and treating them as though they do is a common and expensive mistake.
+Random noise averages down as a random walk over the aperture. Correlated figure error does not average
+at all and integrates coherently &mdash; a penalty of <var>L</var>/&radic;(<var>L</var>&Delta;<var>x</var>),
+which for this bench is a factor of about fifty. A uniform screen-pose offset gives every point the
+<i>same</i> slope error, which is a pure tilt and is therefore removed <i>exactly</i> by the
+reconstruction's low-order fit &mdash; it contributes nothing, not merely a little.</div>
+
+<h3>7.5 Lateral registration</h3>
+<div class="eq"><div class="body">&delta;<var>z</var><sub>reg</sub> = <var>s</var> &middot; &delta;<var>x</var><sub>reg</sub></div><div class="n">(7.7)</div></div>
+<div class="where">Attributing a measured slope to the wrong point on the surface costs height in
+proportion to the local slope itself.</div>
+
+<h3>7.6 Against the surface specification</h3>
+<div class="eq"><div class="body">&delta;<var>z</var><sub>tot</sub> = &radic;( &Sigma;<sub>i</sub> &delta;<var>z</var><sub>i</sub><sup>2</sup> ) &nbsp;&nbsp;vs&nbsp;&nbsp; &lambda;/10</div><div class="n">(7.8)</div></div>
+<div class="note"><b>Slope is the honest deliverable.</b> Deflectometry measures slope <i>directly</i>;
+height is an integrated, assumption-dependent quantity. Reaching &lambda;/10 in absolute height demands
+the screen geometry be known to a few micrometres, which is a far harder requirement than reaching good
+slope accuracy. Quote slope as the primary result and treat height as what it costs you if the geometry
+is only known as well as it is.</div>
+
+<!-- ================= 8. CALIBRATION ================= -->
+<h2 class="sec"><span class="num">8.</span> Screen-pose calibration through the mirrors</h2>
+<p class="lead">Where <var>z</var><sub>d</sub> should come from. Implemented in
+<code>smots/calibration.py</code>; formulation developed from the geometry for this work, structured after
+the conventional linear-then-nonlinear approach [2].</p>
+
+<p>The camera never sees the screen &mdash; it looks at the mirrors. So the screen's pose has to be
+recovered <i>through</i> the reflection. This matters because &sect;&nbsp;7 finds screen geometry
+dominating the whole error budget, and (5.9) needs <var>z</var><sub>d</sub>.</p>
+
+<h3>8.1 Plane reflection</h3>
+<div class="eq"><div class="body"><b>H</b>(n&#770;, <var>e</var>) : &nbsp; <b>R</b> = <b>I</b> &minus; 2 n&#770; n&#770;<sup>T</sup>, &nbsp;&nbsp; <b>t</b> = 2 <var>e</var> n&#770;</div><div class="n">(8.1)</div></div>
+<div class="where">The Householder reflection through the plane { <b>x</b> : n&#770;&middot;<b>x</b> = <var>e</var> }.
+It is an involution &mdash; reflecting twice returns the identity &mdash; and its determinant is
+&minus;1, so it flips handedness. What the camera sees through a flat mirror is a <i>virtual</i> screen,
+and the real screen is that virtual one reflected back through the mirror plane.</div>
+
+<h3>8.2 The ray-correspondence constraint</h3>
+<p>Each observation is a triple: a point <b>P</b> on a mirror of known normal, the direction
+r&#770; the camera ray travels after reflecting there, and the screen coordinate <b>q</b> = (<var>u</var>,
+<var>v</var>) that the decoded absolute pattern says is seen at that point. The screen point must lie
+somewhere on that reflected ray:</p>
+<div class="eq"><div class="body"><b>R</b><b>q</b> + <b>t</b> = <b>P</b> + <var>&lambda;</var> r&#770;</div><div class="n">(8.2)</div></div>
+<div class="eq"><div class="body">( <b>I</b> &minus; r&#770; r&#770;<sup>T</sup> ) ( <b>R</b><b>q</b> + <b>t</b> &minus; <b>P</b> ) = 0</div><div class="n">(8.3)</div></div>
+<div class="where">Projecting perpendicular to the ray eliminates the unknown length
+<var>&lambda;</var>, leaving two independent constraints per observation on the six-DOF pose.</div>
+
+<h3>8.3 Linear solution</h3>
+<p>Since <b>q</b> always has zero third component, the data constrains only the first two columns of
+<b>R</b>. Solve the nine unknowns [<b>r</b><sub>1</sub>, <b>r</b><sub>2</sub>, <b>t</b>] by least squares,
+orthonormalise [<b>r</b><sub>1</sub> <b>r</b><sub>2</sub>] by SVD, and take
+<b>r</b><sub>3</sub> = <b>r</b><sub>1</sub> &times; <b>r</b><sub>2</sub>.</p>
+
+<h3>8.4 Nonlinear refinement</h3>
+<div class="eq"><div class="body">min<sub><b>R</b>,<b>t</b></sub> &nbsp; &Sigma;<sub>i</sub> &#8214; ( <b>I</b> &minus; r&#770;<sub>i</sub> r&#770;<sub>i</sub><sup>T</sup> )( <b>R</b><b>q</b><sub>i</sub> + <b>t</b> &minus; <b>P</b><sub>i</sub> ) &#8214;<sup>2</sup></div><div class="n">(8.4)</div></div>
+<div class="where">Gauss&ndash;Newton over all six degrees of freedom, with the rotation incremented through
+a Rodrigues parameterisation. This removes the bias the orthonormalisation step introduces.</div>
+
+<h3>8.5 Conditioning &mdash; and the degenerate case</h3>
+<div class="eq"><div class="body"><var>&kappa;</var> = <var>&lambda;</var><sub>min</sub>[ &Sigma;<sub>i</sub> ( <b>I</b> &minus; r&#770;<sub>i</sub> r&#770;<sub>i</sub><sup>T</sup> ) ] / <var>N</var></div><div class="n">(8.5)</div></div>
+<div class="warn"><b>A perfectly flat array cannot be calibrated at all.</b> Each observation constrains the
+screen only <i>across</i> its ray, never along it. If every mirror normal is identical then every
+reflected ray is parallel, the sum in (8.5) is singular, and <var>z</var><sub>d</sub> is not poorly
+determined &mdash; it is <i>not determined</i>, for any quantity of data.
+<br><br>The remedy is counter-intuitive: <b>do not set the reference mirrors parallel.</b> A few degrees
+of deliberate spread makes the depth observable. Measured on the synthetic bench with 50 &micro;m decode
+noise, the <var>z</var><sub>d</sub> error falls from unobservable at 0&deg;, to 0.345 mm at 0.5&deg;,
+0.078 mm at 2&deg;, and 0.018 mm at 8&deg;. Stepping only the motorised node helps far less, because it
+is one node in nine.</div>
+
+<h3>8.6 The screen pitch measures itself</h3>
+<div class="eq"><div class="body"><var>k</var> = &frac12; ( &#8214;<b>r</b><sub>1</sub>&#8214; + &#8214;<b>r</b><sub>2</sub>&#8214; ) &nbsp;&nbsp; (should be 1)</div><div class="n">(8.6)</div></div>
+<div class="ok"><b>A free diagnostic.</b> If <b>q</b> is expressed in millimetres, the recovered screen axes
+must come out unit length. They do not if the assumed pixel pitch is wrong, and the deviation <i>is</i>
+the scale error &mdash; on exactly the number (3.1) that has to be measured under a microscope. The
+calibration therefore checks its own most important input.</div>
+
+<h3>8.7 Extracting what Eq. (5.9) needs</h3>
+<div class="eq"><div class="body"><var>z</var><sub>d</sub> = | ( <b>t</b> &minus; <b>o</b> ) &middot; n&#770;<sub>screen</sub> | &nbsp;&nbsp;&nbsp;
+tilt = arccos | n&#770;<sub>array</sub> &middot; n&#770;<sub>screen</sub> |</div><div class="n">(8.7)</div></div>
+<div class="where"><var>z</var><sub>d</sub> is the <i>perpendicular</i> distance from the array origin to
+the screen plane &mdash; not the distance to the screen's origin, which for a tilted screen is a larger
+number. The tilt says how far the screen is from parallel; (5.9) assumes parallel, so any non-zero tilt
+is an error term otherwise absorbed silently into every reported angle.</div>
+
+<div class="note"><b>Two prerequisites.</b> Calibration needs <i>absolute</i> screen coordinates, so
+unwrapped phase &mdash; the relative SMOTS measurement never needs to know which fringe it is on, but this
+does. It also needs mirror normals in advance, which is circular since normals are what SMOTS measures.
+Break the loop with the mechanical normals of the reference nodes, which are set once and stable, or with
+an autocollimator; then calibrate; then measure.</div>
+
+<!-- ================= 9. SIGN TRAPS ================= -->
+<h2 class="sec"><span class="num">9.</span> Sign conventions: three traps, collected</h2>
+<p class="lead">Each of these was found by a numerical test disagreeing with a ray-traced forward model,
+not by reading an equation. Each inverts an angle while leaving every magnitude, residual and consistency
+check untouched.</p>
+
+<table>
+  <thead><tr><th style="width:17%">Trap</th><th style="width:31%">Symptom</th><th>Resolution</th></tr></thead>
+  <tbody>
+  <tr><td><b>Transform<br>sign</b></td>
+      <td>Every recovered shift has the wrong sign. Magnitudes are perfect, so nothing flags it.</td>
+      <td>Eq. (5.2) as printed uses the opposite exponent sign to the standard forward transform. Eq.&nbsp;(5.4) is immune since it takes a magnitude; (5.6) is not. Fix the convention once, then test it.</td></tr>
+  <tr><td><b>Arctangent<br>order</b></td>
+      <td>All tilts report with reversed polarity: a mirror tilted one way reads as tilted the other.</td>
+      <td>Eq. (5.9) as printed subtracts the final term from the initial one, returning a negative angle for a normal rotating toward +<var>x</var>. Reverse the order, or negate.</td></tr>
+  <tr><td><b>Image row<br>direction</b></td>
+      <td><var>x</var> is perfect and <var>y</var> is inverted &mdash; which looks exactly like a swapped actuator cable.</td>
+      <td>Row 0 is the top of the frame, so the row index runs against world +<var>y</var>. Negate the <var>y</var> shift once, at the point where image indices become world coordinates.</td></tr>
+  </tbody>
+</table>
+
+<div class="ok"><b>How to check on the bench.</b> Command a known actuator move on the motorised node and
+confirm the reported angle changes in the expected direction and by roughly the expected amount. One
+deliberate move validates all three at once, and nothing else will.</div>
+
+<!-- ================= 10. GLOSSARY ================= -->
+<h2 class="sec"><span class="num">10.</span> Symbol glossary</h2>
+<table>
+  <thead><tr><th style="width:12%">Symbol</th><th style="width:12%">Units</th><th>Meaning</th></tr></thead>
+  <tbody>
+  <tr><td class="sym">p</td><td class="u">mm</td><td>Screen pixel pitch, Eq. (3.1). Scales every reported angle &mdash; measure it.</td></tr>
+  <tr><td class="sym">n</td><td class="u">px</td><td>Pixels per fringe</td></tr>
+  <tr><td class="sym">P<sub>f</sub></td><td class="u">mm</td><td>Fringe pitch on the screen, Eq. (3.2)</td></tr>
+  <tr><td class="sym">L</td><td class="u">mm</td><td>Array extent (&sect;3) or mount lever arm (&sect;6) &mdash; context distinguishes them</td></tr>
+  <tr><td class="sym">N<sub>f</sub></td><td class="u">&mdash;</td><td>Fringes across the array; target &ge; 60</td></tr>
+  <tr><td class="sym">N</td><td class="u">&mdash;</td><td>Number of phase steps</td></tr>
+  <tr><td class="sym">A, B</td><td class="u">DN</td><td>Bias and modulation of the projected sinusoid</td></tr>
+  <tr><td class="sym">&sigma;<sub>I</sub></td><td class="u">DN</td><td>Per-pixel intensity noise</td></tr>
+  <tr><td class="sym">&sigma;<sub>&phi;</sub></td><td class="u">rad</td><td>Phase uncertainty, Eq. (4.3)</td></tr>
+  <tr><td class="sym">&psi;</td><td class="u">rad</td><td>Sheared-pattern phase, Eq. (5.6)</td></tr>
+  <tr><td class="sym">&Delta;</td><td class="u">mm</td><td>Pattern shift on the screen, Eq. (5.7)</td></tr>
+  <tr><td class="sym">F, S</td><td class="u">&mdash;</td><td>Fourier transforms of the reference and sheared patterns</td></tr>
+  <tr><td class="sym">z<sub>d</sub></td><td class="u">mm</td><td>Mirror-to-screen perpendicular distance. Angle goes as 1/<var>z</var><sub>d</sub>.</td></tr>
+  <tr><td class="sym">&theta;</td><td class="u">rad</td><td>Mirror tilt; reflected ray moves by 2<var>&theta;</var></td></tr>
+  <tr><td class="sym">n&#770;</td><td class="u">&mdash;</td><td>Mirror surface normal, Eq. (6.2)</td></tr>
+  <tr><td class="sym">&ucirc;, v&#770;</td><td class="u">&mdash;</td><td>Incident and reflected unit directions</td></tr>
+  <tr><td class="sym">T</td><td class="u">mm</td><td>Total actuator travel</td></tr>
+  <tr><td class="sym">s</td><td class="u">rad</td><td>Surface slope</td></tr>
+  <tr><td class="sym">&delta;s</td><td class="u">rad</td><td>Slope error &mdash; the primary figure of merit</td></tr>
+  <tr><td class="sym">&delta;z</td><td class="u">mm</td><td>Height error after integrating slope</td></tr>
+  <tr><td class="sym">&Delta;x</td><td class="u">mm</td><td>Lateral sampling at the mirror</td></tr>
+  <tr><td class="sym">&lambda;</td><td class="u">nm</td><td>Wavelength; surface spec quoted as &lambda;/10</td></tr>
+  <tr><td class="sym">R, t</td><td class="u">&mdash;, mm</td><td>Screen pose: rotation and translation, &sect;8</td></tr>
+  <tr><td class="sym">q</td><td class="u">mm</td><td>Absolute screen coordinate seen through a mirror</td></tr>
+  <tr><td class="sym">&kappa;</td><td class="u">&mdash;</td><td>Ray conditioning, Eq. (8.5); zero means depth is unobservable</td></tr>
+  </tbody>
+</table>
+
+<!-- ================= 11. REFERENCES ================= -->
+<h2 class="sec"><span class="num">11.</span> References</h2>
+<ol class="refs">
+  <li>H. Choi, I. Trumper, M. Dubin, W. Zhao and D. W. Kim, &ldquo;Simultaneous angular alignment of
+      segmented mirrors using sinusoidal pattern analysis,&rdquo; <i>Proc. SPIE</i> <b>10377</b>,
+      103770G (2017). &mdash; the source of &sect;5.</li>
+  <li>D. Uhlig, <i>Light Field Imaging for Deflectometry</i>. &mdash; ch. 4 on phase coding and
+      unwrapping, ch. 5 on system calibration. &sect;8 here is structured after its linear-then-nonlinear
+      pattern but was developed independently from the geometry; the text itself was not consulted in
+      deriving it.</li>
+  <li>H. Choi, I. Trumper, M. Dubin, W. Zhao and D. W. Kim, &ldquo;Simultaneous multi-segmented mirror
+      orientation test system using a digital aperture based on sheared Fourier analysis,&rdquo;
+      <i>Opt. Express</i> <b>25</b>, 18152&ndash;18164 (2017).</li>
+  <li>P. Su, R. E. Parks, L. Wang, R. P. Angel and J. H. Burge, &ldquo;Software configurable optical test
+      system: a computerized reverse Hartmann test,&rdquo; <i>Appl. Opt.</i> <b>49</b>, 4404&ndash;4412 (2010).</li>
+  <li>I. Trumper, H. Choi and D. W. Kim, &ldquo;Instantaneous phase shifting deflectometry,&rdquo;
+      <i>Opt. Express</i> <b>24</b>, 27993&ndash;28007 (2016).</li>
+  <li>W. H. Southwell, &ldquo;Wave-front estimation from wave-front slope measurements,&rdquo;
+      <i>J. Opt. Soc. Am.</i> <b>70</b>(8), 998&ndash;1006 (1980). &mdash; background for &sect;7.4.</li>
+</ol>
+
+<div class="note" style="margin-top:18px"><b>Companion material.</b> Every equation above is implemented
+and exercised in the toolkit. The interactive pages (<code>index.html</code>, <code>fringes.html</code>,
+<code>piezo.html</code>, <code>budget.html</code>, <code>simulator.html</code>) evaluate them live; the
+<code>smots</code> Python package implements &sect;5 and &sect;8 with a ray-traced forward model and 63
+tests that check the retrieval against known ground truth.</div>
+
+</div>
+</body>
+</html>
