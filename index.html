@@ -7,12 +7,16 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Arial,Helvetica,sans-serif;background:#FAFAFA;color:#191919;font-size:14px}
-.nav{background:#8C1D40;display:flex;align-items:center;gap:14px;padding:0 24px;height:52px}
+.nav{background:#8C1D40;display:flex;align-items:center;gap:14px;padding:0 24px;height:52px;flex-wrap:wrap}
 .asu-mark{background:#FFC627;width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:3px;flex-shrink:0}
 .asu-mark span{color:#8C1D40;font-weight:900;font-size:17px;letter-spacing:-1px;font-family:Arial,sans-serif}
 .nav-text{color:#fff}.nav-text .t1{font-size:14px;font-weight:700;line-height:1.2}.nav-text .t2{font-size:11px;color:rgba(255,255,255,0.7)}
+.nav-links{margin-left:auto;display:flex;gap:3px;flex-wrap:wrap}
+.nav-links a{color:rgba(255,255,255,.85);text-decoration:none;font-size:12px;font-weight:700;padding:6px 11px;border-radius:3px;white-space:nowrap}
+.nav-links a:hover{background:rgba(255,255,255,.14);color:#fff}
+.nav-links a.active{background:#FFC627;color:#8C1D40}
 .gold-bar{height:4px;background:#FFC627}
-.page-hdr{background:#fff;border-bottom:1px solid #E8E8E8;padding:10px 24px;display:flex;align-items:baseline;gap:16px}
+.page-hdr{background:#fff;border-bottom:1px solid #E8E8E8;padding:10px 24px;display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
 .page-hdr h1{font-size:17px;font-weight:700;color:#8C1D40}.page-hdr p{font-size:12px;color:#747474}
 .app{display:grid;grid-template-columns:260px 1fr;gap:0;min-height:calc(100vh - 80px)}
 .left-col{background:#fff;border-right:1px solid #E8E8E8;padding:14px;display:flex;flex-direction:column;gap:12px}
@@ -66,6 +70,12 @@ body{font-family:Arial,Helvetica,sans-serif;background:#FAFAFA;color:#191919;fon
     <div class="t1">Deflectometry Research</div>
     <div class="t2">School of Manufacturing Systems and Networks &nbsp;·&nbsp; Dr. Xiangyu Guo</div>
   </div>
+  <nav class="nav-links">
+    <a href="index.html" class="active">Array Config</a>
+    <a href="fringes.html">Fringe Generator</a>
+    <a href="piezo.html">Tilt &amp; Actuation</a>
+    <a href="budget.html">Error Budget</a>
+  </nav>
 </div>
 <div class="gold-bar"></div>
 

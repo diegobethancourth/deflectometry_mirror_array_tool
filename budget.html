@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ASU Deflectometry — Measurement Error Budget</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,Helvetica,sans-serif;background:#FAFAFA;color:#191919;font-size:14px}
+.nav{background:#8C1D40;display:flex;align-items:center;gap:14px;padding:0 24px;height:52px;flex-wrap:wrap}
+.asu-mark{background:#FFC627;width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:3px;flex-shrink:0}
+.asu-mark span{color:#8C1D40;font-weight:900;font-size:17px;letter-spacing:-1px;font-family:Arial,sans-serif}
+.nav-text{color:#fff}.nav-text .t1{font-size:14px;font-weight:700;line-height:1.2}.nav-text .t2{font-size:11px;color:rgba(255,255,255,0.7)}
+.nav-links{margin-left:auto;display:flex;gap:3px;flex-wrap:wrap}
+.nav-links a{color:rgba(255,255,255,.85);text-decoration:none;font-size:12px;font-weight:700;padding:6px 11px;border-radius:3px;white-space:nowrap}
+.nav-links a:hover{background:rgba(255,255,255,.14);color:#fff}
+.nav-links a.active{background:#FFC627;color:#8C1D40}
+.gold-bar{height:4px;background:#FFC627}
+.page-hdr{background:#fff;border-bottom:1px solid #E8E8E8;padding:10px 24px;display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+.page-hdr h1{font-size:17px;font-weight:700;color:#8C1D40}.page-hdr p{font-size:12px;color:#747474}
+.app{display:grid;grid-template-columns:260px 1fr;gap:0;min-height:calc(100vh - 80px)}
+.left-col{background:#fff;border-right:1px solid #E8E8E8;padding:14px;display:flex;flex-direction:column;gap:12px}
+.right-col{padding:12px;display:flex;flex-direction:column;gap:10px}
+.sec-lbl{font-size:10px;font-weight:700;color:#8C1D40;text-transform:uppercase;letter-spacing:.07em;border-left:3px solid #FFC627;padding-left:8px;margin-bottom:7px}
+.ctrl-group{display:flex;flex-direction:column;gap:4px}
+.ctrl-group label{font-size:10px;font-weight:700;color:#747474;text-transform:uppercase;letter-spacing:.04em}
+.ctrl-group select,.ctrl-group input[type=number]{width:100%;font-size:13px;color:#191919;border:1px solid #BFBFBF;border-radius:4px;padding:4px 6px;background:#FAFAFA}
+.ctrl-group input[type=range]{width:100%;accent-color:#8C1D40}
+.ctrl-val{font-size:16px;font-weight:700;color:#8C1D40}
+.explainer{background:#FFF5D0;border-left:3px solid #FFC627;padding:8px 10px;font-size:11px;color:#3E3E3E;line-height:1.55;border-radius:0 4px 4px 0}
+.explainer strong{color:#8C1D40}
+.fixed-box{background:#FAFAFA;border:1px solid #E8E8E8;border-radius:5px;padding:9px 11px}
+.mvar{font-size:11px;color:#747474;line-height:1.8}.mvar span{color:#191919;font-weight:700}
+.metrics-row{display:grid;grid-template-columns:repeat(6,1fr);gap:7px}
+.metric{background:#fff;border:1px solid #E8E8E8;border-radius:5px;padding:8px 10px}
+.metric .ml{font-size:10px;color:#747474;text-transform:uppercase;letter-spacing:.03em;margin-bottom:2px}
+.metric .mv{font-size:17px;font-weight:700;color:#8C1D40}.metric .ms{font-size:10px;color:#747474;margin-top:1px}
+.mid-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.panel{background:#fff;border:1px solid #E8E8E8;border-radius:6px;padding:12px}
+.panel-heading{font-size:13px;font-weight:700;color:#8C1D40;margin-bottom:3px}
+.panel-sub{font-size:10px;color:#747474;margin-bottom:8px}
+.bottom-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.card{background:#fff;border:1px solid #E8E8E8;border-radius:6px;padding:11px}
+.comp-table{width:100%;border-collapse:collapse;font-size:11px;table-layout:fixed}
+.comp-table th{background:#8C1D40;color:#fff;padding:5px 6px;text-align:left;font-size:10px;font-weight:700}
+.comp-table td{padding:4px 6px;border-bottom:1px solid #E8E8E8}
+.comp-table tr:nth-child(even) td{background:#FAFAFA}
+.comp-table tr.tot td{background:#FFF5D0;font-weight:700;border-top:2px solid #FFC627}
+.g{color:#2e7d32;font-weight:700}.m{color:#e65100;font-weight:700}.b{color:#b71c1c;font-weight:700}
+.math-block{margin-bottom:9px;padding-bottom:9px;border-bottom:1px solid #F0F0F0}
+.math-block:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.math-title{font-size:11px;font-weight:700;color:#8C1D40;margin-bottom:3px;display:flex;justify-content:space-between;align-items:center;gap:6px}
+.live{background:#8C1D40;color:#fff;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;white-space:nowrap}
+.formula{background:#F7F7F7;border:1px solid #E8E8E8;border-radius:3px;padding:4px 7px;font-family:"Courier New",monospace;font-size:11px;color:#3E3E3E;margin:3px 0}
+.mvar2{font-size:10px;color:#747474;line-height:1.6}.mvar2 span{color:#191919;font-weight:700}
+.verdict-good{background:#edf7ed;border-left:4px solid #2e7d32;border-radius:0 6px 6px 0;padding:9px 14px;font-size:12px;color:#1b5e20;font-weight:500}
+.verdict-warn{background:#fff8e1;border-left:4px solid #f9a825;border-radius:0 6px 6px 0;padding:9px 14px;font-size:12px;color:#6d4c00;font-weight:500}
+.verdict-bad{background:#fdecea;border-left:4px solid #b71c1c;border-radius:0 6px 6px 0;padding:9px 14px;font-size:12px;color:#7f0000;font-weight:500}
+.caveat{font-size:10px;color:#747474;line-height:1.5;background:#FAFAFA;border:1px dashed #D8D8D8;border-radius:4px;padding:7px 9px}
+.caveat b{color:#8C1D40}
+.chk{display:flex;align-items:center;gap:6px;font-size:11px;color:#3E3E3E;font-weight:700;text-transform:none;letter-spacing:0}
+.chk input{accent-color:#8C1D40;flex-shrink:0}
+.off{opacity:.45}
+.footer{background:#3E3E3E;color:#BFBFBF;font-size:10px;padding:10px 24px;text-align:center;margin-top:auto}
+.footer span{color:#FFC627}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="asu-mark"><span>ASU</span></div>
+  <div class="nav-text">
+    <div class="t1">Deflectometry Research</div>
+    <div class="t2">School of Manufacturing Systems and Networks &nbsp;·&nbsp; Dr. Xiangyu Guo</div>
+  </div>
+  <nav class="nav-links">
+    <a href="index.html">Array Config</a>
+    <a href="fringes.html">Fringe Generator</a>
+    <a href="piezo.html">Tilt &amp; Actuation</a>
+    <a href="budget.html" class="active">Error Budget</a>
+  </nav>
+</div>
+<div class="gold-bar"></div>
+
+<div class="page-hdr">
+  <h1>Measurement Error Budget</h1>
+  <p>Phase &rarr; slope &rarr; height propagation &nbsp;·&nbsp; Diego Bethancourth &nbsp;·&nbsp; Arizona State University</p>
+</div>
+
+<div class="app">
+  <div class="left-col">
+
+    <div>
+      <div class="sec-lbl">How it works</div>
+      <div class="explainer">
+        Propagates every screen-side uncertainty into a <strong>slope error &delta;s</strong>, combines
+        them in quadrature, then integrates across the aperture into a <strong>height error &delta;z</strong>
+        to compare against the &lambda;/10 surface spec. Each contributor is a slider &mdash; the bar chart
+        shows which one you should spend effort on.
+      </div>
+    </div>
+
+    <div>
+      <div class="sec-lbl">Geometry</div>
+      <div class="ctrl-group" style="margin-bottom:8px">
+        <label>Mirror layout</label>
+        <select id="arr" onchange="update()">
+          <option value="1x4">1&times;4 &mdash; 4 mirrors (linear)</option>
+          <option value="1x5">1&times;5 &mdash; 5 mirrors (linear)</option>
+          <option value="2x4">2&times;4 &mdash; 8 mirrors</option>
+          <option value="3x3" selected>3&times;3 &mdash; 9 mirrors &#9733;</option>
+          <option value="2x5">2&times;5 &mdash; 10 mirrors</option>
+          <option value="3x4">3&times;4 &mdash; 12 mirrors</option>
+        </select>
+      </div>
+      <div class="ctrl-group" style="margin-bottom:8px">
+        <label>Mirror gap (mm)</label>
+        <input type="range" id="gap" min="1" max="8" value="3" step="1" oninput="update()">
+        <span class="ctrl-val" id="gap-v">3 mm</span>
+      </div>
+      <div class="ctrl-group" style="margin-bottom:8px">
+        <label>Screen&ndash;mirror distance d (mm)</label>
+        <input type="range" id="dist" min="150" max="800" value="300" step="10" oninput="update()">
+        <span class="ctrl-val" id="dist-v">300 mm</span>
+      </div>
+      <div class="ctrl-group">
+        <label>Camera pixels across the array</label>
+        <input type="number" id="campx" value="2448" min="200" max="12000" step="1" oninput="update()">
+      </div>
+    </div>
+
+    <div>
+      <div class="sec-lbl">Phase measurement</div>
+      <div class="ctrl-group" style="margin-bottom:8px">
+        <label>Pixels per fringe (n)</label>
+        <input type="range" id="ppf" min="4" max="60" value="15" step="1" oninput="update()">
+        <span class="ctrl-val" id="ppf-v">15 px</span>
+      </div>
+      <div class="ctrl-group" style="margin-bottom:8px">
+        <label>Phase steps (N)</label>
+        <select id="steps" onchange="update()">
+          <option value="3">3-step</option>
+          <option value="4" selected>4-step &#9733;</option>
+          <option value="5">5-step</option>
+          <option value="8">8-step</option>
+          <option value="12">12-step</option>
+          <option value="16">16-step</option>
+        </select>
+      </div>
+      <div class="ctrl-group" style="margin-bottom:8px">
+        <label>Camera noise &sigma;<sub>I</sub> (DN)</label>
+        <input type="range" id="noise" min="0.2" max="8" value="2" step="0.2" oninput="update()">
+        <span class="ctrl-val" id="noise-v">2.0 DN</span>
+      </div>
+      <div class="ctrl-group" style="margin-bottom:8px">
+        <label>Fringe modulation B (DN)</label>
+        <input type="range" id="modB" min="20" max="127" value="115" step="1" oninput="update()">
+        <span class="ctrl-val" id="modB-v">115 DN</span>
+      </div>
+      <div class="ctrl-group">
+        <label>Frames averaged</label>
+        <input type="range" id="avg" min="1" max="32" value="1" step="1" oninput="update()">
+        <span class="ctrl-val" id="avg-v">1 &times;</span>
+      </div>
+    </div>
+
+    <div>
+      <div class="sec-lbl">Calibration</div>
+      <div class="ctrl-group" style="margin-bottom:8px">
+        <label>Screen lateral calib. &delta;x (mm)</label>
+        <input type="range" id="cal" min="0" max="1" value="0.05" step="0.005" oninput="update()">
+        <span class="ctrl-val" id="cal-v">0.050 mm</span>
+      </div>
+      <div class="ctrl-group" style="margin-bottom:8px">
+        <label>Screen distance uncert. &delta;d (mm)</label>
+        <input type="range" id="dd" min="0" max="5" value="0.5" step="0.1" oninput="update()">
+        <span class="ctrl-val" id="dd-v">0.5 mm</span>
+      </div>
+      <div class="ctrl-group" style="margin-bottom:8px">
+        <label>Screen planarity residual (mm)</label>
+        <input type="range" id="plan" min="0" max="0.5" value="0.02" step="0.002" oninput="update()">
+        <span class="ctrl-val" id="plan-v">0.020 mm</span>
+      </div>
+      <div class="ctrl-group" style="margin-bottom:8px">
+        <label>Camera registration (px)</label>
+        <input type="range" id="reg" min="0" max="3" value="0.3" step="0.1" oninput="update()">
+        <span class="ctrl-val" id="reg-v">0.3 px</span>
+      </div>
+      <div class="ctrl-group">
+        <label>Typical surface slope (mrad)</label>
+        <input type="range" id="slope" min="0.1" max="30" value="5" step="0.1" oninput="update()">
+        <span class="ctrl-val" id="slope-v">5.0 mrad</span>
+      </div>
+    </div>
+
+    <div>
+      <div class="sec-lbl">Spec</div>
+      <div class="ctrl-group" style="margin-bottom:8px">
+        <label>Slope target (&micro;rad RMS)</label>
+        <input type="range" id="starget" min="1" max="200" value="50" step="1" oninput="update()">
+        <span class="ctrl-val" id="starget-v">50 &micro;rad</span>
+      </div>
+      <div class="ctrl-group" style="margin-bottom:8px">
+        <label class="chk"><input type="checkbox" id="lowo" checked onchange="update()"> Remove piston &amp; tilt in reconstruction</label>
+        <div class="mvar2" style="margin-top:3px">Standard practice: fit and subtract the low-order terms. A uniform screen-pose offset is a pure tilt, so it drops out entirely &mdash; leave this off to see the raw, uncorrected budget.</div>
+      </div>
+      <div class="ctrl-group">
+        <label>Wavelength &lambda; (nm)</label>
+        <input type="number" id="lam" value="550" min="200" max="2000" step="1" oninput="update()">
+      </div>
+      <div class="fixed-box" style="margin-top:8px">
+        <div class="mvar">
+          <span>Mirror side:</span> 25.4 mm (PFSQ10-03-G01)<br>
+          <span>Screen width:</span> 344 mm &middot; 3840 px<br>
+          <span>Pixel pitch p:</span> 89.6 &micro;m<br>
+          <span>Mirror flatness:</span> &lambda;/10 PV
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="right-col">
+    <div class="metrics-row" id="metrics"></div>
+    <div id="verdict" class="verdict-good"></div>
+
+    <div class="mid-row">
+      <div class="panel">
+        <div class="panel-heading">Slope-error contributions</div>
+        <div class="panel-sub">Each term in &micro;rad RMS &mdash; bar length is linear, share is of the variance</div>
+        <svg id="bars" width="100%" viewBox="0 0 320 200"></svg>
+      </div>
+      <div class="panel">
+        <div class="panel-heading">Propagation chain</div>
+        <div class="panel-sub">From displayed fringe to reconstructed surface height</div>
+        <svg id="chain" width="100%" viewBox="0 0 320 200"></svg>
+      </div>
+    </div>
+
+    <div class="bottom-row">
+      <div class="card">
+        <div class="sec-lbl" style="margin-bottom:8px">Error budget table</div>
+        <div id="tbl"></div>
+        <div class="caveat" style="margin-top:8px">
+          <b>Model assumptions.</b> Slope terms are treated as independent and combined in quadrature.
+          Each one is then integrated into height by its spatial character, not by a single rule:
+          <b>random</b> error (phase noise) averages down as a random walk, &delta;s&middot;&radic;(L&middot;&Delta;x);
+          <b>figure</b> error (screen planarity) is correlated across the aperture so it integrates
+          coherently, &delta;s&middot;L; a <b>tilt-like</b> term (a uniform screen-pose offset) gives every
+          point the same slope error and is therefore removed exactly by the reconstruction's
+          piston-and-tilt fit; a <b>scale</b> term (distance uncertainty) reproduces the sag scaled by
+          &delta;d/d. Systematic inputs are entered as 1&sigma; equivalents. Slope, not height, is what
+          deflectometry measures directly &mdash; treat &sect;6 as the primary result and the height
+          column as what it costs you if the screen geometry is only known this well.
+        </div>
+      </div>
+      <div class="card">
+        <div class="sec-lbl" style="margin-bottom:8px">Mathematics</div>
+        <div id="math"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <span>Arizona State University</span> &nbsp;&middot;&nbsp; School of Manufacturing Systems and Networks &nbsp;&middot;&nbsp;
+  Deflectometry Research &nbsp;&middot;&nbsp; Diego Bethancourth &nbsp;&middot;&nbsp; Advisor: Dr. Xiangyu Guo
+</div>
+
+<script>
+const MIRROR=25.4, SW=344, NX=3840, PP=SW/NX;
+const cfgs={'1x4':{c:4,r:1},'1x5':{c:5,r:1},'2x4':{c:4,r:2},'3x3':{c:3,r:3},'2x5':{c:5,r:2},'3x4':{c:4,r:3}};
+
+// How a slope error turns into a height error depends on its spatial character:
+//   random  - uncorrelated pixel to pixel, integrates as a random walk
+//   tilt    - uniform across the aperture, so it IS a tilt and the low-order fit removes it
+//   figure  - correlated across the aperture, integrates coherently
+//   scale   - multiplies the true slope, so it reproduces the sag scaled by the relative error
+const CHAR={
+  random:{lbl:'random',   note:'uncorrelated — random walk'},
+  tilt:  {lbl:'tilt-like',note:'uniform — removed by the low-order fit'},
+  figure:{lbl:'figure',   note:'correlated — integrates coherently'},
+  scale: {lbl:'scale',    note:'multiplies the true slope'}
+};
+
+function readState(){
+  const key=document.getElementById('arr').value;
+  return {
+    key, ...cfgs[key],
+    gap:+document.getElementById('gap').value,
+    d:+document.getElementById('dist').value,
+    campx:+document.getElementById('campx').value||2448,
+    n:+document.getElementById('ppf').value,
+    N:+document.getElementById('steps').value,
+    sig:+document.getElementById('noise').value,
+    B:+document.getElementById('modB').value,
+    avg:+document.getElementById('avg').value,
+    cal:+document.getElementById('cal').value,
+    dd:+document.getElementById('dd').value,
+    plan:+document.getElementById('plan').value,
+    reg:+document.getElementById('reg').value,
+    s0:+document.getElementById('slope').value/1000,
+    tgt:+document.getElementById('starget').value/1e6,
+    lowo:document.getElementById('lowo').checked,
+    lam:(+document.getElementById('lam').value||550)/1e6
+  };
+}
+
+const fz=mm=>{const nm=mm*1e6;return nm<1000?nm.toFixed(1)+' nm':(nm/1000).toFixed(2)+' µm'};
+const fzn=mm=>{const nm=mm*1e6;return nm<1000?nm.toFixed(1):(nm/1000).toFixed(2)};
+const fzu=mm=>mm*1e6<1000?'nm':'µm';
+
+function update(){
+  const s=readState();
+  document.getElementById('gap-v').textContent=s.gap+' mm';
+  document.getElementById('dist-v').textContent=s.d+' mm';
+  document.getElementById('ppf-v').textContent=s.n+' px';
+  document.getElementById('noise-v').textContent=s.sig.toFixed(1)+' DN';
+  document.getElementById('modB-v').textContent=s.B+' DN';
+  document.getElementById('avg-v').textContent=s.avg+' ×';
+  document.getElementById('cal-v').textContent=s.cal.toFixed(3)+' mm';
+  document.getElementById('dd-v').textContent=s.dd.toFixed(1)+' mm';
+  document.getElementById('plan-v').textContent=s.plan.toFixed(3)+' mm';
+  document.getElementById('reg-v').textContent=s.reg.toFixed(1)+' px';
+  document.getElementById('slope-v').textContent=(s.s0*1000).toFixed(1)+' mrad';
+  document.getElementById('starget-v').textContent=(s.tgt*1e6).toFixed(0)+' µrad';
+
+  const L=s.c*MIRROR+(s.c-1)*s.gap;        // aperture across the array, mm
+  const Pf=s.n*PP;                          // fringe pitch on the screen, mm
+  const dx=L/s.campx;                       // lateral sampling at the mirror, mm/px
+  const sigPhi=Math.sqrt(2/s.N)*s.sig/s.B/Math.sqrt(s.avg);
+  const xPhase=sigPhi/(2*Math.PI)*Pf;       // screen point error from phase noise, mm
+  const sag=s.s0*L/2;                       // height swing the surface itself carries, mm
+
+  // A slope change ds rotates the reflected ray by 2ds, so a screen-point error dx maps to dx/(2d).
+  const terms=[
+    {lbl:'Phase noise',        ch:'random', s:xPhase/(2*s.d),
+     src:`σ<sub>φ</sub> = ${(sigPhi*1000).toFixed(2)} mrad → ${(xPhase*1000).toFixed(1)} µm on screen`},
+    {lbl:'Screen calibration', ch:'tilt',   s:s.cal/(2*s.d),
+     src:`${s.cal.toFixed(3)} mm uniform screen-pose offset`},
+    {lbl:'Screen planarity',   ch:'figure', s:s.plan/(2*s.d),
+     src:`${s.plan.toFixed(3)} mm panel non-flatness after plane fit`},
+    {lbl:'Distance δd',    ch:'scale',  s:s.s0*s.dd/s.d,
+     src:`s·δd/d at s = ${(s.s0*1000).toFixed(1)} mrad`}
+  ];
+  // Low-order removal zeroes the tilt-like terms and nothing else.
+  terms.forEach(t=>{ t.res = (s.lowo && t.ch==='tilt') ? 0 : t.s; });
+
+  const varRaw=terms.reduce((a,t)=>a+t.s*t.s,0);
+  const varRes=terms.reduce((a,t)=>a+t.res*t.res,0);
+  const sRaw=Math.sqrt(varRaw), sRes=Math.sqrt(varRes);
+  const sMargin=s.tgt/sRes;
+  const sPass=sRes<=s.tgt, sMarg=sRes<=2*s.tgt;
+  const sc=sPass?'#2e7d32':sMarg?'#e65100':'#b71c1c';
+
+  // Height propagation, one rule per character.
+  const hz=[];
+  terms.forEach(t=>{
+    let z=0, rule='';
+    if(t.res===0){ z=0; rule='removed with piston &amp; tilt'; }
+    else if(t.ch==='random'){ z=t.res*Math.sqrt(L*dx); rule=`&delta;s&middot;&radic;(L&middot;&Delta;x) = &delta;s&middot;${Math.sqrt(L*dx).toFixed(2)} mm`; }
+    else if(t.ch==='scale'){  z=sag*(s.dd/s.d);        rule=`sag&middot;&delta;d/d = ${fz(sag)}&middot;${(s.dd/s.d).toExponential(1)}`; }
+    else {                    z=t.res*L;               rule=`&delta;s&middot;L = &delta;s&middot;${Math.round(L)} mm`; }
+    hz.push({lbl:t.lbl, z, rule});
+  });
+  const xReg=s.reg*dx;
+  hz.push({lbl:'Camera registration', z:s.s0*xReg,
+           rule:`s&middot;&delta;x = ${(s.s0*1000).toFixed(1)} mrad &middot; ${(xReg*1000).toFixed(1)} µm`});
+  const zTot=Math.sqrt(hz.reduce((a,h)=>a+h.z*h.z,0));
+  const spec=s.lam/10, specQ=s.lam/4;
+  const zPass=zTot<=spec, zMarg=zTot<=specQ;
+  const zc=zPass?'#2e7d32':zMarg?'#e65100':'#b71c1c';
+
+  const urad=v=>v*1e6;
+  const live=terms.filter(t=>t.res>0);
+  const worst=live.length?live.slice().sort((a,b)=>b.res-a.res)[0]:null;
+  const share=t=>varRes>0?100*t.res*t.res/varRes:0;
+
+  document.getElementById('metrics').innerHTML=`
+    <div class="metric"><div class="ml">Phase noise &sigma;<sub>&phi;</sub></div><div class="mv">${(sigPhi*1000).toFixed(2)}</div><div class="ms">mrad &middot; ${s.N}-step, ${s.avg}&times; avg</div></div>
+    <div class="metric"><div class="ml">Screen point err</div><div class="mv">${(xPhase*1000).toFixed(1)} &micro;m</div><div class="ms">of ${Pf.toFixed(2)} mm fringe</div></div>
+    <div class="metric"><div class="ml">Slope err (RSS)</div><div class="mv" style="color:${sc}">${urad(sRes).toFixed(1)}</div><div class="ms">&micro;rad RMS${s.lowo?', low-order out':''}</div></div>
+    <div class="metric" style="border-left:3px solid ${sc}"><div class="ml">Slope margin</div><div class="mv" style="color:${sc}">${sMargin.toFixed(2)}&times;</div><div class="ms">target ${(s.tgt*1e6).toFixed(0)} &micro;rad</div></div>
+    <div class="metric"><div class="ml">Height err &delta;z</div><div class="mv" style="color:${zc}">${fzn(zTot)}</div><div class="ms">${fzu(zTot)} RMS over ${Math.round(L)} mm</div></div>
+    <div class="metric"><div class="ml">vs &lambda;/10</div><div class="mv" style="color:${zc}">${(spec/zTot).toFixed(2)}&times;</div><div class="ms">&lambda;/10 = ${(spec*1e6).toFixed(1)} nm</div></div>`;
+
+  let vc='verdict-good', vt='';
+  if(!sMarg){
+    vc='verdict-bad';
+    vt=`Slope error ${urad(sRes).toFixed(1)} &micro;rad RMS is more than 2&times; the ${(s.tgt*1e6).toFixed(0)} &micro;rad target. <strong>${worst.lbl}</strong> dominates at ${share(worst).toFixed(0)}% of the variance &mdash; nothing else is worth touching until that term comes down.`;
+  }else if(!sPass){
+    vc='verdict-warn';
+    vt=`Slope error ${urad(sRes).toFixed(1)} &micro;rad RMS misses the ${(s.tgt*1e6).toFixed(0)} &micro;rad target by ${(sRes/s.tgt).toFixed(2)}&times;. Largest lever: <strong>${worst.lbl}</strong>, ${share(worst).toFixed(0)}% of the variance.`;
+  }else{
+    vt=`Slope error ${urad(sRes).toFixed(1)} &micro;rad RMS &mdash; ${sMargin.toFixed(2)}&times; inside the ${(s.tgt*1e6).toFixed(0)} &micro;rad target${worst?`, dominated by <strong>${worst.lbl}</strong> (${share(worst).toFixed(0)}% of variance)`:''}. Integrated height ${fz(zTot)} RMS${zPass?` &mdash; also within &lambda;/10.`:` &mdash; ${(zTot/spec).toFixed(0)}&times; over &lambda;/10, which is expected: absolute height needs the screen geometry known far better than slope does.`}`;
+  }
+  document.getElementById('verdict').className=vc;
+  document.getElementById('verdict').innerHTML=vt;
+
+  drawBars(terms,varRes,s);
+  drawChain(s,{Pf,xPhase,sRes,zTot,L,dx});
+
+  const rows=terms.map(t=>{
+    const sh=share(t), off=t.res===0;
+    const cls=off?'':sh>50?'b':sh>25?'m':'g';
+    return `<tr class="${off?'off':''}"><td>${t.lbl}</td><td>${urad(t.s).toFixed(2)}</td><td style="font-size:10px">${CHAR[t.ch].lbl}</td><td>${off?'&mdash;':urad(t.res).toFixed(2)}</td><td class="${cls}">${off?'removed':sh.toFixed(1)+'%'}</td></tr>`;
+  }).join('');
+  const hrows=hz.map(h=>`<tr class="${h.z===0?'off':''}"><td>${h.lbl}</td><td>${h.z===0?'&mdash;':fz(h.z)}</td><td style="font-size:10px;color:#747474">${h.rule}</td></tr>`).join('');
+  document.getElementById('tbl').innerHTML=`
+    <table class="comp-table">
+      <tr><th style="width:30%">Contributor</th><th style="width:17%">&delta;s raw</th><th style="width:18%">Character</th><th style="width:17%">&delta;s left</th><th>Share</th></tr>
+      ${rows}
+      <tr class="tot"><td>RSS slope</td><td>${urad(sRaw).toFixed(2)}</td><td style="font-size:10px">&micro;rad</td><td>${urad(sRes).toFixed(2)}</td><td class="${sPass?'g':sMarg?'m':'b'}">${sMargin.toFixed(2)}&times;</td></tr>
+    </table>
+    <table class="comp-table" style="margin-top:8px">
+      <tr><th style="width:30%">Height term</th><th style="width:17%">&delta;z</th><th>Integration rule</th></tr>
+      ${hrows}
+      <tr class="tot"><td>Total &delta;z (RSS)</td><td class="${zPass?'g':zMarg?'m':'b'}">${fz(zTot)}</td><td style="font-size:10px">vs &lambda;/10 = ${(spec*1e6).toFixed(1)} nm &middot; &lambda;/4 = ${(specQ*1e6).toFixed(1)} nm</td></tr>
+    </table>`;
+
+  document.getElementById('math').innerHTML=`
+    <div class="math-block">
+      <div class="math-title">&sect;1 Phase uncertainty <span class="live">${(sigPhi*1000).toFixed(2)} mrad</span></div>
+      <div class="formula">&sigma;&#8202;&phi; = &radic;(2/N) &middot; &sigma;&#8202;I / B / &radic;M</div>
+      <div class="mvar2"><span>N</span> = ${s.N} steps &nbsp;&middot;&nbsp; <span>&sigma;&#8202;I</span> = ${s.sig.toFixed(1)} DN &nbsp;&middot;&nbsp; <span>B</span> = ${s.B} DN &nbsp;&middot;&nbsp; <span>M</span> = ${s.avg} frames</div>
+    </div>
+    <div class="math-block">
+      <div class="math-title">&sect;2 Screen point error <span class="live">${(xPhase*1000).toFixed(1)} &micro;m</span></div>
+      <div class="formula">&delta;x&#8202;s = &sigma;&#8202;&phi; &middot; P&#8198;f / 2&pi; = ${(sigPhi*1000).toFixed(2)} mrad &times; ${Pf.toFixed(2)} mm / 2&pi;</div>
+      <div class="mvar2">A coarser fringe turns the same phase noise into a bigger position error</div>
+    </div>
+    <div class="math-block">
+      <div class="math-title">&sect;3 Slope sensitivity <span class="live">1 / 2d</span></div>
+      <div class="formula">&delta;s = &delta;x&#8202;s / (2d) = &delta;x&#8202;s / ${2*s.d} mm</div>
+      <div class="mvar2">A slope change &delta;s rotates the reflected ray by <span>2&delta;s</span>, walking the screen point by 2&delta;s&middot;d</div>
+    </div>
+    <div class="math-block">
+      <div class="math-title">&sect;4 Distance / scale term <span class="live">${urad(s.s0*s.dd/s.d).toFixed(2)} &micro;rad</span></div>
+      <div class="formula">&delta;s&#8202;d = s &middot; &delta;d / d = ${(s.s0*1000).toFixed(1)}e&minus;3 &times; ${s.dd.toFixed(1)} / ${s.d}</div>
+      <div class="mvar2">Proportional to the true slope, so it reproduces the sag: <span>&delta;z = sag&middot;&delta;d/d</span>, sag = ${fz(sag)}</div>
+    </div>
+    <div class="math-block">
+      <div class="math-title">&sect;5 Spatial character <span class="live" style="background:${s.lowo?'#2e7d32':'#747474'}">${s.lowo?'low-order removed':'raw'}</span></div>
+      <div class="formula">random &rarr; &radic;(L&middot;&Delta;x) &nbsp;&middot;&nbsp; figure &rarr; L &nbsp;&middot;&nbsp; tilt &rarr; ${s.lowo?'0':'L'}</div>
+      <div class="mvar2">A uniform screen-pose offset gives every point the same slope error &mdash; that is a <span>pure tilt</span>, so the reconstruction's low-order fit takes it out. Random noise averages down; correlated figure error does not.</div>
+    </div>
+    <div class="math-block">
+      <div class="math-title">&sect;6 Slope budget <span class="live" style="background:${sc}">${urad(sRes).toFixed(1)} &micro;rad</span></div>
+      <div class="formula">&delta;s&#8202;RSS = &radic;( &Sigma; &delta;s&#8202;i&sup2; ) &nbsp;vs&nbsp; target ${(s.tgt*1e6).toFixed(0)} &micro;rad</div>
+      <div class="mvar2">Deflectometry measures slope directly &mdash; this is the primary figure of merit. Valid while the terms are independent.</div>
+    </div>
+    <div class="math-block">
+      <div class="math-title">&sect;7 Integration to height <span class="live">${fz(zTot)}</span></div>
+      <div class="formula">&delta;z = &radic;( &Sigma; &delta;z&#8202;i&sup2; ) over ${Math.round(L/dx).toLocaleString()} samples of ${(dx*1000).toFixed(1)} &micro;m</div>
+      <div class="mvar2">Aperture <span>L = ${Math.round(L)} mm</span> &nbsp;&middot;&nbsp; random-walk factor <span>&radic;(L&middot;&Delta;x) = ${Math.sqrt(L*dx).toFixed(2)} mm</span> vs coherent factor <span>L = ${Math.round(L)} mm</span> &mdash; a ${(L/Math.sqrt(L*dx)).toFixed(0)}&times; penalty for correlated error</div>
+    </div>
+    <div class="math-block">
+      <div class="math-title">&sect;8 Height vs spec <span class="live" style="background:${zc}">${(spec/zTot).toFixed(2)}&times;</span></div>
+      <div class="formula">&delta;z = ${fz(zTot)} &nbsp;vs&nbsp; &lambda;/10 = ${(spec*1e6).toFixed(1)} nm</div>
+      <div class="mvar2">${zPass?'Within the surface tolerance you are trying to certify':'Absolute height is the hard part: it needs the screen geometry known to a few &micro;m, or a self-calibration step. Slope accuracy (&sect;6) is the honest deliverable.'}</div>
+    </div>`;
+}
+
+function drawBars(terms,varRes,st){
+  const W=320,H=200,pl=96,pr=52,pt=14,pb=20;
+  const iw=W-pl-pr;
+  const mx=Math.max(...terms.map(t=>t.res))||1;
+  const bh=Math.min(26,(H-pt-pb)/terms.length-8);
+  let h='';
+  terms.forEach((t,i)=>{
+    const y=pt+i*((H-pt-pb)/terms.length);
+    const off=t.res===0;
+    const w=off?0:Math.max(1.5,iw*t.res/mx);
+    const sh=varRes>0?100*t.res*t.res/varRes:0;
+    const col=off?'#BFBFBF':sh>50?'#b71c1c':sh>25?'#e65100':'#8C1D40';
+    h+=`<text x="${pl-6}" y="${(y+bh/2+3).toFixed(1)}" text-anchor="end" font-family="Arial" font-size="9.5" fill="${off?'#A8A8A8':'#3E3E3E'}">${t.lbl}</text>`;
+    h+=`<rect x="${pl}" y="${y.toFixed(1)}" width="${iw}" height="${bh.toFixed(1)}" fill="#FAFAFA" stroke="#F0F0F0"/>`;
+    if(!off) h+=`<rect x="${pl}" y="${y.toFixed(1)}" width="${w.toFixed(1)}" height="${bh.toFixed(1)}" fill="${col}" rx="1"/>`;
+    h+=`<text x="${(pl+iw+4).toFixed(1)}" y="${(y+bh/2+3).toFixed(1)}" font-family="Arial" font-size="9" fill="${col}" font-weight="700">${off?'removed':sh.toFixed(0)+'%'}</text>`;
+    h+=`<text x="${(pl+6).toFixed(1)}" y="${(y+bh/2+3).toFixed(1)}" font-family="Arial" font-size="8.5" fill="${w>64?'#fff':'#747474'}">${(t.s*1e6).toFixed(2)} &#181;rad ${off?'(tilt)':''}</text>`;
+  });
+  h+=`<text x="${pl}" y="${H-5}" font-family="Arial" font-size="8" fill="#747474">after low-order removal${st.lowo?'':' (disabled — showing raw)'} &#183; label = share of variance</text>`;
+  document.getElementById('bars').innerHTML=h;
+}
+
+function drawChain(s,v){
+  const W=320,H=200;
+  const steps=[
+    {t:'Displayed fringe', v:`P f = ${v.Pf.toFixed(2)} mm`, c:'#FFC627', tc:'#8a6d00'},
+    {t:'Retrieved phase',  v:`σφ → ${(v.xPhase*1000).toFixed(1)} µm on screen`, c:'#1565C0', tc:'#1565C0'},
+    {t:'Surface slope',    v:`δs = ${(v.sRes*1e6).toFixed(1)} µrad`, c:'#E65100', tc:'#E65100'},
+    {t:'Reconstructed height', v:`δz = ${fz(v.zTot)}`, c:'#8C1D40', tc:'#8C1D40'}
+  ];
+  const lbls=['× P f / 2π','÷ 2d = '+(2*s.d)+' mm','× √(L·Δx) or L'];
+  const bh=32, gap=(H-18-steps.length*bh)/(steps.length-1);
+  let h='';
+  steps.forEach((st,i)=>{
+    const y=8+i*(bh+gap);
+    h+=`<rect x="14" y="${y}" width="292" height="${bh}" rx="4" fill="#fff" stroke="${st.c}" stroke-width="1.6"/>`;
+    h+=`<rect x="14" y="${y}" width="5" height="${bh}" rx="2" fill="${st.c}"/>`;
+    h+=`<text x="28" y="${y+13}" font-family="Arial" font-size="10" fill="${st.tc}" font-weight="700">${st.t}</text>`;
+    h+=`<text x="28" y="${y+25}" font-family="Arial" font-size="9.5" fill="#3E3E3E">${st.v}</text>`;
+    if(i<steps.length-1){
+      const ay=y+bh, my=ay+gap/2;
+      h+=`<line x1="160" y1="${ay+2}" x2="160" y2="${ay+gap-6}" stroke="#BFBFBF" stroke-width="1.4"/>`;
+      h+=`<polygon points="160,${ay+gap-1} 156,${ay+gap-7} 164,${ay+gap-7}" fill="#BFBFBF"/>`;
+      h+=`<text x="168" y="${(my+3).toFixed(1)}" font-family="Arial" font-size="8.5" fill="#747474" font-style="italic">${lbls[i]}</text>`;
+    }
+  });
+  document.getElementById('chain').innerHTML=h;
+}
+
+update();
+</script>
+</body>
+</html>

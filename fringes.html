@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ASU Deflectometry — Fringe Pattern Generator</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,Helvetica,sans-serif;background:#FAFAFA;color:#191919;font-size:14px}
+.nav{background:#8C1D40;display:flex;align-items:center;gap:14px;padding:0 24px;height:52px;flex-wrap:wrap}
+.asu-mark{background:#FFC627;width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:3px;flex-shrink:0}
+.asu-mark span{color:#8C1D40;font-weight:900;font-size:17px;letter-spacing:-1px;font-family:Arial,sans-serif}
+.nav-text{color:#fff}.nav-text .t1{font-size:14px;font-weight:700;line-height:1.2}.nav-text .t2{font-size:11px;color:rgba(255,255,255,0.7)}
+.nav-links{margin-left:auto;display:flex;gap:3px;flex-wrap:wrap}
+.nav-links a{color:rgba(255,255,255,.85);text-decoration:none;font-size:12px;font-weight:700;padding:6px 11px;border-radius:3px;white-space:nowrap}
+.nav-links a:hover{background:rgba(255,255,255,.14);color:#fff}
+.nav-links a.active{background:#FFC627;color:#8C1D40}
+.gold-bar{height:4px;background:#FFC627}
+.page-hdr{background:#fff;border-bottom:1px solid #E8E8E8;padding:10px 24px;display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+.page-hdr h1{font-size:17px;font-weight:700;color:#8C1D40}.page-hdr p{font-size:12px;color:#747474}
+.app{display:grid;grid-template-columns:260px 1fr;gap:0;min-height:calc(100vh - 80px)}
+.left-col{background:#fff;border-right:1px solid #E8E8E8;padding:14px;display:flex;flex-direction:column;gap:12px}
+.right-col{padding:12px;display:flex;flex-direction:column;gap:10px}
+.sec-lbl{font-size:10px;font-weight:700;color:#8C1D40;text-transform:uppercase;letter-spacing:.07em;border-left:3px solid #FFC627;padding-left:8px;margin-bottom:7px}
+.ctrl-group{display:flex;flex-direction:column;gap:4px}
+.ctrl-group label{font-size:10px;font-weight:700;color:#747474;text-transform:uppercase;letter-spacing:.04em}
+.ctrl-group select,.ctrl-group input[type=number]{width:100%;font-size:13px;color:#191919;border:1px solid #BFBFBF;border-radius:4px;padding:4px 6px;background:#FAFAFA}
+.ctrl-group input[type=range]{width:100%;accent-color:#8C1D40}
+.ctrl-val{font-size:16px;font-weight:700;color:#8C1D40}
+.explainer{background:#FFF5D0;border-left:3px solid #FFC627;padding:8px 10px;font-size:11px;color:#3E3E3E;line-height:1.55;border-radius:0 4px 4px 0}
+.explainer strong{color:#8C1D40}
+.fixed-box{background:#FAFAFA;border:1px solid #E8E8E8;border-radius:5px;padding:9px 11px}
+.mvar{font-size:11px;color:#747474;line-height:1.8}.mvar span{color:#191919;font-weight:700}
+.metrics-row{display:grid;grid-template-columns:repeat(6,1fr);gap:7px}
+.metric{background:#fff;border:1px solid #E8E8E8;border-radius:5px;padding:8px 10px}
+.metric .ml{font-size:10px;color:#747474;text-transform:uppercase;letter-spacing:.03em;margin-bottom:2px}
+.metric .mv{font-size:17px;font-weight:700;color:#8C1D40}.metric .ms{font-size:10px;color:#747474;margin-top:1px}
+.mid-row{display:grid;grid-template-columns:1.35fr 1fr;gap:10px}
+.panel{background:#fff;border:1px solid #E8E8E8;border-radius:6px;padding:12px}
+.panel-heading{font-size:13px;font-weight:700;color:#8C1D40;margin-bottom:3px}
+.panel-sub{font-size:10px;color:#747474;margin-bottom:8px}
+.bottom-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.card{background:#fff;border:1px solid #E8E8E8;border-radius:6px;padding:11px}
+.math-block{margin-bottom:9px;padding-bottom:9px;border-bottom:1px solid #F0F0F0}
+.math-block:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.math-title{font-size:11px;font-weight:700;color:#8C1D40;margin-bottom:3px;display:flex;justify-content:space-between;align-items:center;gap:6px}
+.live{background:#8C1D40;color:#fff;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;white-space:nowrap}
+.formula{background:#F7F7F7;border:1px solid #E8E8E8;border-radius:3px;padding:4px 7px;font-family:"Courier New",monospace;font-size:11px;color:#3E3E3E;margin:3px 0}
+.mvar2{font-size:10px;color:#747474;line-height:1.6}.mvar2 span{color:#191919;font-weight:700}
+.verdict-good{background:#edf7ed;border-left:4px solid #2e7d32;border-radius:0 6px 6px 0;padding:9px 14px;font-size:12px;color:#1b5e20;font-weight:500}
+.verdict-warn{background:#fff8e1;border-left:4px solid #f9a825;border-radius:0 6px 6px 0;padding:9px 14px;font-size:12px;color:#6d4c00;font-weight:500}
+.verdict-bad{background:#fdecea;border-left:4px solid #b71c1c;border-radius:0 6px 6px 0;padding:9px 14px;font-size:12px;color:#7f0000;font-weight:500}
+.btn{background:#8C1D40;color:#fff;border:none;border-radius:4px;padding:7px 10px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit}
+.btn:hover{background:#6d1631}
+.btn.alt{background:#fff;color:#8C1D40;border:1px solid #8C1D40}
+.btn.alt:hover{background:#FFF5D0}
+.btn-row{display:flex;gap:6px;flex-wrap:wrap}
+.chk{display:flex;align-items:center;gap:6px;font-size:11px;color:#3E3E3E;font-weight:700}
+.chk input{accent-color:#8C1D40}
+#prev{width:100%;display:block;border:1px solid #BFBFBF;border-radius:4px;background:#000}
+#crop{display:block;border:1px solid #BFBFBF;border-radius:4px;background:#000;max-width:100%}
+.code{background:#2b2b2b;color:#e6e6e6;border-radius:4px;padding:9px 11px;font-family:"Courier New",monospace;font-size:10.5px;line-height:1.5;white-space:pre;overflow-x:auto}
+.step-dots{display:flex;gap:4px;flex-wrap:wrap;margin-top:5px}
+.dot{width:20px;height:20px;border-radius:3px;border:1px solid #BFBFBF;background:#FAFAFA;font-size:10px;font-weight:700;color:#747474;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.dot.on{background:#8C1D40;border-color:#8C1D40;color:#fff}
+.footer{background:#3E3E3E;color:#BFBFBF;font-size:10px;padding:10px 24px;text-align:center;margin-top:auto}
+.footer span{color:#FFC627}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="asu-mark"><span>ASU</span></div>
+  <div class="nav-text">
+    <div class="t1">Deflectometry Research</div>
+    <div class="t2">School of Manufacturing Systems and Networks &nbsp;·&nbsp; Dr. Xiangyu Guo</div>
+  </div>
+  <nav class="nav-links">
+    <a href="index.html">Array Config</a>
+    <a href="fringes.html" class="active">Fringe Generator</a>
+    <a href="piezo.html">Tilt &amp; Actuation</a>
+    <a href="budget.html">Error Budget</a>
+  </nav>
+</div>
+<div class="gold-bar"></div>
+
+<div class="page-hdr">
+  <h1>Phase-Shifted Fringe Pattern Generator</h1>
+  <p>Screen-side pattern design &nbsp;·&nbsp; Diego Bethancourth &nbsp;·&nbsp; Arizona State University</p>
+</div>
+
+<div class="app">
+  <div class="left-col">
+
+    <div>
+      <div class="sec-lbl">How it works</div>
+      <div class="explainer">
+        Generates the sinusoidal patterns displayed on the SMOTS screen:
+        <strong>I<sub>k</sub>(x) = A + B&middot;cos(2&pi;x/n &minus; 2&pi;k/N)</strong>.
+        Every control updates the preview, the true 1:1 pixel crop and the retrieval math live.
+        Export full-resolution PNGs for the display, or copy the matching Python snippet.
+      </div>
+    </div>
+
+    <div>
+      <div class="sec-lbl">Pattern</div>
+      <div class="ctrl-group" style="margin-bottom:8px">
+        <label>Orientation</label>
+        <select id="orient" onchange="update()">
+          <option value="v" selected>Vertical fringes &mdash; phase along x</option>
+          <option value="h">Horizontal fringes &mdash; phase along y</option>
+        </select>
+      </div>
+      <div class="ctrl-group" style="margin-bottom:8px">
+        <label>Pixels per fringe (n)</label>
+        <input type="range" id="ppf" min="4" max="60" value="15" step="1" oninput="update()">
+        <span class="ctrl-val" id="ppf-v">15 px</span>
+      </div>
+      <div class="ctrl-group" style="margin-bottom:8px">
+        <label>Phase steps (N)</label>
+        <select id="steps" onchange="onStepsChange()">
+          <option value="3">3-step</option>
+          <option value="4" selected>4-step &#9733;</option>
+          <option value="5">5-step</option>
+          <option value="8">8-step</option>
+          <option value="12">12-step</option>
+          <option value="16">16-step</option>
+        </select>
+      </div>
+      <div class="ctrl-group">
+        <label>Displayed step k</label>
+        <div class="step-dots" id="dots"></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="sec-lbl">Intensity</div>
+      <div class="ctrl-group" style="margin-bottom:8px">
+        <label>Bias A (grey level)</label>
+        <input type="range" id="bias" min="60" max="200" value="128" step="1" oninput="update()">
+        <span class="ctrl-val" id="bias-v">128</span>
+      </div>
+      <div class="ctrl-group" style="margin-bottom:8px">
+        <label>Modulation B / A</label>
+        <input type="range" id="mod" min="10" max="100" value="90" step="5" oninput="update()">
+        <span class="ctrl-val" id="mod-v">0.90</span>
+      </div>
+      <div class="ctrl-group" style="margin-bottom:8px">
+        <label class="chk"><input type="checkbox" id="gon" onchange="update()"> Pre-compensate display gamma</label>
+        <input type="range" id="gam" min="10" max="30" value="22" step="1" oninput="update()">
+        <span class="ctrl-val" id="gam-v">&gamma; = 2.2</span>
+      </div>
+      <div class="ctrl-group">
+        <label>Camera noise &sigma;<sub>I</sub> (grey levels)</label>
+        <input type="range" id="noise" min="0.2" max="8" value="2" step="0.2" oninput="update()">
+        <span class="ctrl-val" id="noise-v">2.0 DN</span>
+      </div>
+    </div>
+
+    <div>
+      <div class="sec-lbl">Screen &amp; array</div>
+      <div class="ctrl-group" style="margin-bottom:8px">
+        <label>Screen resolution</label>
+        <select id="res" onchange="update()">
+          <option value="3840,2160" selected>3840 &times; 2160 (UHD) &#9733;</option>
+          <option value="2560,1440">2560 &times; 1440 (QHD)</option>
+          <option value="1920,1080">1920 &times; 1080 (FHD)</option>
+          <option value="1280,720">1280 &times; 720 (HD)</option>
+        </select>
+      </div>
+      <div class="ctrl-group" style="margin-bottom:8px">
+        <label>Screen width W (mm)</label>
+        <input type="number" id="sw" value="344" min="50" max="2000" step="1" oninput="update()">
+      </div>
+      <div class="ctrl-group" style="margin-bottom:8px">
+        <label>Mirror layout</label>
+        <select id="arr" onchange="update()">
+          <option value="1x4">1&times;4 &mdash; 4 mirrors (linear)</option>
+          <option value="1x5">1&times;5 &mdash; 5 mirrors (linear)</option>
+          <option value="2x4">2&times;4 &mdash; 8 mirrors</option>
+          <option value="3x3" selected>3&times;3 &mdash; 9 mirrors &#9733;</option>
+          <option value="2x5">2&times;5 &mdash; 10 mirrors</option>
+          <option value="3x4">3&times;4 &mdash; 12 mirrors</option>
+        </select>
+      </div>
+      <div class="ctrl-group">
+        <label>Mirror gap (mm)</label>
+        <input type="range" id="gap" min="1" max="8" value="3" step="1" oninput="update()">
+        <span class="ctrl-val" id="gap-v">3 mm</span>
+      </div>
+    </div>
+
+    <div>
+      <div class="sec-lbl">Export</div>
+      <div class="btn-row">
+        <button class="btn" onclick="dlCurrent()">PNG &mdash; step k</button>
+        <button class="btn alt" onclick="dlAll()">PNG &mdash; all N steps</button>
+        <button class="btn alt" onclick="copyCode()">Copy Python</button>
+      </div>
+      <div class="mvar" style="margin-top:6px" id="dl-note">Exports at full screen resolution, 8-bit greyscale PNG.</div>
+    </div>
+
+  </div>
+
+  <div class="right-col">
+    <div class="metrics-row" id="metrics"></div>
+    <div id="verdict" class="verdict-good"></div>
+
+    <div class="mid-row">
+      <div class="panel">
+        <div class="panel-heading">Screen preview</div>
+        <div class="panel-sub">Full panel, scaled to fit &mdash; step <span id="kshow">0</span> of <span id="nshow">4</span></div>
+        <canvas id="prev" width="760" height="428"></canvas>
+      </div>
+      <div class="panel">
+        <div class="panel-heading">1:1 pixel crop</div>
+        <div class="panel-sub">True screen pixels &mdash; check sampling and quantisation</div>
+        <canvas id="crop" width="330" height="120"></canvas>
+        <div class="mvar2" style="margin-top:7px" id="crop-note"></div>
+        <div class="panel-heading" style="margin-top:11px">Generator snippet</div>
+        <div class="panel-sub">Matches the controls on the left</div>
+        <div class="code" id="code"></div>
+      </div>
+    </div>
+
+    <div class="bottom-row">
+      <div class="card">
+        <div class="sec-lbl" style="margin-bottom:8px">Intensity profile &mdash; all N steps over two fringes</div>
+        <svg id="prof" width="100%" viewBox="0 0 320 180"></svg>
+        <div class="mvar2" id="prof-note" style="margin-top:4px"></div>
+      </div>
+      <div class="card">
+        <div class="sec-lbl" style="margin-bottom:8px">Mathematics</div>
+        <div id="math"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <span>Arizona State University</span> &nbsp;&middot;&nbsp; School of Manufacturing Systems and Networks &nbsp;&middot;&nbsp;
+  Deflectometry Research &nbsp;&middot;&nbsp; Diego Bethancourth &nbsp;&middot;&nbsp; Advisor: Dr. Xiangyu Guo
+</div>
+
+<script>
+const MIRROR=25.4;
+const cfgs={'1x4':{c:4,r:1},'1x5':{c:5,r:1},'2x4':{c:4,r:2},'3x3':{c:3,r:3},'2x5':{c:5,r:2},'3x4':{c:4,r:3}};
+const PAL=['#8C1D40','#1565C0','#2e7d32','#E65100','#6A1B9A','#00838F','#AD1457','#37474F','#9E7700','#4527A0','#00695C','#BF360C','#283593','#558B2F','#D84315','#455A64'];
+let K=0;
+
+function clamp(v,lo,hi){return v<lo?lo:v>hi?hi:v}
+
+function readState(){
+  const res=document.getElementById('res').value.split(',');
+  const N=+document.getElementById('steps').value;
+  const A=+document.getElementById('bias').value;
+  const mod=+document.getElementById('mod').value/100;
+  return {
+    orient:document.getElementById('orient').value,
+    n:+document.getElementById('ppf').value,
+    N:N, k:clamp(K,0,N-1),
+    A:A, B:A*mod, mod:mod,
+    gOn:document.getElementById('gon').checked,
+    gam:+document.getElementById('gam').value/10,
+    sig:+document.getElementById('noise').value,
+    W:+res[0], H:+res[1],
+    sw:+document.getElementById('sw').value,
+    key:document.getElementById('arr').value,
+    gap:+document.getElementById('gap').value
+  };
+}
+
+// Intensity of step k at integer screen coordinate x, in 0..255
+function level(x,s,k){
+  let v=s.A+s.B*Math.cos(2*Math.PI*x/s.n-2*Math.PI*k/s.N);
+  if(s.gOn) v=255*Math.pow(clamp(v,0,255)/255,1/s.gam);
+  return clamp(Math.round(v),0,255);
+}
+
+// Build a 1-px line canvas holding one period-correct scan of the pattern.
+// stepX = screen pixels advanced per output pixel (1 = true 1:1).
+function lineCanvas(len,s,k,stepX,off){
+  const c=document.createElement('canvas');
+  const vert=s.orient==='v';
+  c.width=vert?len:1; c.height=vert?1:len;
+  const x=c.getContext('2d');
+  const img=x.createImageData(vert?len:1,vert?1:len);
+  for(let i=0;i<len;i++){
+    const v=level((off||0)+i*stepX,s,k);
+    img.data[i*4]=v; img.data[i*4+1]=v; img.data[i*4+2]=v; img.data[i*4+3]=255;
+  }
+  x.putImageData(img,0,0);
+  return c;
+}
+
+function paint(canvas,s,k,fit){
+  const ctx=canvas.getContext('2d');
+  const cw=canvas.width, ch=canvas.height;
+  ctx.imageSmoothingEnabled=false;
+  const vert=s.orient==='v';
+  if(fit){
+    const len=vert?cw:ch;
+    const stepX=(vert?s.W/cw:s.H/ch);
+    ctx.drawImage(lineCanvas(len,s,k,stepX,0),0,0,cw,ch);
+  }else{
+    const len=vert?cw:ch;
+    ctx.drawImage(lineCanvas(len,s,k,1,0),0,0,cw,ch);
+  }
+}
+
+function renderFull(s,k){
+  const c=document.createElement('canvas');
+  c.width=s.W; c.height=s.H;
+  const ctx=c.getContext('2d');
+  ctx.imageSmoothingEnabled=false;
+  const vert=s.orient==='v';
+  ctx.drawImage(lineCanvas(vert?s.W:s.H,s,k,1,0),0,0,s.W,s.H);
+  return c;
+}
+
+function drawDots(N){
+  document.getElementById('dots').innerHTML=Array.from({length:N},(_,i)=>
+    `<div class="dot ${i===clamp(K,0,N-1)?'on':''}" onclick="setK(${i})">${i}</div>`).join('');
+}
+function setK(i){K=i;update()}
+function onStepsChange(){K=0;update()}
+
+function update(){
+  const s=readState();
+  K=s.k;
+  document.getElementById('ppf-v').textContent=s.n+' px';
+  document.getElementById('bias-v').textContent=s.A;
+  document.getElementById('mod-v').textContent=s.mod.toFixed(2);
+  document.getElementById('gam-v').textContent='γ = '+s.gam.toFixed(1);
+  document.getElementById('noise-v').textContent=s.sig.toFixed(1)+' DN';
+  document.getElementById('gap-v').textContent=s.gap+' mm';
+  document.getElementById('kshow').textContent=s.k;
+  document.getElementById('nshow').textContent=s.N;
+  drawDots(s.N);
+
+  const p=s.sw/s.W;                    // pixel pitch, mm
+  const Pf=s.n*p;                      // fringe pitch, mm
+  const axisPx=s.orient==='v'?s.W:s.H;
+  const nScreen=axisPx/s.n;            // fringes across the screen axis
+  const {c,r}=cfgs[s.key];
+  const arrW=c*MIRROR+(c-1)*s.gap, arrH=r*MIRROR+(r-1)*s.gap;
+  const arrSpan=s.orient==='v'?arrW:arrH;
+  const Nf=arrSpan/Pf;                 // fringes across the array
+  const dPhi=360/s.N;
+  const sigPhi=Math.sqrt(2/s.N)*s.sig/s.B;        // rad
+  const dxs=sigPhi/(2*Math.PI)*Pf*1000;           // screen position error, um
+  const clipLo=s.A-s.B<0, clipHi=s.A+s.B>255;
+  const clipped=clipLo||clipHi;
+  const sampOk=s.n>=8, sampMarg=s.n>=5;
+  const nfOk=Nf>=60, nfMarg=Nf>=40;
+  const nfc=nfOk?'#2e7d32':nfMarg?'#e65100':'#b71c1c';
+
+  document.getElementById('metrics').innerHTML=`
+    <div class="metric"><div class="ml">Fringe pitch</div><div class="mv">${Pf.toFixed(2)} mm</div><div class="ms">${s.n} px &times; ${(p*1000).toFixed(1)} &micro;m</div></div>
+    <div class="metric"><div class="ml">Fringes / screen</div><div class="mv">${nScreen.toFixed(0)}</div><div class="ms">across ${axisPx} px</div></div>
+    <div class="metric"><div class="ml">Fringes / array</div><div class="mv" style="color:${nfc}">${Nf.toFixed(0)}</div><div class="ms">${nfOk?'Excellent':nfMarg?'Marginal':'Too few'}</div></div>
+    <div class="metric"><div class="ml">Phase step</div><div class="mv">${dPhi.toFixed(0)}&deg;</div><div class="ms">${s.N}-step algorithm</div></div>
+    <div class="metric"><div class="ml">Phase noise &sigma;<sub>&phi;</sub></div><div class="mv">${(sigPhi*1000).toFixed(1)}</div><div class="ms">mrad &middot; &sigma;<sub>I</sub>=${s.sig.toFixed(1)} DN</div></div>
+    <div class="metric" style="border-left:3px solid ${clipped?'#b71c1c':'#2e7d32'}"><div class="ml">Screen error</div><div class="mv" style="color:${clipped?'#b71c1c':'#8C1D40'}">${dxs.toFixed(1)} &micro;m</div><div class="ms">1&sigma; on screen point</div></div>`;
+
+  let vc='verdict-good', vt='';
+  if(clipped){
+    vc='verdict-bad';
+    vt=`Intensity clips at ${clipLo?'black':''}${clipLo&&clipHi?' and ':''}${clipHi?'white':''} &mdash; A &plusmn; B = ${Math.round(s.A-s.B)}…${Math.round(s.A+s.B)}. Reduce modulation or re-centre the bias; a clipped sinusoid biases the retrieved phase.`;
+  }else if(!sampMarg){
+    vc='verdict-bad';
+    vt=`Only ${s.n} px per fringe &mdash; below the practical sampling floor. The displayed sinusoid is quantised into a near-square wave; harmonics leak straight into the retrieved phase.`;
+  }else if(!sampOk){
+    vc='verdict-warn';
+    vt=`${s.n} px per fringe is coarse &mdash; keep n &ge; 8 so the panel renders a smooth sinusoid, or accept harmonic phase ripple.`;
+  }else if(!nfMarg){
+    vc='verdict-warn';
+    vt=`Sampling is fine, but only ${Nf.toFixed(0)} fringes fall across the ${Math.round(arrSpan)} mm array. Reduce n or widen the array to reach the ≥ 60 target.`;
+  }else{
+    vt=`${s.N}-step, n = ${s.n} px/fringe: ${Nf.toFixed(0)} fringes across the ${Math.round(arrSpan)} mm array, &sigma;<sub>φ</sub> = ${(sigPhi*1000).toFixed(1)} mrad → ${dxs.toFixed(1)} &micro;m on the screen. ${nfOk?'Excellent':'Adequate'} for SMOTS phase extraction.`;
+  }
+  document.getElementById('verdict').className=vc;
+  document.getElementById('verdict').innerHTML=vt;
+
+  paint(document.getElementById('prev'),s,s.k,true);
+  paint(document.getElementById('crop'),s,s.k,false);
+  document.getElementById('crop-note').innerHTML=
+    `330 &times; 120 screen pixels &nbsp;&middot;&nbsp; <span>${(330*p).toFixed(1)} &times; ${(120*p).toFixed(1)} mm</span> on the panel &nbsp;&middot;&nbsp; ${(330/s.n).toFixed(1)} fringes shown &nbsp;&middot;&nbsp; levels <span>${Math.round(s.A-s.B)}–${Math.round(s.A+s.B)}</span>`;
+
+  drawProfile(s);
+  document.getElementById('prof-note').innerHTML=
+    `Each curve is one projected frame; the camera samples all ${s.N} at every pixel and solves for φ. Grey band = the 0–255 display range.`;
+
+  document.getElementById('code').textContent=pySnippet(s);
+
+  const sumS=`Σ Iₖ sin(2πk/${s.N})`, sumC=`Σ Iₖ cos(2πk/${s.N})`;
+  document.getElementById('math').innerHTML=`
+    <div class="math-block">
+      <div class="math-title">&sect;1 Pixel pitch <span class="live">${(p*1000).toFixed(1)} &micro;m</span></div>
+      <div class="formula">p = W / N&#x2093; = ${s.sw} / ${s.W}</div>
+      <div class="mvar2"><span>W</span> = screen width &nbsp;&middot;&nbsp; <span>N&#x2093;</span> = horizontal pixels</div>
+    </div>
+    <div class="math-block">
+      <div class="math-title">&sect;2 Projected intensity <span class="live">A = ${s.A}, B = ${Math.round(s.B)}</span></div>
+      <div class="formula">I&#8342;(x) = A + B&middot;cos(2&pi;x/n &minus; 2&pi;k/N)</div>
+      <div class="mvar2"><span>n</span> = ${s.n} px/fringe &nbsp;&middot;&nbsp; <span>N</span> = ${s.N} steps &nbsp;&middot;&nbsp; range <span>${Math.round(s.A-s.B)}–${Math.round(s.A+s.B)}</span> DN</div>
+    </div>
+    <div class="math-block">
+      <div class="math-title">&sect;3 Fringe pitch <span class="live">${Pf.toFixed(2)} mm</span></div>
+      <div class="formula">P&#8198;f = n &times; p = ${s.n} &times; ${(p*1000).toFixed(1)} &micro;m</div>
+      <div class="mvar2">Same P&#8198;f the array page uses for N&#8198;f</div>
+    </div>
+    <div class="math-block">
+      <div class="math-title">&sect;4 Fringes across array <span class="live" style="background:${nfc}">${Nf.toFixed(0)}</span></div>
+      <div class="formula">N&#8198;f = L / P&#8198;f = ${Math.round(arrSpan)} / ${Pf.toFixed(2)}</div>
+      <div class="mvar2">${c}&times;${r} layout, ${s.gap} mm gap &nbsp;&middot;&nbsp; target <span>&ge; 60</span></div>
+    </div>
+    <div class="math-block">
+      <div class="math-title">&sect;5 Phase retrieval <span class="live">${s.N}-step</span></div>
+      <div class="formula">&phi; = arctan2( ${sumS} , ${sumC} )</div>
+      <div class="mvar2">Wrapped to <span>(&minus;&pi;, &pi;]</span> &nbsp;&middot;&nbsp; unwrap, then x&#8202;s = &phi;&middot;P&#8198;f / 2&pi;</div>
+    </div>
+    <div class="math-block">
+      <div class="math-title">&sect;6 Phase uncertainty <span class="live">${(sigPhi*1000).toFixed(1)} mrad</span></div>
+      <div class="formula">&sigma;&#8202;&phi; = &radic;(2/N) &middot; &sigma;&#8202;I / B = &radic;(2/${s.N}) &middot; ${s.sig.toFixed(1)} / ${Math.round(s.B)}</div>
+      <div class="mvar2">Screen point error <span>&delta;x&#8202;s = &sigma;&#8202;&phi;&middot;P&#8198;f/2&pi; = ${dxs.toFixed(1)} &micro;m</span> &rarr; feeds the error budget page</div>
+    </div>
+    <div class="math-block">
+      <div class="math-title">&sect;7 Gamma pre-compensation <span class="live" style="background:${s.gOn?'#2e7d32':'#747474'}">${s.gOn?'on, γ = '+s.gam.toFixed(1):'off'}</span></div>
+      <div class="formula">I&#8202;out = 255 &middot; (I&#8202;lin / 255)^(1/&gamma;)</div>
+      <div class="mvar2">Cancels panel gamma so the emitted irradiance is sinusoidal; uncorrected &gamma; puts a 2&phi; harmonic into the phase</div>
+    </div>`;
+}
+
+function drawProfile(s){
+  const W=320,H=180,pl=34,pr=8,pt=10,pb=22;
+  const iw=W-pl-pr, ih=H-pt-pb;
+  const span=2*s.n;
+  const y=v=>pt+ih*(1-clamp(v,0,255)/255);
+  let h='';
+  h+=`<rect x="${pl}" y="${pt}" width="${iw}" height="${ih}" fill="#FAFAFA" stroke="#E8E8E8"/>`;
+  [0,64,128,192,255].forEach(v=>{
+    h+=`<line x1="${pl}" y1="${y(v).toFixed(1)}" x2="${pl+iw}" y2="${y(v).toFixed(1)}" stroke="#E8E8E8" stroke-width="1"/>`;
+    h+=`<text x="${pl-4}" y="${(y(v)+3).toFixed(1)}" text-anchor="end" font-family="Arial" font-size="8" fill="#747474">${v}</text>`;
+  });
+  for(let k=0;k<s.N;k++){
+    const pts=[];
+    for(let i=0;i<=120;i++){
+      const x=i/120*span;
+      let v=s.A+s.B*Math.cos(2*Math.PI*x/s.n-2*Math.PI*k/s.N);
+      if(s.gOn) v=255*Math.pow(clamp(v,0,255)/255,1/s.gam);
+      pts.push(`${(pl+i/120*iw).toFixed(1)},${y(v).toFixed(1)}`);
+    }
+    const col=PAL[k%PAL.length];
+    h+=`<polyline points="${pts.join(' ')}" fill="none" stroke="${col}" stroke-width="${k===s.k?2.2:1}" opacity="${k===s.k?1:0.5}"/>`;
+  }
+  h+=`<line x1="${pl}" y1="${pt+ih}" x2="${pl+iw}" y2="${pt+ih}" stroke="#BFBFBF"/>`;
+  h+=`<text x="${pl}" y="${H-6}" font-family="Arial" font-size="8" fill="#747474">0</text>`;
+  h+=`<text x="${pl+iw/2}" y="${H-6}" text-anchor="middle" font-family="Arial" font-size="8" fill="#747474">screen x (px) — 2 fringes = ${span} px</text>`;
+  h+=`<text x="${pl+iw}" y="${H-6}" text-anchor="end" font-family="Arial" font-size="8" fill="#747474">${span}</text>`;
+  h+=`<text x="4" y="${pt+ih/2}" font-family="Arial" font-size="8" fill="#747474" transform="rotate(-90 10,${pt+ih/2})">grey level</text>`;
+  h+=`<text x="${pl+6}" y="${pt+11}" font-family="Arial" font-size="8" fill="${PAL[s.k%PAL.length]}" font-weight="700">bold = displayed step k=${s.k}</text>`;
+  document.getElementById('prof').innerHTML=h;
+}
+
+function pySnippet(s){
+  const axis=s.orient==='v'?'x':'y';
+  const dim=s.orient==='v'?`W`:`H`;
+  return `import numpy as np
+from PIL import Image
+
+W, H, n, N = ${s.W}, ${s.H}, ${s.n}, ${s.N}
+A, B, gamma = ${s.A}, ${Math.round(s.B)}, ${s.gOn?s.gam.toFixed(1):'None'}
+
+${axis} = np.arange(${dim})
+for k in range(N):
+    I = A + B*np.cos(2*np.pi*${axis}/n - 2*np.pi*k/N)
+    if gamma: I = 255*np.clip(I/255, 0, 1)**(1/gamma)
+    row = np.clip(I, 0, 255).astype(np.uint8)
+    frame = np.tile(row${s.orient==='v'?'[None, :], (H, 1)':'[:, None], (1, W)'})
+    Image.fromarray(frame, 'L').save(f'fringe_${s.orient}_n${s.n}_N${s.N}_k{k}.png')
+
+# retrieval (camera stack I[k] -> wrapped phase)
+# phi = np.arctan2(sum(I[k]*np.sin(2*np.pi*k/N) for k in range(N)),
+#                  sum(I[k]*np.cos(2*np.pi*k/N) for k in range(N)))`;
+}
+
+function copyCode(){
+  const t=document.getElementById('code').textContent;
+  navigator.clipboard.writeText(t).then(
+    ()=>note('Python snippet copied to clipboard.'),
+    ()=>note('Clipboard blocked — select the snippet and copy manually.'));
+}
+function note(msg){
+  const el=document.getElementById('dl-note');
+  el.innerHTML=`<span>${msg}</span>`;
+  setTimeout(()=>{el.textContent='Exports at full screen resolution, 8-bit greyscale PNG.';},4000);
+}
+
+function saveCanvas(c,name){
+  c.toBlob(b=>{
+    const u=URL.createObjectURL(b), a=document.createElement('a');
+    a.href=u; a.download=name; document.body.appendChild(a); a.click();
+    document.body.removeChild(a); setTimeout(()=>URL.revokeObjectURL(u),2000);
+  },'image/png');
+}
+function fname(s,k){return `fringe_${s.orient}_n${s.n}_N${s.N}_k${k}_${s.W}x${s.H}.png`}
+
+function dlCurrent(){
+  const s=readState();
+  note('Rendering '+s.W+'×'+s.H+'…');
+  setTimeout(()=>{saveCanvas(renderFull(s,s.k),fname(s,s.k));note('Saved step '+s.k+'.')},30);
+}
+function dlAll(){
+  const s=readState();
+  note('Rendering '+s.N+' frames — allow multiple downloads if the browser asks.');
+  let k=0;
+  (function next(){
+    if(k>=s.N){note('Saved all '+s.N+' steps.');return}
+    saveCanvas(renderFull(s,k),fname(s,k));
+    k++; setTimeout(next,400);
+  })();
+}
+
+update();
+</script>
+</body>
+</html>

@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ASU Deflectometry — Mirror Tilt &amp; Piezo Actuation</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,Helvetica,sans-serif;background:#FAFAFA;color:#191919;font-size:14px}
+.nav{background:#8C1D40;display:flex;align-items:center;gap:14px;padding:0 24px;height:52px;flex-wrap:wrap}
+.asu-mark{background:#FFC627;width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:3px;flex-shrink:0}
+.asu-mark span{color:#8C1D40;font-weight:900;font-size:17px;letter-spacing:-1px;font-family:Arial,sans-serif}
+.nav-text{color:#fff}.nav-text .t1{font-size:14px;font-weight:700;line-height:1.2}.nav-text .t2{font-size:11px;color:rgba(255,255,255,0.7)}
+.nav-links{margin-left:auto;display:flex;gap:3px;flex-wrap:wrap}
+.nav-links a{color:rgba(255,255,255,.85);text-decoration:none;font-size:12px;font-weight:700;padding:6px 11px;border-radius:3px;white-space:nowrap}
+.nav-links a:hover{background:rgba(255,255,255,.14);color:#fff}
+.nav-links a.active{background:#FFC627;color:#8C1D40}
+.gold-bar{height:4px;background:#FFC627}
+.page-hdr{background:#fff;border-bottom:1px solid #E8E8E8;padding:10px 24px;display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+.page-hdr h1{font-size:17px;font-weight:700;color:#8C1D40}.page-hdr p{font-size:12px;color:#747474}
+.app{display:grid;grid-template-columns:260px 1fr;gap:0;min-height:calc(100vh - 80px)}
+.left-col{background:#fff;border-right:1px solid #E8E8E8;padding:14px;display:flex;flex-direction:column;gap:12px}
+.right-col{padding:12px;display:flex;flex-direction:column;gap:10px}
+.sec-lbl{font-size:10px;font-weight:700;color:#8C1D40;text-transform:uppercase;letter-spacing:.07em;border-left:3px solid #FFC627;padding-left:8px;margin-bottom:7px}
+.ctrl-group{display:flex;flex-direction:column;gap:4px}
+.ctrl-group label{font-size:10px;font-weight:700;color:#747474;text-transform:uppercase;letter-spacing:.04em}
+.ctrl-group select,.ctrl-group input[type=number]{width:100%;font-size:13px;color:#191919;border:1px solid #BFBFBF;border-radius:4px;padding:4px 6px;background:#FAFAFA}
+.ctrl-group input[type=range]{width:100%;accent-color:#8C1D40}
+.ctrl-val{font-size:16px;font-weight:700;color:#8C1D40}
+.explainer{background:#FFF5D0;border-left:3px solid #FFC627;padding:8px 10px;font-size:11px;color:#3E3E3E;line-height:1.55;border-radius:0 4px 4px 0}
+.explainer strong{color:#8C1D40}
+.fixed-box{background:#FAFAFA;border:1px solid #E8E8E8;border-radius:5px;padding:9px 11px}
+.mvar{font-size:11px;color:#747474;line-height:1.8}.mvar span{color:#191919;font-weight:700}
+.metrics-row{display:grid;grid-template-columns:repeat(6,1fr);gap:7px}
+.metric{background:#fff;border:1px solid #E8E8E8;border-radius:5px;padding:8px 10px}
+.metric .ml{font-size:10px;color:#747474;text-transform:uppercase;letter-spacing:.03em;margin-bottom:2px}
+.metric .mv{font-size:17px;font-weight:700;color:#8C1D40}.metric .ms{font-size:10px;color:#747474;margin-top:1px}
+.mid-row{display:grid;grid-template-columns:1fr 1.2fr;gap:10px}
+.panel{background:#fff;border:1px solid #E8E8E8;border-radius:6px;padding:12px}
+.panel-heading{font-size:13px;font-weight:700;color:#8C1D40;margin-bottom:3px}
+.panel-sub{font-size:10px;color:#747474;margin-bottom:8px}
+.bottom-row{display:grid;grid-template-columns:1.15fr 1fr;gap:10px}
+.card{background:#fff;border:1px solid #E8E8E8;border-radius:6px;padding:11px}
+.comp-table{width:100%;border-collapse:collapse;font-size:11px;table-layout:fixed}
+.comp-table th{background:#8C1D40;color:#fff;padding:5px 6px;text-align:left;font-size:10px;font-weight:700}
+.comp-table td{padding:4px 6px;border-bottom:1px solid #E8E8E8}
+.comp-table tr:nth-child(even) td{background:#FAFAFA}
+.g{color:#2e7d32;font-weight:700}.m{color:#e65100;font-weight:700}.b{color:#b71c1c;font-weight:700}
+.math-block{margin-bottom:9px;padding-bottom:9px;border-bottom:1px solid #F0F0F0}
+.math-block:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.math-title{font-size:11px;font-weight:700;color:#8C1D40;margin-bottom:3px;display:flex;justify-content:space-between;align-items:center;gap:6px}
+.live{background:#8C1D40;color:#fff;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;white-space:nowrap}
+.formula{background:#F7F7F7;border:1px solid #E8E8E8;border-radius:3px;padding:4px 7px;font-family:"Courier New",monospace;font-size:11px;color:#3E3E3E;margin:3px 0}
+.mvar2{font-size:10px;color:#747474;line-height:1.6}.mvar2 span{color:#191919;font-weight:700}
+.verdict-good{background:#edf7ed;border-left:4px solid #2e7d32;border-radius:0 6px 6px 0;padding:9px 14px;font-size:12px;color:#1b5e20;font-weight:500}
+.verdict-warn{background:#fff8e1;border-left:4px solid #f9a825;border-radius:0 6px 6px 0;padding:9px 14px;font-size:12px;color:#6d4c00;font-weight:500}
+.verdict-bad{background:#fdecea;border-left:4px solid #b71c1c;border-radius:0 6px 6px 0;padding:9px 14px;font-size:12px;color:#7f0000;font-weight:500}
+.caveat{font-size:10px;color:#747474;line-height:1.5;background:#FAFAFA;border:1px dashed #D8D8D8;border-radius:4px;padding:7px 9px}
+.caveat b{color:#8C1D40}
+.chk{display:flex;align-items:center;gap:6px;font-size:11px;color:#3E3E3E;font-weight:700;text-transform:none;letter-spacing:0}
+.chk input{accent-color:#8C1D40;flex-shrink:0}
+.footer{background:#3E3E3E;color:#BFBFBF;font-size:10px;padding:10px 24px;text-align:center;margin-top:auto}
+.footer span{color:#FFC627}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="asu-mark"><span>ASU</span></div>
+  <div class="nav-text">
+    <div class="t1">Deflectometry Research</div>
+    <div class="t2">School of Manufacturing Systems and Networks &nbsp;·&nbsp; Dr. Xiangyu Guo</div>
+  </div>
+  <nav class="nav-links">
+    <a href="index.html">Array Config</a>
+    <a href="fringes.html">Fringe Generator</a>
+    <a href="piezo.html" class="active">Tilt &amp; Actuation</a>
+    <a href="budget.html">Error Budget</a>
+  </nav>
+</div>
+<div class="gold-bar"></div>
+
+<div class="page-hdr">
+  <h1>Mirror Tilt &amp; Piezo Actuation Calculator</h1>
+  <p>Per-mirror pointing solution &nbsp;·&nbsp; Diego Bethancourth &nbsp;·&nbsp; Arizona State University</p>
+</div>
+
+<div class="app">
+  <div class="left-col">
+
+    <div>
+      <div class="sec-lbl">How it works</div>
+      <div class="explainer">
+        Every mirror sits at a different place in the array, so each one needs its own tilt to fold the
+        camera's line of sight onto the screen. This solves the law of reflection per mirror &mdash;
+        <strong>n&#770; &prop; v&#770; &minus; u&#770;</strong> &mdash; converts the result into
+        <strong>piezo displacement &Delta; = L&middot;tan&theta;</strong>, and checks it against the
+        mount's tilt limit and the actuator's travel and step size.
+      </div>
+    </div>
+
+    <div>
+      <div class="sec-lbl">Array</div>
+      <div class="ctrl-group" style="margin-bottom:8px">
+        <label>Mirror layout</label>
+        <select id="arr" onchange="update()">
+          <option value="1x4">1&times;4 &mdash; 4 mirrors (linear)</option>
+          <option value="1x5">1&times;5 &mdash; 5 mirrors (linear)</option>
+          <option value="2x4">2&times;4 &mdash; 8 mirrors</option>
+          <option value="3x3" selected>3&times;3 &mdash; 9 mirrors &#9733;</option>
+          <option value="2x5">2&times;5 &mdash; 10 mirrors</option>
+          <option value="3x4">3&times;4 &mdash; 12 mirrors</option>
+        </select>
+      </div>
+      <div class="ctrl-group">
+        <label>Mirror gap (mm)</label>
+        <input type="range" id="gap" min="1" max="8" value="3" step="1" oninput="update()">
+        <span class="ctrl-val" id="gap-v">3 mm</span>
+      </div>
+    </div>
+
+    <div>
+      <div class="sec-lbl">Geometry</div>
+      <div class="ctrl-group" style="margin-bottom:8px">
+        <label>Camera standoff z (mm)</label>
+        <input type="range" id="cz" min="150" max="1500" value="800" step="10" oninput="update()">
+        <span class="ctrl-val" id="cz-v">800 mm</span>
+      </div>
+      <div class="ctrl-group" style="margin-bottom:8px">
+        <label>Camera height offset y (mm)</label>
+        <input type="range" id="cy" min="-400" max="400" value="180" step="10" oninput="update()">
+        <span class="ctrl-val" id="cy-v">+180 mm</span>
+      </div>
+      <div class="ctrl-group" style="margin-bottom:8px">
+        <label>Screen distance z (mm)</label>
+        <input type="range" id="sz" min="150" max="800" value="400" step="10" oninput="update()">
+        <span class="ctrl-val" id="sz-v">400 mm</span>
+      </div>
+      <div class="ctrl-group">
+        <label>Screen height offset y (mm)</label>
+        <input type="range" id="sy" min="-500" max="200" value="-190" step="10" oninput="update()">
+        <span class="ctrl-val" id="sy-v">&minus;190 mm</span>
+      </div>
+    </div>
+
+    <div>
+      <div class="sec-lbl">Mount &amp; actuator</div>
+      <div class="ctrl-group" style="margin-bottom:8px">
+        <label>Lever arm L, pivot&ndash;actuator (mm)</label>
+        <input type="number" id="lev" value="19.05" min="4" max="80" step="0.05" oninput="update()">
+      </div>
+      <div class="ctrl-group" style="margin-bottom:8px">
+        <label>Mount tilt limit &plusmn;&theta; (deg)</label>
+        <input type="range" id="tlim" min="1" max="12" value="4" step="0.5" oninput="update()">
+        <span class="ctrl-val" id="tlim-v">&plusmn;4.0&deg;</span>
+      </div>
+      <div class="ctrl-group" style="margin-bottom:8px">
+        <label>Actuator travel, total (mm)</label>
+        <input type="number" id="trav" value="25" min="0.01" max="60" step="0.01" oninput="update()">
+      </div>
+      <div class="ctrl-group" style="margin-bottom:8px">
+        <label>Actuator step size (nm)</label>
+        <input type="number" id="stp" value="20" min="1" max="5000" step="1" oninput="update()">
+      </div>
+      <div class="ctrl-group">
+        <label class="chk"><input type="checkbox" id="base" checked onchange="update()"> Baseplate pre-tilted to array mean</label>
+        <div class="mvar2" style="margin-top:3px">On: the plate is bolted at the mean fold angle and the piezos only supply the differential tilt between mirrors. Off: the plate sits normal to the optical axis and the piezos carry the whole fold.</div>
+      </div>
+      <div class="caveat" style="margin-top:8px">
+        <b>Verify before ordering.</b> Lever arm, tilt limit and travel are editable because they are
+        mount- and actuator-specific. Defaults sketch a Thorlabs KMSR_M-class &Oslash;1&Prime; kinematic
+        mount driven by PIA25 inertia actuators &mdash; read the real numbers off the datasheet drawing.
+      </div>
+    </div>
+
+  </div>
+
+  <div class="right-col">
+    <div class="metrics-row" id="metrics"></div>
+    <div id="verdict" class="verdict-good"></div>
+
+    <div class="mid-row">
+      <div class="panel">
+        <div class="panel-heading">Required tilt map</div>
+        <div class="panel-sub">Front view &mdash; shaded by actuator-range utilisation</div>
+        <svg id="map-svg" width="100%" viewBox="0 0 300 200"></svg>
+      </div>
+      <div class="panel">
+        <div class="panel-heading">Fold geometry</div>
+        <div class="panel-sub">Side elevation &mdash; centre column, camera &rarr; mirror &rarr; screen</div>
+        <svg id="side-svg" width="100%" viewBox="0 0 320 250"></svg>
+      </div>
+    </div>
+
+    <div class="bottom-row">
+      <div class="card">
+        <div class="sec-lbl" style="margin-bottom:8px">Per-mirror pointing solution</div>
+        <div id="tbl"></div>
+      </div>
+      <div class="card">
+        <div class="sec-lbl" style="margin-bottom:8px">Mathematics</div>
+        <div id="math"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <span>Arizona State University</span> &nbsp;&middot;&nbsp; School of Manufacturing Systems and Networks &nbsp;&middot;&nbsp;
+  Deflectometry Research &nbsp;&middot;&nbsp; Diego Bethancourth &nbsp;&middot;&nbsp; Advisor: Dr. Xiangyu Guo
+</div>
+
+<script>
+const MIRROR=25.4;
+const cfgs={'1x4':{c:4,r:1},'1x5':{c:5,r:1},'2x4':{c:4,r:2},'3x3':{c:3,r:3},'2x5':{c:5,r:2},'3x4':{c:4,r:3}};
+const DEG=180/Math.PI;
+
+const sub=(a,b)=>[a[0]-b[0],a[1]-b[1],a[2]-b[2]];
+const len=a=>Math.hypot(a[0],a[1],a[2]);
+const norm=a=>{const l=len(a)||1;return [a[0]/l,a[1]/l,a[2]/l]};
+
+function readState(){
+  const key=document.getElementById('arr').value;
+  return {
+    key:key, ...cfgs[key],
+    gap:+document.getElementById('gap').value,
+    cz:+document.getElementById('cz').value, cy:+document.getElementById('cy').value,
+    sz:+document.getElementById('sz').value, sy:+document.getElementById('sy').value,
+    L:+document.getElementById('lev').value||19.05,
+    tlim:+document.getElementById('tlim').value,
+    trav:+document.getElementById('trav').value||25,
+    step:+document.getElementById('stp').value||20,
+    base:document.getElementById('base').checked
+  };
+}
+
+// Solve the law of reflection for every mirror in the array.
+function solve(s){
+  const C=[0,s.cy,s.cz], S=[0,s.sy,s.sz];
+  const pitch=MIRROR+s.gap;
+  const out=[];
+  for(let row=0;row<s.r;row++) for(let col=0;col<s.c;col++){
+    const M=[(col-(s.c-1)/2)*pitch, ((s.r-1)/2-row)*pitch, 0];
+    const u=norm(sub(M,C));      // incident, camera -> mirror
+    const v=norm(sub(S,M));      // reflected, mirror -> screen
+    let n=norm(sub(v,u));        // bisector = surface normal
+    if(n[2]<0) n=[-n[0],-n[1],-n[2]];
+    const tH=Math.atan2(n[0],n[2]);          // about the vertical axis
+    const tV=Math.atan2(n[1],n[2]);          // about the horizontal axis
+    const tot=Math.acos(Math.min(1,Math.abs(n[2])));
+    out.push({row,col,M,n,tH,tV,tot,dCam:len(sub(M,C)),dScr:len(sub(S,M))});
+  }
+  // The baseplate carries the common fold angle; the piezos only supply what is
+  // left over per mirror. With the plate normal to the axis, they carry it all.
+  const bH=s.base?out.reduce((a,o)=>a+o.tH,0)/out.length:0;
+  const bV=s.base?out.reduce((a,o)=>a+o.tV,0)/out.length:0;
+  out.forEach(o=>{
+    o.rH=o.tH-bH; o.rV=o.tV-bV;
+    o.dH=s.L*Math.tan(o.rH); o.dV=s.L*Math.tan(o.rV);
+    o.demand=Math.max(Math.abs(o.rH),Math.abs(o.rV));
+  });
+  out.base={H:bH,V:bV};
+  return out;
+}
+
+function update(){
+  const s=readState();
+  document.getElementById('gap-v').textContent=s.gap+' mm';
+  document.getElementById('cz-v').textContent=s.cz+' mm';
+  document.getElementById('cy-v').textContent=(s.cy>=0?'+':'−')+Math.abs(s.cy)+' mm';
+  document.getElementById('sz-v').textContent=s.sz+' mm';
+  document.getElementById('sy-v').textContent=(s.sy>=0?'+':'−')+Math.abs(s.sy)+' mm';
+  document.getElementById('tlim-v').textContent='±'+s.tlim.toFixed(1)+'°';
+
+  const m=solve(s);
+  const stepMM=s.step/1e6;
+  const tiltFromTravel=Math.atan((s.trav/2)/s.L)*DEG;       // usable half-travel about mid-position
+  const limit=Math.min(s.tlim,tiltFromTravel);              // deg, the binding constraint
+  const travelLimited=tiltFromTravel<s.tlim;
+
+  const maxTilt=Math.max(...m.map(o=>o.demand))*DEG;
+  const baseTot=Math.acos(Math.cos(m.base.H)*Math.cos(m.base.V))*DEG;
+  const maxDelta=Math.max(...m.map(o=>Math.max(Math.abs(o.dH),Math.abs(o.dV))));
+  const util=maxTilt/limit;
+
+  const dRes=stepMM/s.L;                                    // rad per actuator step
+  const dResU=dRes*1e6;                                     // urad
+  const dResArc=dRes*DEG*3600;                              // arcsec
+  const meanScr=m.reduce((a,o)=>a+o.dScr,0)/m.length;
+  const spot=2*dRes*meanScr*1000;                           // um of screen-spot walk per step
+  const nSteps=Math.round(2*(limit/DEG)*s.L/stepMM);
+
+  const ok=util<=1, tight=util>0.8;
+  const uc=!ok?'#b71c1c':tight?'#e65100':'#2e7d32';
+
+  document.getElementById('metrics').innerHTML=`
+    <div class="metric"><div class="ml">Max piezo tilt</div><div class="mv" style="color:${uc}">${maxTilt.toFixed(2)}&deg;</div><div class="ms">limit &plusmn;${limit.toFixed(2)}&deg;</div></div>
+    <div class="metric"><div class="ml">Baseplate tilt</div><div class="mv">${baseTot.toFixed(2)}&deg;</div><div class="ms">${s.base?'set mechanically':'plate normal to axis'}</div></div>
+    <div class="metric"><div class="ml">Max &Delta; actuator</div><div class="mv" style="color:${uc}">${Math.abs(maxDelta)<1?(maxDelta*1000).toFixed(0)+' &micro;m':maxDelta.toFixed(2)+' mm'}</div><div class="ms">of &plusmn;${(s.trav/2).toFixed(1)} mm travel</div></div>
+    <div class="metric"><div class="ml">Angular resolution</div><div class="mv">${dResU.toFixed(2)}</div><div class="ms">&micro;rad &middot; ${dResArc.toFixed(2)}&Prime; per step</div></div>
+    <div class="metric"><div class="ml">Screen walk / step</div><div class="mv">${spot.toFixed(1)} &micro;m</div><div class="ms">2&delta;&theta; &times; ${Math.round(meanScr)} mm</div></div>
+    <div class="metric" style="border-left:3px solid ${uc}"><div class="ml">Range used</div><div class="mv" style="color:${uc}">${(util*100).toFixed(0)}%</div><div class="ms">${nSteps.toLocaleString()} steps full range</div></div>`;
+
+  let vc='verdict-good', vt='';
+  if(!ok){
+    vc='verdict-bad';
+    vt=`Out of range: the worst mirror needs ${maxTilt.toFixed(2)}&deg; of piezo tilt but the ${travelLimited?'actuator travel':'mount'} caps it at &plusmn;${limit.toFixed(2)}&deg;. ${s.base?`The baseplate already absorbs ${baseTot.toFixed(2)}&deg; of common fold &mdash; shrink the array, add standoff, or pick a mount with more tilt authority.`:`Pre-tilt the baseplate to the array mean (${baseTot.toFixed(2)}&deg; is currently going into the piezos) or move the camera and screen closer to a common axis.`}`;
+  }else if(tight){
+    vc='verdict-warn';
+    vt=`Tight: ${maxTilt.toFixed(2)}&deg; of the &plusmn;${limit.toFixed(2)}&deg; available (${(util*100).toFixed(0)}%). It closes, but there is little margin left for alignment error &mdash; consider more standoff, a smaller array, or a stiffer pre-tilt on the baseplate.`;
+  }else{
+    vt=`All ${m.length} mirrors reach their pointing solution: worst case ${maxTilt.toFixed(2)}&deg; of piezo tilt = ${(util*100).toFixed(0)}% of the &plusmn;${limit.toFixed(2)}&deg; ${travelLimited?'travel-limited':'mount-limited'} range, at ${Math.abs(maxDelta)<1?(Math.abs(maxDelta)*1000).toFixed(0)+' &micro;m':Math.abs(maxDelta).toFixed(2)+' mm'} of actuator${s.base?`, on a baseplate pre-tilted ${baseTot.toFixed(2)}&deg;`:''}. ${dResU.toFixed(2)} &micro;rad per step moves the screen spot ${spot.toFixed(1)} &micro;m.`;
+  }
+  document.getElementById('verdict').className=vc;
+  document.getElementById('verdict').innerHTML=vt;
+
+  drawMap(s,m,limit);
+  drawSide(s,m);
+
+  const rows=m.map(o=>{
+    const u=o.demand*DEG/limit;
+    const cls=u>1?'b':u>0.8?'m':'g';
+    const f=v=>Math.abs(v)<1?(v*1000).toFixed(0)+' &micro;m':v.toFixed(2)+' mm';
+    return `<tr><td>R${o.row+1}C${o.col+1}</td><td>${(o.rH*DEG).toFixed(2)}&deg;</td><td>${(o.rV*DEG).toFixed(2)}&deg;</td><td>${f(o.dH)}</td><td>${f(o.dV)}</td><td class="${cls}">${(u*100).toFixed(0)}%</td></tr>`;
+  }).join('');
+  document.getElementById('tbl').innerHTML=`
+    <div style="max-height:260px;overflow-y:auto">
+    <table class="comp-table"><tr><th>Mirror</th><th>Tilt H</th><th>Tilt V</th><th>&Delta; H</th><th>&Delta; V</th><th>Range</th></tr>${rows}</table></div>
+    <p style="font-size:10px;color:#747474;margin-top:5px">Piezo demand per mirror, relative to the baseplate (${s.base?`pre-tilted ${(m.base.H*DEG).toFixed(2)}&deg; H / ${(m.base.V*DEG).toFixed(2)}&deg; V`:'normal to the optical axis'}). Tilt H about the vertical axis, tilt V about the horizontal axis. &Delta; = L&middot;tan&theta; at L = ${s.L} mm. Green &lt;80% of range, orange 80&ndash;100%, red over.</p>`;
+
+  const ctr=m[Math.floor(m.length/2)];
+  document.getElementById('math').innerHTML=`
+    <div class="math-block">
+      <div class="math-title">&sect;1 Incident &amp; reflected rays <span class="live">per mirror</span></div>
+      <div class="formula">u&#770; = (M &minus; C)/|M &minus; C| &nbsp;&nbsp; v&#770; = (S &minus; M)/|S &minus; M|</div>
+      <div class="mvar2"><span>C</span> = (0, ${s.cy}, ${s.cz}) camera &nbsp;&middot;&nbsp; <span>S</span> = (0, ${s.sy}, ${s.sz}) screen centre &nbsp;&middot;&nbsp; array plane at z = 0</div>
+    </div>
+    <div class="math-block">
+      <div class="math-title">&sect;2 Surface normal <span class="live">bisector</span></div>
+      <div class="formula">v&#770; = u&#770; &minus; 2(u&#770;&middot;n&#770;)n&#770; &nbsp;&rArr;&nbsp; n&#770; &prop; v&#770; &minus; u&#770;</div>
+      <div class="mvar2">Law of reflection: the normal bisects the incoming and outgoing rays</div>
+    </div>
+    <div class="math-block">
+      <div class="math-title">&sect;3 Tilt angles <span class="live">${(ctr.tH*DEG).toFixed(2)}&deg; / ${(ctr.tV*DEG).toFixed(2)}&deg;</span></div>
+      <div class="formula">&theta;&#8341; = arctan(n&#8339;/n&#8344;) &nbsp;&nbsp; &theta;&#8342; = arctan(n&#8342;/n&#8344;)</div>
+      <div class="mvar2">Absolute tilt of reference mirror <span>R${ctr.row+1}C${ctr.col+1}</span> &nbsp;&middot;&nbsp; total ${(ctr.tot*DEG).toFixed(2)}&deg;</div>
+    </div>
+    <div class="math-block">
+      <div class="math-title">&sect;4 Baseplate split <span class="live">${baseTot.toFixed(2)}&deg; common</span></div>
+      <div class="formula">&theta;&#8202;piezo = &theta; &minus; &theta;&#8202;base &nbsp;&nbsp; &theta;&#8202;base = ${s.base?'mean(&theta;)':'0'}</div>
+      <div class="mvar2">${s.base?`Plate bolted at <span>${(m.base.H*DEG).toFixed(2)}&deg; H / ${(m.base.V*DEG).toFixed(2)}&deg; V</span>; the piezos supply only the differential. R${ctr.row+1}C${ctr.col+1} demand: <span>${(ctr.rH*DEG).toFixed(2)}&deg; / ${(ctr.rV*DEG).toFixed(2)}&deg;</span>`:'Plate normal to the optical axis &mdash; the piezos carry the whole fold angle'}</div>
+    </div>
+    <div class="math-block">
+      <div class="math-title">&sect;5 Actuator displacement <span class="live">L = ${s.L} mm</span></div>
+      <div class="formula">&Delta; = L &middot; tan&theta;&#8202;piezo</div>
+      <div class="mvar2">Kinematic mount: one actuator per axis at lever arm L from the pivot</div>
+    </div>
+    <div class="math-block">
+      <div class="math-title">&sect;6 Angular resolution <span class="live">${dResU.toFixed(2)} &micro;rad</span></div>
+      <div class="formula">&delta;&theta; = &delta;&Delta; / L = ${s.step} nm / ${s.L} mm</div>
+      <div class="mvar2">= <span>${dResArc.toFixed(2)}&Prime;</span> of mechanical tilt &nbsp;&middot;&nbsp; reflected beam moves <span>2&delta;&theta; = ${(2*dResU).toFixed(2)} &micro;rad</span></div>
+    </div>
+    <div class="math-block">
+      <div class="math-title">&sect;7 Screen-spot resolution <span class="live">${spot.toFixed(1)} &micro;m</span></div>
+      <div class="formula">&delta;s = 2&middot;&delta;&theta;&middot;d = 2 &times; ${dResU.toFixed(2)} &micro;rad &times; ${Math.round(meanScr)} mm</div>
+      <div class="mvar2">One actuator step walks the reflected spot this far on the screen &mdash; compare against the fringe pitch</div>
+    </div>
+    <div class="math-block">
+      <div class="math-title">&sect;8 Range budget <span class="live" style="background:${uc}">${(util*100).toFixed(0)}% used</span></div>
+      <div class="formula">&theta;&#8202;max = min( mount &plusmn;${s.tlim.toFixed(1)}&deg; , arctan(T/2L) = &plusmn;${tiltFromTravel.toFixed(2)}&deg; )</div>
+      <div class="mvar2">Binding constraint: <span>${travelLimited?'actuator travel':'mount tilt limit'}</span> &nbsp;&middot;&nbsp; ${nSteps.toLocaleString()} discrete steps across the full range</div>
+    </div>`;
+}
+
+function drawMap(s,m,limit){
+  const svg=document.getElementById('map-svg');
+  const W=300,H=200,pX=12,pY=10;
+  const uW=W-2*pX, uH=H-2*pY-20;
+  const tW=s.c*MIRROR+(s.c-1)*s.gap, tH=s.r*MIRROR+(s.r-1)*s.gap;
+  const sc=Math.min(uW/tW,uH/tH);
+  const mw=MIRROR*sc, gp=s.gap*sc;
+  const oX=pX+(uW-(s.c*mw+(s.c-1)*gp))/2;
+  const oY=pY+(uH-(s.r*mw+(s.r-1)*gp))/2;
+  let h='';
+  m.forEach(o=>{
+    const x=oX+o.col*(mw+gp), y=oY+o.row*(mw+gp);
+    const u=o.demand*DEG/limit;
+    const fill=u>1?'#fdecea':u>0.8?'#fff3e0':'#edf7ed';
+    const stroke=u>1?'#b71c1c':u>0.8?'#e65100':'#2e7d32';
+    h+=`<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${mw.toFixed(1)}" height="${mw.toFixed(1)}" rx="2" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`;
+    const fs=Math.max(6,Math.min(10,mw*0.26));
+    h+=`<text x="${(x+mw/2).toFixed(1)}" y="${(y+mw/2-1).toFixed(1)}" text-anchor="middle" font-family="Arial" font-size="${fs.toFixed(0)}" fill="${stroke}" font-weight="700">${(Math.max(Math.abs(o.rH),Math.abs(o.rV))*DEG).toFixed(2)}&#176;</text>`;
+    h+=`<text x="${(x+mw/2).toFixed(1)}" y="${(y+mw/2+fs).toFixed(1)}" text-anchor="middle" font-family="Arial" font-size="${(fs*0.85).toFixed(0)}" fill="#747474">${(u*100).toFixed(0)}%</text>`;
+    // normal direction tick
+    const tl=mw*0.33;
+    h+=`<line x1="${(x+mw/2).toFixed(1)}" y1="${(y+mw/2).toFixed(1)}" x2="${(x+mw/2+Math.sin(o.rH)*tl*90).toFixed(1)}" y2="${(y+mw/2-Math.sin(o.rV)*tl*90).toFixed(1)}" stroke="${stroke}" stroke-width="1" opacity="0.55"/>`;
+  });
+  h+=`<text x="${W/2}" y="${H-4}" text-anchor="middle" font-family="Arial" font-size="9" fill="#747474">piezo tilt per mirror &#183; tick = differential normal &#183; ${Math.round(tW)} × ${Math.round(tH)} mm</text>`;
+  svg.innerHTML=h;
+}
+
+function drawSide(s,m){
+  const svg=document.getElementById('side-svg');
+  const W=320,H=250,pad=30;
+  const pitch=MIRROR+s.gap;
+  const arrHalf=(s.r*MIRROR+(s.r-1)*s.gap)/2;
+  const zMax=Math.max(s.cz,s.sz)*1.12;
+  const ys=[s.cy,s.sy-80,s.sy+80,arrHalf,-arrHalf];
+  const yMin=Math.min(...ys)*1.1, yMax=Math.max(...ys)*1.1;
+  const zx=z=>pad+ (z/zMax)*(W-pad-14);
+  const yy=y=>H-24-((y-yMin)/((yMax-yMin)||1))*(H-24-14);
+  let h='';
+
+  // optical axis
+  h+=`<line x1="${zx(0)}" y1="${yy(0).toFixed(1)}" x2="${zx(zMax).toFixed(1)}" y2="${yy(0).toFixed(1)}" stroke="#E8E8E8" stroke-width="1" stroke-dasharray="4,3"/>`;
+
+  // screen panel (in the y-z plane, drawn as a bar centred on S)
+  const scrY1=yy(s.sy+80), scrY2=yy(s.sy-80);
+  h+=`<rect x="${(zx(s.sz)-3).toFixed(1)}" y="${Math.min(scrY1,scrY2).toFixed(1)}" width="6" height="${Math.abs(scrY2-scrY1).toFixed(1)}" rx="1" fill="#3E3E3E"/>`;
+  for(let i=0;i<6;i++){
+    const ly=Math.min(scrY1,scrY2)+6+i*(Math.abs(scrY2-scrY1)-10)/5;
+    h+=`<line x1="${(zx(s.sz)-2).toFixed(1)}" y1="${ly.toFixed(1)}" x2="${(zx(s.sz)+2).toFixed(1)}" y2="${ly.toFixed(1)}" stroke="#FFC627" stroke-width="1.4" opacity="0.85"/>`;
+  }
+  h+=`<text x="${zx(s.sz).toFixed(1)}" y="${(Math.max(scrY1,scrY2)+12).toFixed(1)}" text-anchor="middle" font-family="Arial" font-size="9" fill="#3E3E3E" font-weight="700">Screen</text>`;
+
+  // camera
+  const cX=zx(s.cz), cY=yy(s.cy);
+  h+=`<rect x="${(cX-9).toFixed(1)}" y="${(cY-6).toFixed(1)}" width="18" height="12" rx="2" fill="#1565C0"/>`;
+  h+=`<polygon points="${(cX-9).toFixed(1)},${(cY-4).toFixed(1)} ${(cX-17).toFixed(1)},${(cY-6).toFixed(1)} ${(cX-17).toFixed(1)},${(cY+6).toFixed(1)} ${(cX-9).toFixed(1)},${(cY+4).toFixed(1)}" fill="#0D47A1"/>`;
+  h+=`<text x="${cX.toFixed(1)}" y="${(cY-10).toFixed(1)}" text-anchor="middle" font-family="Arial" font-size="9" fill="#1565C0" font-weight="700">Camera</text>`;
+
+  // centre-column mirrors, drawn tilted by their vertical solution
+  const centreCol=Math.floor((s.c-1)/2);
+  const col=m.filter(o=>o.col===centreCol);
+  col.forEach(o=>{
+    const mX=zx(0), mY=yy(o.M[1]);
+    const half=Math.min(13,Math.max(6,(H-38)/(s.r*3)));
+    // mirror face is perpendicular to n: rotate the face by the tilt angle
+    const a=o.tV;
+    const dxm=Math.sin(a)*half, dym=Math.cos(a)*half;
+    h+=`<line x1="${(mX-dxm).toFixed(1)}" y1="${(mY-dym).toFixed(1)}" x2="${(mX+dxm).toFixed(1)}" y2="${(mY+dym).toFixed(1)}" stroke="#8C1D40" stroke-width="3.5" stroke-linecap="round"/>`;
+    // probe ray camera -> mirror
+    h+=`<line x1="${(cX-17).toFixed(1)}" y1="${cY.toFixed(1)}" x2="${mX.toFixed(1)}" y2="${mY.toFixed(1)}" stroke="#1565C0" stroke-width="1" opacity="0.75"/>`;
+    // reflected ray mirror -> screen centre
+    h+=`<line x1="${mX.toFixed(1)}" y1="${mY.toFixed(1)}" x2="${zx(s.sz).toFixed(1)}" y2="${yy(s.sy).toFixed(1)}" stroke="#E65100" stroke-width="1" opacity="0.75"/>`;
+    h+=`<text x="${(mX-6).toFixed(1)}" y="${(mY+3).toFixed(1)}" text-anchor="end" font-family="Arial" font-size="7.5" fill="#8C1D40" font-weight="700">${(o.tV*DEG).toFixed(2)}&#176;</text>`;
+  });
+  h+=`<text x="${zx(0).toFixed(1)}" y="12" text-anchor="middle" font-family="Arial" font-size="9" fill="#8C1D40" font-weight="700">Array</text>`;
+
+  h+=`<line x1="8" y1="${H-13}" x2="22" y2="${H-13}" stroke="#1565C0" stroke-width="1.6"/>`;
+  h+=`<text x="26" y="${H-10}" font-family="Arial" font-size="8" fill="#555">probe</text>`;
+  h+=`<line x1="66" y1="${H-13}" x2="80" y2="${H-13}" stroke="#E65100" stroke-width="1.6"/>`;
+  h+=`<text x="84" y="${H-10}" font-family="Arial" font-size="8" fill="#555">reflected — centre column, tilt about the horizontal axis</text>`;
+  svg.innerHTML=h;
+}
+
+update();
+</script>
+</body>
+</html>
