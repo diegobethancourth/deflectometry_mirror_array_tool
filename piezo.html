@@ -6,14 +6,14 @@
 <title>Mirror Tilt & Piezo Actuation Calculator — Diego Bethancourth | ASU Deflectometry</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Arial,Helvetica,sans-serif;background:#FAFAFA;color:#191919;font-size:14px}
+body{font-family:Arial,Helvetica,sans-serif;background:#F2F2F5;color:#191919;font-size:14px}
 .nav{background:#8C1D40;display:flex;align-items:center;gap:14px;padding:0 24px;height:52px;flex-wrap:wrap}
 .nav-links{margin-left:auto;display:flex;gap:3px;flex-wrap:wrap}
 .nav-links a{color:rgba(255,255,255,.85);text-decoration:none;font-size:12px;font-weight:700;padding:6px 11px;border-radius:3px;white-space:nowrap}
 .nav-links a:hover{background:rgba(255,255,255,.14);color:#fff}
 .nav-links a.active{background:#FFC627;color:#8C1D40}
 .gold-bar{height:4px;background:#FFC627}
-.brandbar{background:#fff;border-bottom:1px solid #E8E8E8;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:7px 24px;flex-wrap:wrap}
+.brandbar{background:#fff;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:7px 24px;flex-wrap:wrap}
 .brandbar img{display:block}
 .logo-asu{height:30px;width:auto}
 .logo-lab{height:52px;width:auto;mix-blend-mode:multiply}
@@ -22,46 +22,46 @@ body{font-family:Arial,Helvetica,sans-serif;background:#FAFAFA;color:#191919;fon
 .byline{font-size:12px;color:#747474}
 .byline strong{color:#8C1D40}
 @media(max-width:760px){.logo-asu{height:22px}.logo-lab{height:32px}}
-.page-hdr{background:#fff;border-bottom:1px solid #E8E8E8;padding:10px 24px;display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+.page-hdr{background:#fff;padding:10px 24px;display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
 .page-hdr h1{font-size:17px;font-weight:700;color:#8C1D40}.page-hdr p{font-size:12px;color:#747474}
 .app{display:grid;grid-template-columns:260px 1fr;gap:0;min-height:calc(100vh - 80px)}
-.left-col{background:#fff;border-right:1px solid #E8E8E8;padding:14px;display:flex;flex-direction:column;gap:12px}
+.left-col{background:#fff;padding:14px;display:flex;flex-direction:column;gap:12px}
 .right-col{padding:12px;display:flex;flex-direction:column;gap:10px}
-.sec-lbl{font-size:10px;font-weight:700;color:#8C1D40;text-transform:uppercase;letter-spacing:.07em;border-left:3px solid #FFC627;padding-left:8px;margin-bottom:7px}
+.sec-lbl{font-size:10px;font-weight:700;color:#8C1D40;text-transform:uppercase;letter-spacing:.07em;margin-bottom:7px}
 .ctrl-group{display:flex;flex-direction:column;gap:4px}
 .ctrl-group label{font-size:10px;font-weight:700;color:#747474;text-transform:uppercase;letter-spacing:.04em}
-.ctrl-group select,.ctrl-group input[type=number]{width:100%;font-size:13px;color:#191919;border:1px solid #BFBFBF;border-radius:4px;padding:4px 6px;background:#FAFAFA}
+.ctrl-group select,.ctrl-group input[type=number]{width:100%;font-size:13px;color:#191919;border:none;border-radius:6px;padding:6px 8px;background:#F1F1F4}
 .ctrl-group input[type=range]{width:100%;accent-color:#8C1D40}
 .ctrl-val{font-size:16px;font-weight:700;color:#8C1D40}
-.explainer{background:#FFF5D0;border-left:3px solid #FFC627;padding:8px 10px;font-size:11px;color:#3E3E3E;line-height:1.55;border-radius:0 4px 4px 0}
+.explainer{background:#FFF4D6;padding:10px 12px;font-size:11px;color:#3E3E3E;line-height:1.55;border-radius:8px}
 .explainer strong{color:#8C1D40}
-.fixed-box{background:#FAFAFA;border:1px solid #E8E8E8;border-radius:5px;padding:9px 11px}
+.fixed-box{background:#F1F1F4;border-radius:8px;padding:10px 12px}
 .mvar{font-size:11px;color:#747474;line-height:1.8}.mvar span{color:#191919;font-weight:700}
 .metrics-row{display:grid;grid-template-columns:repeat(6,1fr);gap:7px}
-.metric{background:#fff;border:1px solid #E8E8E8;border-radius:5px;padding:8px 10px}
+.metric{background:#fff;border-radius:8px;padding:10px 12px}
 .metric .ml{font-size:10px;color:#747474;text-transform:uppercase;letter-spacing:.03em;margin-bottom:2px}
 .metric .mv{font-size:17px;font-weight:700;color:#8C1D40}.metric .ms{font-size:10px;color:#747474;margin-top:1px}
 .mid-row{display:grid;grid-template-columns:1fr 1.2fr;gap:10px}
-.panel{background:#fff;border:1px solid #E8E8E8;border-radius:6px;padding:12px}
+.panel{background:#fff;border-radius:10px;padding:14px}
 .panel-heading{font-size:13px;font-weight:700;color:#8C1D40;margin-bottom:3px}
 .panel-sub{font-size:10px;color:#747474;margin-bottom:8px}
 .bottom-row{display:grid;grid-template-columns:1.15fr 1fr;gap:10px}
-.card{background:#fff;border:1px solid #E8E8E8;border-radius:6px;padding:11px}
+.card{background:#fff;border-radius:10px;padding:13px}
 .comp-table{width:100%;border-collapse:collapse;font-size:11px;table-layout:fixed}
-.comp-table th{background:#8C1D40;color:#fff;padding:5px 6px;text-align:left;font-size:10px;font-weight:700}
-.comp-table td{padding:4px 6px;border-bottom:1px solid #E8E8E8}
-.comp-table tr:nth-child(even) td{background:#FAFAFA}
+.comp-table th{background:#8C1D40;color:#fff;padding:6px;text-align:left;font-size:10px;font-weight:700}
+.comp-table td{padding:6px}
+.comp-table tr:nth-child(even) td{background:#F6F6F9}
 .g{color:#2e7d32;font-weight:700}.m{color:#e65100;font-weight:700}.b{color:#b71c1c;font-weight:700}
-.math-block{margin-bottom:9px;padding-bottom:9px;border-bottom:1px solid #F0F0F0}
-.math-block:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.math-block{margin-bottom:10px;padding-bottom:0}
+.math-block:last-child{margin-bottom:0}
 .math-title{font-size:11px;font-weight:700;color:#8C1D40;margin-bottom:3px;display:flex;justify-content:space-between;align-items:center;gap:6px}
 .live{background:#8C1D40;color:#fff;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;white-space:nowrap}
-.formula{background:#F7F7F7;border:1px solid #E8E8E8;border-radius:3px;padding:4px 7px;font-family:"Courier New",monospace;font-size:11px;color:#3E3E3E;margin:3px 0}
+.formula{background:#F1F1F4;border-radius:6px;padding:5px 8px;font-family:"Courier New",monospace;font-size:11px;color:#3E3E3E;margin:3px 0}
 .mvar2{font-size:10px;color:#747474;line-height:1.6}.mvar2 span{color:#191919;font-weight:700}
-.verdict-good{background:#edf7ed;border-left:4px solid #2e7d32;border-radius:0 6px 6px 0;padding:9px 14px;font-size:12px;color:#1b5e20;font-weight:500}
-.verdict-warn{background:#fff8e1;border-left:4px solid #f9a825;border-radius:0 6px 6px 0;padding:9px 14px;font-size:12px;color:#6d4c00;font-weight:500}
-.verdict-bad{background:#fdecea;border-left:4px solid #b71c1c;border-radius:0 6px 6px 0;padding:9px 14px;font-size:12px;color:#7f0000;font-weight:500}
-.caveat{font-size:10px;color:#747474;line-height:1.5;background:#FAFAFA;border:1px dashed #D8D8D8;border-radius:4px;padding:7px 9px}
+.verdict-good{background:#E9F4EB;border-radius:8px;padding:11px 16px;font-size:12px;color:#1b5e20;font-weight:500}
+.verdict-warn{background:#FDF2DA;border-radius:8px;padding:11px 16px;font-size:12px;color:#6d4c00;font-weight:500}
+.verdict-bad{background:#FBEAEA;border-radius:8px;padding:11px 16px;font-size:12px;color:#7f0000;font-weight:500}
+.caveat{font-size:10px;color:#747474;line-height:1.5;background:#F1F1F4;border-radius:8px;padding:9px 11px}
 .caveat b{color:#8C1D40}
 .chk{display:flex;align-items:center;gap:6px;font-size:11px;color:#3E3E3E;font-weight:700;text-transform:none;letter-spacing:0}
 .chk input{accent-color:#8C1D40;flex-shrink:0}
@@ -255,6 +255,10 @@ body{font-family:Arial,Helvetica,sans-serif;background:#FAFAFA;color:#191919;fon
 </div>
 
 <script>
+// Highlighted metrics use a soft pastel wash rather than an accent rule, so no
+// block on the page carries a line.
+const TINT={'#2e7d32':'#E9F4EB','#e65100':'#FDF0E2','#b71c1c':'#FBEAEA','#8C1D40':'#F8ECF1','#f9a825':'#FDF2DA'};
+const tint=c=>TINT[c]||'#F1F1F4';
 const MIRROR=25.4;
 const cfgs={'1x4':{c:4,r:1},'1x5':{c:5,r:1},'2x4':{c:4,r:2},'3x3':{c:3,r:3},'2x5':{c:5,r:2},'3x4':{c:4,r:3}};
 const DEG=180/Math.PI;
@@ -405,11 +409,11 @@ function update(){
 
   document.getElementById('metrics').innerHTML=`
     <div class="metric"><div class="ml">Max piezo tilt</div><div class="mv" style="color:${uc}">${motors.length?maxTilt.toFixed(2)+'&deg;':'&mdash;'}</div><div class="ms">${motors.length?'limit &plusmn;'+motorLimit.toFixed(2)+'&deg;':'no motorised node'}</div></div>
-    <div class="metric" style="border-left:3px solid ${cc}"><div class="ml">Motorised</div><div class="mv" style="color:${cc}">${motors.length} / ${m.length}</div><div class="ms">${chUsed} of ${chAvail===999?'&infin;':chAvail} channels</div></div>
+    <div class="metric" style="background:${tint(cc)}"><div class="ml">Motorised</div><div class="mv" style="color:${cc}">${motors.length} / ${m.length}</div><div class="ms">${chUsed} of ${chAvail===999?'&infin;':chAvail} channels</div></div>
     <div class="metric"><div class="ml">Max &Delta; actuator</div><div class="mv" style="color:${uc}">${Math.abs(maxDelta)<1?(maxDelta*1000).toFixed(0)+' &micro;m':maxDelta.toFixed(2)+' mm'}</div><div class="ms">of &plusmn;${(s.trav/2).toFixed(1)} mm travel</div></div>
     <div class="metric"><div class="ml">Angular resolution</div><div class="mv">${dResU.toFixed(2)}</div><div class="ms">&micro;rad &middot; ${dResArc.toFixed(2)}&Prime; per step</div></div>
     <div class="metric"><div class="ml">Screen walk / step</div><div class="mv">${spot.toFixed(1)} &micro;m</div><div class="ms">2&delta;&theta; &times; ${Math.round(meanScr)} mm</div></div>
-    <div class="metric" style="border-left:3px solid ${uc}"><div class="ml">Range used</div><div class="mv" style="color:${uc}">${motors.length?(util*100).toFixed(0)+'%':'&mdash;'}</div><div class="ms">${motors.length?nSteps.toLocaleString()+' steps full range':'manual max '+maxManual.toFixed(2)+'&deg;'}</div></div>`;
+    <div class="metric" style="background:${tint(uc)}"><div class="ml">Range used</div><div class="mv" style="color:${uc}">${motors.length?(util*100).toFixed(0)+'%':'&mdash;'}</div><div class="ms">${motors.length?nSteps.toLocaleString()+' steps full range':'manual max '+maxManual.toFixed(2)+'&deg;'}</div></div>`;
 
   let vc='verdict-good', vt='';
   if(chOver){
