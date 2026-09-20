@@ -89,6 +89,15 @@ RMS** at 2 DN camera noise; the paper reports 0.8 µrad RMS against an
 autocollimator. See [`smots/README.md`](smots/README.md) for the three sign
 conventions that will silently invert your angles if you get them wrong.
 
+It also includes **mirror-based screen-pose calibration** (`calibration.py`),
+which recovers `z_d` and the screen orientation from reflected-ray
+correspondences rather than a tape measure — the screen geometry is what the
+error budget says dominates. One result from it is worth stating up front: a
+perfectly flat mirror array makes the calibration **exactly degenerate**, because
+every reflected ray is parallel and distance along them is unobservable. Deliberate
+tilt spread across the reference nodes is what makes the screen distance
+measurable at all.
+
 ## Notes on the defaults
 
 The fixed hardware values describe the as-built 9-node TR1.5/PH1.5 hybrid from

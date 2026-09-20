@@ -27,6 +27,9 @@ from .analysis import (Carrier, find_carriers, phase_complex, phase_paper_eq4,
                        shear_ratio, shift_mm, synthetic_period,
                        unwrap_two_carrier)
 from .apertures import Aperture, grid_apertures, sampling_report
+from .calibration import (PoseEstimate, ScreenPose, estimate_screen_pose,
+                          householder, ray_conditioning, reflect_pose,
+                          screen_geometry, synthetic_observations)
 from .geometry import (angle_resolution, shift_from_tilt, small_angle_tilt,
                        tilt_from_shift, tilt_from_shift_paper, unambiguous_range)
 from .hardware import (Actuator, Bench, Camera, Controller, MirrorArray, Screen,
@@ -44,6 +47,8 @@ __all__ = [
     "Carrier", "find_carriers", "shear_ratio", "phase_complex",
     "phase_paper_eq4", "shift_mm", "unwrap_two_carrier",
     "Aperture", "grid_apertures", "sampling_report",
+    "ScreenPose", "PoseEstimate", "estimate_screen_pose", "screen_geometry",
+    "householder", "reflect_pose", "ray_conditioning", "synthetic_observations",
     "tilt_from_shift", "tilt_from_shift_paper", "shift_from_tilt",
     "small_angle_tilt", "angle_resolution", "unambiguous_range",
     "SyntheticFrame", "render_frame", "reference_frame",

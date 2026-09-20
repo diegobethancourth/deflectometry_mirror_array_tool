@@ -12,6 +12,7 @@ Built for the ASU bench: a 3×3 array of 1″ square mirrors with the centre nod
 ```bash
 pip install numpy
 python demo.py          # full walkthrough, no hardware needed
+python demo.py calib    # screen-pose calibration through the mirrors
 python -m pytest tests/ -q
 ```
 
@@ -114,6 +115,68 @@ and cannot be separated at all.
 | `apertures.py` | Per-segment binary digital masks |
 | `simulate.py` | Ray-traced forward model, for ground truth |
 | `pipeline.py` | `measure()` — two frames in, per-node angles out |
+| `calibration.py` | Mirror-based screen-pose calibration — where `z_d` should come from |
+
+## Calibrating the screen pose through the mirrors
+
+The error budget says screen geometry dominates everything else, and Eq. (6)
+needs `z_d`. But the camera never sees the screen — only its reflection. So
+`calibration.py` recovers the screen pose *through* the mirrors.
+
+Each observation is a correspondence: a point **P** on a mirror of known normal,
+the direction **r** the ray leaves in after reflecting, and the screen coordinate
+**q** the decoded pattern says is seen there. The screen point lies on that ray,
+which gives two constraints per observation with the ray length eliminated:
+
+```
+(I − r rᵀ)(R q + t − P) = 0
+```
+
+Solved linearly for `[r₁, r₂, t]` (the data never constrains `R`'s third column,
+since `q` is planar), orthonormalised, then refined by Gauss-Newton on all six
+pose degrees of freedom. Structured after the conventional linear-then-nonlinear
+pattern — cf. Uhlig, *Light Field Imaging for Deflectometry*, ch. 5 — but written
+from the geometry, not transcribed from it.
+
+### A flat array cannot be calibrated at all
+
+This is the finding worth carrying to the bench. If every mirror normal is
+identical, every reflected ray is **parallel**, and (I − r rᵀ) says nothing about
+position *along* those rays. `z_d` is not poorly determined — it is not
+determined. No quantity of data fixes it.
+
+Measured on the synthetic bench with 50 µm absolute decode noise, 20 trials:
+
+| Mirror tilt spread | Conditioning | `z_d` error |
+|---|---|---|
+| 0° (perfectly flat) | 0.0000 | **unobservable** |
+| 0.5° | 0.0004 | 0.345 mm |
+| 1.0° | 0.0018 | 0.144 mm |
+| 2.0° | 0.0070 | 0.078 mm |
+| 4.0° | 0.0279 | 0.038 mm |
+| 8.0° | 0.1064 | 0.018 mm |
+
+So **do not try to set the nine mirrors parallel.** A few degrees of deliberate
+spread across the eight reference nodes buys more calibration accuracy than any
+amount of extra data at zero spread. Stepping only the motorised node helps far
+less — it is one node in nine. `ray_conditioning()` reports where you are, and
+the estimator refuses to be quiet when the bundle is degenerate.
+
+### The screen pitch measures itself
+
+If `q` is in millimetres, the recovered screen axes must come out unit length.
+They do not if the assumed pixel pitch is wrong, and the deviation *is* the scale
+error — on the one number the paper insists you measure under a microscope.
+`PoseEstimate.pitch_scale` reports it, and a 2% error raises a warning.
+
+### Two prerequisites
+
+- **Absolute screen coordinates**, so unwrapped phase — a multi-frequency or
+  coded sequence. The relative SMOTS tilt measurement never needs to know which
+  fringe it is on; calibration does.
+- **Mirror normals from somewhere else first.** This is circular, since normals
+  are what SMOTS measures. Break it with the mechanical normals of the reference
+  nodes (set once, stable) or an autocollimator, then calibrate, then measure.
 
 ## Before this touches hardware
 

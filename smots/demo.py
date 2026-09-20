@@ -124,5 +124,76 @@ def main() -> None:
         print(f"  - {line}")
 
 
+def calibration_demo() -> None:
+    """Mirror-based screen-pose calibration -- run with ``python demo.py calib``."""
+    import numpy as np
+
+    from smots.calibration import (ScreenPose, estimate_screen_pose,
+                                   screen_geometry, synthetic_observations)
+
+    bench = Bench()
+    arr = bench.array
+    centres = np.array([[*arr.centre_mm(r, c), 0.0]
+                        for r in range(arr.rows) for c in range(arr.cols)])
+
+    def normals(spread_deg, seed=5):
+        rng = np.random.default_rng(seed)
+        s = np.radians(spread_deg)
+        out = []
+        for _ in range(len(centres)):
+            tx, ty = (rng.normal(0.0, s, 2) if s > 0 else (0.0, 0.0))
+            out.append([np.sin(tx), np.sin(ty),
+                        np.sqrt(max(0.0, 1 - np.sin(tx) ** 2 - np.sin(ty) ** 2))])
+        return np.array(out)
+
+    banner("Screen-pose calibration through the mirrors")
+    print("  The camera never sees the screen -- only its reflection. This recovers")
+    print("  the screen's pose from reflected-ray correspondences, which is where")
+    print("  z_d in Eq. (6) should come from instead of a tape measure.")
+
+    truth = ScreenPose(R=np.eye(3), t=np.array([0.0, 0.0, 400.0]))
+
+    banner("A perfectly flat array cannot be calibrated at all")
+    flat = np.tile([0.0, 0.0, 1.0], (len(centres), 1))
+    P, D, Q = synthetic_observations(truth, centres, flat, samples=3)
+    est = estimate_screen_pose(P, D, Q)
+    print(est.report())
+    print(f"\n  recovered z_d = {screen_geometry(est.pose)['z_d_mm']:.1f} mm "
+          f"against a true 400.0 mm -- the estimate is not merely noisy, it is")
+    print("  unconstrained: parallel rays say nothing about distance along them.")
+
+    banner("Tilt spread is the lever (50 um decode noise, 20 trials each)")
+    print("   mirror spread   conditioning    z_d error")
+    for spread in (0.5, 1.0, 2.0, 4.0, 8.0):
+        errs, cond = [], 0.0
+        for seed in range(20):
+            P, D, Q = synthetic_observations(
+                truth, centres, normals(spread, seed), samples=3,
+                noise_mm=0.05, rng=np.random.default_rng(100 + seed))
+            e = estimate_screen_pose(P, D, Q)
+            cond = e.conditioning
+            errs.append(screen_geometry(e.pose)["z_d_mm"] - 400.0)
+        rms = np.sqrt(np.mean(np.square(errs)))
+        print(f"   {spread:5.1f} deg       {cond:9.4f}     {rms:7.3f} mm")
+
+    banner("So, for the bench")
+    for line in (
+        "do NOT try to set all nine mirrors parallel -- that is the degenerate\n"
+        "    case, not merely the hardest one",
+        "a few degrees of deliberate spread across the reference nodes buys more\n"
+        "    calibration accuracy than any amount of extra data at zero spread",
+        "stepping only the motorised node helps far less: it is 1 node in 9",
+        "calibration needs ABSOLUTE screen coordinates, so unwrapped phase --\n"
+        "    the relative SMOTS tilt measurement is not enough on its own",
+        "mirror normals must come from somewhere else first (mechanical design\n"
+        "    or an autocollimator); measure them with SMOTS only after calibrating",
+    ):
+        print(f"  - {line}")
+
+
 if __name__ == "__main__":
-    main()
+    import sys
+    if len(sys.argv) > 1 and sys.argv[1].startswith("calib"):
+        calibration_demo()
+    else:
+        main()
