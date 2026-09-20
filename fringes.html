@@ -3,19 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ASU Deflectometry — Fringe Pattern Generator</title>
+<title>Phase-Shifted Fringe Pattern Generator — Diego Bethancourth | ASU Deflectometry</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Arial,Helvetica,sans-serif;background:#FAFAFA;color:#191919;font-size:14px}
 .nav{background:#8C1D40;display:flex;align-items:center;gap:14px;padding:0 24px;height:52px;flex-wrap:wrap}
-.asu-mark{background:#FFC627;width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:3px;flex-shrink:0}
-.asu-mark span{color:#8C1D40;font-weight:900;font-size:17px;letter-spacing:-1px;font-family:Arial,sans-serif}
-.nav-text{color:#fff}.nav-text .t1{font-size:14px;font-weight:700;line-height:1.2}.nav-text .t2{font-size:11px;color:rgba(255,255,255,0.7)}
 .nav-links{margin-left:auto;display:flex;gap:3px;flex-wrap:wrap}
 .nav-links a{color:rgba(255,255,255,.85);text-decoration:none;font-size:12px;font-weight:700;padding:6px 11px;border-radius:3px;white-space:nowrap}
 .nav-links a:hover{background:rgba(255,255,255,.14);color:#fff}
 .nav-links a.active{background:#FFC627;color:#8C1D40}
 .gold-bar{height:4px;background:#FFC627}
+.brandbar{background:#fff;border-bottom:1px solid #E8E8E8;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:7px 24px;flex-wrap:wrap}
+.brandbar img{display:block}
+.logo-asu{height:30px;width:auto}
+.logo-lab{height:52px;width:auto;mix-blend-mode:multiply}
+.nav-title .t1{font-size:14px;font-weight:700;line-height:1.2;color:#fff}
+.nav-title .t2{font-size:11px;color:rgba(255,255,255,0.72)}
+.byline{font-size:12px;color:#747474}
+.byline strong{color:#8C1D40}
+@media(max-width:760px){.logo-asu{height:22px}.logo-lab{height:32px}}
 .page-hdr{background:#fff;border-bottom:1px solid #E8E8E8;padding:10px 24px;display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
 .page-hdr h1{font-size:17px;font-weight:700;color:#8C1D40}.page-hdr p{font-size:12px;color:#747474}
 .app{display:grid;grid-template-columns:260px 1fr;gap:0;min-height:calc(100vh - 80px)}
@@ -69,24 +75,28 @@ body{font-family:Arial,Helvetica,sans-serif;background:#FAFAFA;color:#191919;fon
 </head>
 <body>
 
+<div class="brandbar">
+  <img class="logo-asu" src="logos/ASU%20Logo%20School.png" alt="Arizona State University — Ira A. Fulton Schools of Engineering, School of Manufacturing Systems and Networks">
+  <img class="logo-lab" src="logos/SOLAR%20LAB%20LOGO.png" alt="SOLAR — Sensing, Optics, Laser Application Research">
+</div>
 <div class="nav">
-  <div class="asu-mark"><span>ASU</span></div>
-  <div class="nav-text">
-    <div class="t1">Deflectometry Research</div>
-    <div class="t2">School of Manufacturing Systems and Networks &nbsp;·&nbsp; Dr. Xiangyu Guo</div>
+  <div class="nav-title">
+    <div class="t1">Deflectometry Mirror-Array Toolkit</div>
+    <div class="t2">SMOTS &mdash; Simultaneous Multi-segmented mirror Orientation Test System</div>
   </div>
   <nav class="nav-links">
     <a href="index.html">Array Config</a>
     <a href="fringes.html" class="active">Fringe Generator</a>
     <a href="piezo.html">Tilt &amp; Actuation</a>
     <a href="budget.html">Error Budget</a>
+    <a href="simulator.html">SMOTS Simulator</a>
   </nav>
 </div>
 <div class="gold-bar"></div>
 
 <div class="page-hdr">
   <h1>Phase-Shifted Fringe Pattern Generator</h1>
-  <p>Screen-side pattern design &nbsp;·&nbsp; Diego Bethancourth &nbsp;·&nbsp; Arizona State University</p>
+  <p class="byline"><strong>Diego Bethancourth</strong> &nbsp;&middot;&nbsp; Advisor: Dr. Xiangyu Guo &nbsp;&middot;&nbsp; Systems, Optics and Laser Application Research Lab &nbsp;&middot;&nbsp; Arizona State University</p>
 </div>
 
 <div class="app">
@@ -238,8 +248,7 @@ body{font-family:Arial,Helvetica,sans-serif;background:#FAFAFA;color:#191919;fon
 </div>
 
 <div class="footer">
-  <span>Arizona State University</span> &nbsp;&middot;&nbsp; School of Manufacturing Systems and Networks &nbsp;&middot;&nbsp;
-  Deflectometry Research &nbsp;&middot;&nbsp; Diego Bethancourth &nbsp;&middot;&nbsp; Advisor: Dr. Xiangyu Guo
+  <span>Arizona State University</span> &nbsp;&middot;&nbsp; School of Manufacturing Systems and Networks &nbsp;&middot;&nbsp; SOLAR Lab &nbsp;&middot;&nbsp; Diego Bethancourth &nbsp;&middot;&nbsp; Advisor: Dr. Xiangyu Guo
 </div>
 
 <script>
