@@ -109,6 +109,10 @@ pytest                             # 63 tests, from the repo root
 cd smots && python demo.py         # narrated walkthrough
 ```
 
+[`smots/first_steps/`](smots/first_steps/) holds the build-up to the algorithm,
+one standalone script per idea, starting from a 1-D check of the shear theorem
+that the whole method rests on.
+
 Nothing in the package needs hardware — it is validated against a ray-traced
 forward model. See [`smots/README.md`](smots/README.md) for a reviewer's reading
 order and an explicit statement of what is and is not yet established.

@@ -24,6 +24,13 @@ python demo.py calib    # screen-pose calibration through the mirrors
 `pytest` works from the repository root or from this directory. To use the
 package from elsewhere, `pip install -e .` first.
 
+**Start with [`first_steps/`](first_steps/).** `01_shear_theorem.py` is a
+standalone 1-D check of the single claim the whole paper rests on: that
+subtracting two shifted copies of a sinusoid encodes the shift in the amplitude
+of the difference. It recovers known shifts to machine precision, then pushes
+until the phase wraps. Sixty lines, numpy only, and the shortest route to
+understanding why any of the rest works.
+
 **Where to look, in order.** `analysis.py` is the core — Eqs. (1)–(4) of the
 paper, plus the phase estimator this implementation prefers and why.
 `geometry.py` turns phase into an angle. `pipeline.py` is the whole chain in one
