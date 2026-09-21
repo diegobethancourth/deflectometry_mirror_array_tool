@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="asu_icon.ico" sizes="any">
+<title>Start Here — Deflectometry Mirror-Array Toolkit</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,Helvetica,sans-serif;background:#F2F2F5;color:#191919;font-size:14px}
+.nav{background:#8C1D40;display:flex;align-items:center;gap:14px;padding:0 24px;height:52px;flex-wrap:wrap}
+.nav-links{margin-left:auto;display:flex;gap:3px;flex-wrap:wrap;align-items:center}
+.nav-links a{color:rgba(255,255,255,.85);text-decoration:none;font-size:12px;font-weight:700;padding:6px 11px;border-radius:3px;white-space:nowrap}
+.nav-links a:hover{background:rgba(255,255,255,.14);color:#fff}
+.nav-links a.active{background:#FFC627;color:#8C1D40}
+.gold-bar{height:4px;background:#FFC627}
+.brandbar{background:#fff;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:7px 24px;flex-wrap:wrap}
+.brandbar img{display:block}
+.logo-asu{height:30px;width:auto}
+.logo-lab{height:52px;width:auto;mix-blend-mode:multiply}
+.nav-title .t1{font-size:14px;font-weight:700;line-height:1.2;color:#fff}
+.nav-title .t2{font-size:11px;color:rgba(255,255,255,0.78);line-height:1.35}
+.nav-title .t2 strong{color:#FFC627;font-weight:700}
+.nav-title{min-width:0}
+@media(max-width:760px){.logo-asu{height:22px}.logo-lab{height:32px}}
+.page-hdr{background:#fff;padding:10px 24px;display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+.page-hdr h1{font-size:17px;font-weight:700;color:#8C1D40;margin:0}
+
+.wrap{max-width:1180px;margin:0 auto;padding:16px 24px 40px;display:flex;flex-direction:column;gap:14px}
+.card{background:#fff;border-radius:10px;padding:18px 20px}
+.sec-lbl{font-size:10px;font-weight:700;color:#8C1D40;text-transform:uppercase;letter-spacing:.07em;margin-bottom:9px}
+h2{font-size:16px;color:#8C1D40;margin-bottom:6px}
+p{font-size:13px;line-height:1.65;color:#3E3E3E;margin:6px 0}
+.hero{background:#FFF4D6;border-radius:10px;padding:18px 20px}
+.hero h2{margin-bottom:4px}
+.hero p{color:#3E3E3E}
+.hero b{color:#8C1D40}
+
+/* flowchart */
+.flow{width:100%;height:auto;display:block}
+.fnode rect{transition:filter .15s ease}
+.fnode:hover rect{filter:brightness(.96)}
+.fnode{cursor:pointer}
+.fnode text{pointer-events:none}
+
+/* routers */
+.router{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:10px}
+.task{background:#F1F1F4;border-radius:9px;padding:12px 14px;text-decoration:none;display:block;transition:background .15s}
+.task:hover{background:#FFF4D6}
+.task .q{font-size:12.5px;font-weight:700;color:#191919;display:block;margin-bottom:3px}
+.task .a{font-size:11px;color:#747474}
+.task .a b{color:#8C1D40}
+
+/* steps */
+.steps{counter-reset:s;display:flex;flex-direction:column;gap:9px}
+.step{counter-increment:s;display:flex;gap:12px;align-items:flex-start;background:#F1F1F4;border-radius:9px;padding:12px 14px}
+.step::before{content:counter(s);background:#8C1D40;color:#fff;font-weight:700;font-size:12px;
+  width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.step div{font-size:12.5px;line-height:1.6;color:#3E3E3E}
+.step b{color:#191919}
+.step a{color:#8C1D40;font-weight:700;text-decoration:none}
+.step a:hover{text-decoration:underline}
+
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{background:#8C1D40;color:#fff;text-align:left;padding:7px 9px;font-size:10px;text-transform:uppercase;letter-spacing:.04em}
+td{padding:7px 9px;vertical-align:top;line-height:1.55}
+tbody tr:nth-child(even) td{background:#F6F6F9}
+td a{color:#8C1D40;font-weight:700;text-decoration:none}
+td a:hover{text-decoration:underline}
+.pill{display:inline-block;background:#E9F4EB;color:#1b5e20;border-radius:5px;padding:1px 7px;font-size:10.5px;font-weight:700}
+.pill.warn{background:#FDF2DA;color:#6d4c00}
+.pill.bad{background:#FBEAEA;color:#7f0000}
+.note{background:#E9F4EB;border-radius:9px;padding:12px 15px;font-size:12.5px;line-height:1.6;color:#1b5e20}
+.note b{color:#14501a}
+.footer{background:#3E3E3E;color:#BFBFBF;font-size:10px;padding:10px 24px;text-align:center}
+.footer span{color:#FFC627}
+</style>
+</head>
+<body>
+
+<div class="brandbar">
+  <img class="logo-asu" src="logos/ASU%20Logo%20School.png" alt="Arizona State University — Ira A. Fulton Schools of Engineering, School of Manufacturing Systems and Networks">
+  <img class="logo-lab" src="logos/SOLAR%20LAB%20LOGO.png" alt="SOLAR — Sensing, Optics, Laser Application Research">
+</div>
+<div class="nav">
+  <div class="nav-title">
+    <div class="t1">Deflectometry Mirror-Array Toolkit</div>
+    <div class="t2"><strong>Diego Bethancourth</strong> &nbsp;&middot;&nbsp; Advisor: Dr. Xiangyu Guo &nbsp;&middot;&nbsp; Systems, Optics and Laser Application Research Lab &nbsp;&middot;&nbsp; Arizona State University</div>
+  </div>
+  <nav class="nav-links">
+    <a href="guide.html" class="active">Start Here</a>
+    <a href="index.html">Array Config</a>
+    <a href="fringes.html">Fringe Generator</a>
+    <a href="piezo.html">Tilt &amp; Actuation</a>
+    <a href="budget.html">Error Budget</a>
+    <a href="simulator.html">SMOTS Simulator</a>
+  </nav>
+</div>
+<div class="gold-bar"></div>
+
+<div class="page-hdr"><h1>Start Here &mdash; how the five tools fit together</h1></div>
+
+<div class="wrap">
+
+  <div class="hero">
+    <h2>What this toolkit is for</h2>
+    <p>A flat mirror reflects a pattern shown on a screen into a camera. Tilt the mirror and the
+    reflected pattern shifts &mdash; measure the shift and you have measured the tilt. Do it for nine
+    mirrors at once and you can watch a whole segmented surface simultaneously. That is
+    <b>deflectometry</b>, and the specific method here is <b>SMOTS</b>.</p>
+    <p>These five pages answer the five questions you have to settle before the bench can work.
+    They are not independent: each one hands numbers to the next. The chart below shows what
+    flows where. <b>Every box is clickable.</b></p>
+  </div>
+
+  <div class="card">
+    <div class="sec-lbl">The design chain</div>
+    <svg class="flow" viewBox="0 0 1000 640" role="img"
+         aria-label="Flowchart: Array Config feeds the Fringe Generator and Tilt and Actuation; both feed the Error Budget, which feeds the SMOTS Simulator; a feedback loop returns from the Error Budget to Array Config.">
+      <defs>
+        <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#8C1D40"/>
+        </marker>
+        <marker id="ahg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#A98C3A"/>
+        </marker>
+      </defs>
+
+      <!-- feedback loop, drawn first so nodes sit on top -->
+      <path d="M 375 374 L 55 374 L 55 74 L 375 74" fill="none" stroke="#A98C3A"
+            stroke-width="2" stroke-dasharray="7,5" marker-end="url(#ahg)"/>
+      <rect x="18" y="200" width="76" height="52" rx="7" fill="#FFF4D6"/>
+      <text x="56" y="218" text-anchor="middle" font-size="10.5" fill="#6d4c00" font-weight="bold">target</text>
+      <text x="56" y="232" text-anchor="middle" font-size="10.5" fill="#6d4c00" font-weight="bold">missed?</text>
+      <text x="56" y="246" text-anchor="middle" font-size="10.5" fill="#6d4c00">go back</text>
+
+      <!-- 1 Array Config -->
+      <a class="fnode" href="index.html">
+        <rect x="375" y="30" width="250" height="88" rx="12" fill="#F8ECF1"/>
+        <text x="393" y="56" font-size="11" fill="#8C1D40" font-weight="bold">1 &nbsp; ARRAY CONFIG</text>
+        <text x="393" y="76" font-size="12.5" fill="#191919">Which layout fits the</text>
+        <text x="393" y="93" font-size="12.5" fill="#191919">screen and the camera?</text>
+        <text x="393" y="109" font-size="10.5" fill="#747474">out: layout, gap, d, n</text>
+      </a>
+
+      <!-- 2 Fringe Generator -->
+      <a class="fnode" href="fringes.html">
+        <rect x="120" y="180" width="250" height="88" rx="12" fill="#FFF4D6"/>
+        <text x="138" y="206" font-size="11" fill="#8a6d00" font-weight="bold">2 &nbsp; FRINGE GENERATOR</text>
+        <text x="138" y="226" font-size="12.5" fill="#191919">What do I display on</text>
+        <text x="138" y="243" font-size="12.5" fill="#191919">the screen?</text>
+        <text x="138" y="259" font-size="10.5" fill="#747474">out: pattern PNGs, &#963;&#966;</text>
+      </a>
+
+      <!-- 3 Tilt & Actuation -->
+      <a class="fnode" href="piezo.html">
+        <rect x="630" y="180" width="250" height="88" rx="12" fill="#E7EFF9"/>
+        <text x="648" y="206" font-size="11" fill="#12508F" font-weight="bold">3 &nbsp; TILT &amp; ACTUATION</text>
+        <text x="648" y="226" font-size="12.5" fill="#191919">Can the mounts point</text>
+        <text x="648" y="243" font-size="12.5" fill="#191919">each mirror there?</text>
+        <text x="648" y="259" font-size="10.5" fill="#747474">out: tilt demand, &#948;&#952;</text>
+      </a>
+
+      <!-- 4 Error Budget -->
+      <a class="fnode" href="budget.html">
+        <rect x="375" y="330" width="250" height="88" rx="12" fill="#FDF0E2"/>
+        <text x="393" y="356" font-size="11" fill="#B54A00" font-weight="bold">4 &nbsp; ERROR BUDGET</text>
+        <text x="393" y="376" font-size="12.5" fill="#191919">How accurate will the</text>
+        <text x="393" y="393" font-size="12.5" fill="#191919">measurement be?</text>
+        <text x="393" y="409" font-size="10.5" fill="#747474">out: slope error &#948;s, height &#948;z</text>
+      </a>
+
+      <!-- 5 Simulator -->
+      <a class="fnode" href="simulator.html">
+        <rect x="375" y="480" width="250" height="88" rx="12" fill="#E9F4EB"/>
+        <text x="393" y="506" font-size="11" fill="#1b5e20" font-weight="bold">5 &nbsp; SMOTS SIMULATOR</text>
+        <text x="393" y="526" font-size="12.5" fill="#191919">Does the algorithm</text>
+        <text x="393" y="543" font-size="12.5" fill="#191919">actually recover it?</text>
+        <text x="393" y="559" font-size="10.5" fill="#747474">out: commanded vs recovered</text>
+      </a>
+
+      <!-- arrows -->
+      <path d="M 430 118 L 300 180" fill="none" stroke="#8C1D40" stroke-width="2" marker-end="url(#ah)"/>
+      <rect x="292" y="132" width="84" height="18" rx="5" fill="#fff"/>
+      <text x="334" y="145" text-anchor="middle" font-size="10.5" fill="#8C1D40" font-weight="bold">layout, n</text>
+
+      <path d="M 570 118 L 700 180" fill="none" stroke="#8C1D40" stroke-width="2" marker-end="url(#ah)"/>
+      <rect x="622" y="132" width="106" height="18" rx="5" fill="#fff"/>
+      <text x="675" y="145" text-anchor="middle" font-size="10.5" fill="#8C1D40" font-weight="bold">layout, geometry</text>
+
+      <path d="M 300 268 L 430 330" fill="none" stroke="#8C1D40" stroke-width="2" marker-end="url(#ah)"/>
+      <rect x="296" y="286" width="66" height="18" rx="5" fill="#fff"/>
+      <text x="329" y="299" text-anchor="middle" font-size="10.5" fill="#8C1D40" font-weight="bold">&#963;&#966;, n</text>
+
+      <path d="M 700 268 L 570 330" fill="none" stroke="#8C1D40" stroke-width="2" marker-end="url(#ah)"/>
+      <rect x="632" y="286" width="118" height="18" rx="5" fill="#fff"/>
+      <text x="691" y="299" text-anchor="middle" font-size="10.5" fill="#8C1D40" font-weight="bold">&#948;&#952; you can command</text>
+
+      <path d="M 500 418 L 500 480" fill="none" stroke="#8C1D40" stroke-width="2" marker-end="url(#ah)"/>
+      <rect x="506" y="440" width="150" height="18" rx="5" fill="#fff"/>
+      <text x="512" y="453" font-size="10.5" fill="#8C1D40" font-weight="bold">&#948;s you can measure</text>
+
+      <text x="500" y="604" text-anchor="middle" font-size="11" fill="#747474">
+        solid = a number handed forward &#160;&#183;&#160; dashed = go back and change something
+      </text>
+    </svg>
+  </div>
+
+  <div class="card">
+    <div class="sec-lbl">When a page turns amber or red</div>
+    <p>Every page shows a verdict banner. Red does not mean the tool is broken &mdash; it means the
+    design does not close, and it tells you which page to go back to.</p>
+    <table>
+      <thead><tr><th style="width:30%">What you see</th><th style="width:26%">What it means</th><th>Where to fix it</th></tr></thead>
+      <tbody>
+      <tr><td><span class="pill bad">Fringes N<sub>f</sub> &lt; 40</span></td>
+          <td>Too few fringes across the array to extract phase reliably</td>
+          <td>Lower pixels-per-fringe, or add columns, on <a href="index.html">Array Config</a></td></tr>
+      <tr><td><span class="pill bad">Camera FOV too small</span></td>
+          <td>The lens cannot cover the whole array at that distance</td>
+          <td>Shorter focal length or bigger sensor on <a href="index.html">Array Config</a></td></tr>
+      <tr><td><span class="pill bad">Intensity clips</span></td>
+          <td>A &plusmn; B leaves the 0&ndash;255 range, so the sinusoid is truncated &mdash; this
+              <em>biases</em> the phase, it does not merely add noise</td>
+          <td>Lower modulation or re-centre bias on <a href="fringes.html">Fringe Generator</a></td></tr>
+      <tr><td><span class="pill warn">n &lt; 8 px per fringe</span></td>
+          <td>The panel renders a stepped near-square wave; harmonics leak into the phase</td>
+          <td>Raise pixels-per-fringe on <a href="fringes.html">Fringe Generator</a></td></tr>
+      <tr><td><span class="pill bad">Controller over budget</span></td>
+          <td>A tip/tilt node needs 2 channels and a KIM101 has 4 &mdash; so two nodes, maximum</td>
+          <td>Fewer motorised nodes, or a second controller, on <a href="piezo.html">Tilt &amp; Actuation</a></td></tr>
+      <tr><td><span class="pill bad">Piezo out of range</span></td>
+          <td>A mirror needs more tilt than the mount or actuator can give</td>
+          <td>Check the baseplate pre-tilt, add standoff, or shrink the array</td></tr>
+      <tr><td><span class="pill warn">Slope target missed</span></td>
+          <td>The measurement will not be accurate enough</td>
+          <td>The bar chart on <a href="budget.html">Error Budget</a> names the dominant term</td></tr>
+      <tr><td><span class="pill bad">Error reads &ldquo;wrap&rdquo;</span></td>
+          <td>Tilt exceeded the unambiguous range, so the phase folded back</td>
+          <td>Coarser carrier or shorter screen distance on <a href="simulator.html">Simulator</a></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="sec-lbl">I want to&hellip;</div>
+    <div class="router">
+      <a class="task" href="index.html"><span class="q">Choose a mirror layout</span>
+        <span class="a">Compare all six side by side &rarr; <b>Array Config</b></span></a>
+      <a class="task" href="index.html"><span class="q">Check whether my lens covers the array</span>
+        <span class="a">Sensor and focal length &rarr; <b>Array Config</b></span></a>
+      <a class="task" href="fringes.html"><span class="q">Produce the pattern to display</span>
+        <span class="a">Export full-resolution PNGs &rarr; <b>Fringe Generator</b></span></a>
+      <a class="task" href="fringes.html"><span class="q">Get Python code for the pattern</span>
+        <span class="a">Copy a numpy snippet &rarr; <b>Fringe Generator</b></span></a>
+      <a class="task" href="piezo.html"><span class="q">Decide which mirrors to motorise</span>
+        <span class="a">Click nodes to toggle &rarr; <b>Tilt &amp; Actuation</b></span></a>
+      <a class="task" href="piezo.html"><span class="q">Know my smallest commandable tilt</span>
+        <span class="a">Angular resolution per step &rarr; <b>Tilt &amp; Actuation</b></span></a>
+      <a class="task" href="budget.html"><span class="q">Find what limits my accuracy</span>
+        <span class="a">Share-of-variance bars &rarr; <b>Error Budget</b></span></a>
+      <a class="task" href="simulator.html"><span class="q">See the method actually work</span>
+        <span class="a">Commanded vs recovered &rarr; <b>SMOTS Simulator</b></span></a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="sec-lbl">First time here? Do these four things</div>
+    <div class="steps">
+      <div class="step"><div><b>Open the <a href="simulator.html">SMOTS Simulator</a> and tilt M5.</b>
+        Watch the fringes on that one mirror shift while the others stay put. Then set the right-hand
+        panel to <b>Sheared pattern</b>: eight mirrors go blank and only M5 carries fringes. That
+        single picture <em>is</em> the method &mdash; subtracting the reference leaves only what moved.</div></div>
+      <div class="step"><div><b>Press &ldquo;+1 actuator step&rdquo;.</b> The mirror moves about
+        1.05&nbsp;&micro;rad &mdash; one step of a real MPIA10 &mdash; and the retrieval still resolves it.
+        That is the sensitivity you are working with.</div></div>
+      <div class="step"><div><b>Walk the chain: <a href="index.html">1</a> &rarr;
+        <a href="fringes.html">2</a> &rarr; <a href="piezo.html">3</a> &rarr;
+        <a href="budget.html">4</a>.</b> On each page, read the <b>Mathematics</b> panel on the right
+        while you move a slider on the left. Each equation shows its current numbers, so you see cause
+        and effect rather than a formula.</div></div>
+      <div class="step"><div><b>Press <em>Guided tour</em> in the top bar of any page.</b> It walks
+        you through that page's controls and outputs one at a time. Arrow keys move, Escape
+        closes.</div></div>
+    </div>
+  </div>
+
+  <div class="note">
+    <b>One habit worth forming.</b> Change one control at a time and watch which metric tile reacts.
+    Every number on every page is live, so the tool is at its most useful as an instrument for
+    building intuition &mdash; not as a calculator you read once. The full derivations are in the
+    mathematical reference in the repository if you want to go deeper.
+  </div>
+
+</div>
+
+<div class="footer">
+  <span>Arizona State University</span> &nbsp;&middot;&nbsp; School of Manufacturing Systems and Networks &nbsp;&middot;&nbsp; SOLAR Lab &nbsp;&middot;&nbsp; Diego Bethancourth &nbsp;&middot;&nbsp; Advisor: Dr. Xiangyu Guo
+</div>
+
+</body>
+</html>

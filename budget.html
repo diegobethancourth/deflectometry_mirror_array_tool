@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" href="asu_icon.ico" sizes="any">
+<link rel="stylesheet" href="assets/tour.css">
 <title>Measurement Error Budget — Diego Bethancourth | ASU Deflectometry</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -87,6 +88,7 @@ body{font-family:Arial,Helvetica,sans-serif;background:#F2F2F5;color:#191919;fon
     <div class="t2"><strong>Diego Bethancourth</strong> &nbsp;&middot;&nbsp; Advisor: Dr. Xiangyu Guo &nbsp;&middot;&nbsp; Systems, Optics and Laser Application Research Lab &nbsp;&middot;&nbsp; Arizona State University</div>
   </div>
   <nav class="nav-links">
+    <a href="guide.html">Start Here</a>
     <a href="index.html">Array Config</a>
     <a href="fringes.html">Fringe Generator</a>
     <a href="piezo.html">Tilt &amp; Actuation</a>
@@ -527,5 +529,38 @@ function drawChain(s,v){
 
 update();
 </script>
+<script>window.TOUR_STEPS=[
+ {
+  "sel": "#ppf",
+  "title": "Phase measurement inputs",
+  "text": "Carry these across from the Fringe Generator so the budget describes the pattern you actually intend to display."
+ },
+ {
+  "sel": "#cal",
+  "title": "Calibration uncertainties",
+  "text": "These four are usually what limit the measurement — not the camera. Move each one and watch the bar chart to see which actually matters."
+ },
+ {
+  "sel": "#bars",
+  "title": "Share of the variance",
+  "text": "The honest answer to ‘what should I work on’. With realistic defaults, screen planarity dominates at around 93% and phase noise is a rounding error beside it."
+ },
+ {
+  "sel": "#lowo",
+  "title": "Remove piston and tilt",
+  "text": "Standard practice in reconstruction. A uniform screen-pose offset gives every point the <em>same</em> slope error, which is a pure tilt — so the low-order fit removes it exactly. Untick to see the raw, uncorrected budget."
+ },
+ {
+  "sel": "#tbl",
+  "title": "The two budget tables",
+  "text": "The first is slope, the second height. Note the <b>Character</b> column: random, tilt-like, figure and scale error each integrate into height by a different rule. Treating them alike is the expensive mistake."
+ },
+ {
+  "sel": "#chain",
+  "title": "The propagation chain",
+  "text": "Fringe → phase → slope → height, with the multiplier on each arrow. Slope is what deflectometry measures directly; height is integrated and assumption-dependent."
+ }
+];</script>
+<script src="assets/tour.js"></script>
 </body>
 </html>

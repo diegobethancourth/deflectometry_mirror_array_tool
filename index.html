@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" href="asu_icon.ico" sizes="any">
+<link rel="stylesheet" href="assets/tour.css">
 <title>Mirror-Screen-Camera Array Configuration Tool — Diego Bethancourth | ASU Deflectometry</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -83,6 +84,7 @@ body{font-family:Arial,Helvetica,sans-serif;background:#F2F2F5;color:#191919;fon
     <div class="t2"><strong>Diego Bethancourth</strong> &nbsp;&middot;&nbsp; Advisor: Dr. Xiangyu Guo &nbsp;&middot;&nbsp; Systems, Optics and Laser Application Research Lab &nbsp;&middot;&nbsp; Arizona State University</div>
   </div>
   <nav class="nav-links">
+    <a href="guide.html">Start Here</a>
     <a href="index.html" class="active">Array Config</a>
     <a href="fringes.html">Fringe Generator</a>
     <a href="piezo.html">Tilt &amp; Actuation</a>
@@ -463,5 +465,43 @@ function drawSystem(dist,arrayW,fov,aovH){
 
 update();
 </script>
+<script>window.TOUR_STEPS=[
+ {
+  "sel": "#arr",
+  "title": "Start with the layout",
+  "text": "Six candidate mirror layouts. The 3×3 is the as-built array. Everything else on this page recalculates the moment you change it."
+ },
+ {
+  "sel": "#ppf",
+  "title": "Pixels per fringe",
+  "text": "The single most influential control here. A finer fringe (smaller n) packs more fringes across the array, which the measurement needs — but below about 8 px the screen can no longer render a smooth sinusoid."
+ },
+ {
+  "sel": "#dist",
+  "title": "Screen–mirror distance",
+  "text": "Sets how much of the screen the array can see, and later divides into every slope error. Longer standoff is free accuracy — up to the point the screen no longer fills the field."
+ },
+ {
+  "sel": ".metrics-row",
+  "title": "The six live metrics",
+  "text": "Read left to right. The one that decides the design is <b>Fringes N<sub>f</sub></b>: target ≥ 60, marginal below 40."
+ },
+ {
+  "sel": "#cam-check",
+  "title": "Does the lens cover the array?",
+  "text": "Green means the camera sees the whole array at this distance. Red means it does not — shorten the focal length or use a larger sensor."
+ },
+ {
+  "sel": "#comp",
+  "title": "All layouts at once",
+  "text": "Every candidate scored on the same criteria, so you can see what you are giving up by choosing one over another."
+ },
+ {
+  "sel": "#math",
+  "title": "The mathematics panel",
+  "text": "Every equation with its current numbers substituted in. Move a slider on the left and watch the terms change here — that is the fastest way to learn what each control really does."
+ }
+];</script>
+<script src="assets/tour.js"></script>
 </body>
 </html>

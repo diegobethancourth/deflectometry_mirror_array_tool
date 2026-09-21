@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" href="asu_icon.ico" sizes="any">
+<link rel="stylesheet" href="assets/tour.css">
 <title>Phase-Shifted Fringe Pattern Generator — Diego Bethancourth | ASU Deflectometry</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -88,6 +89,7 @@ body{font-family:Arial,Helvetica,sans-serif;background:#F2F2F5;color:#191919;fon
     <div class="t2"><strong>Diego Bethancourth</strong> &nbsp;&middot;&nbsp; Advisor: Dr. Xiangyu Guo &nbsp;&middot;&nbsp; Systems, Optics and Laser Application Research Lab &nbsp;&middot;&nbsp; Arizona State University</div>
   </div>
   <nav class="nav-links">
+    <a href="guide.html">Start Here</a>
     <a href="index.html">Array Config</a>
     <a href="fringes.html" class="active">Fringe Generator</a>
     <a href="piezo.html">Tilt &amp; Actuation</a>
@@ -539,5 +541,38 @@ function dlAll(){
 
 update();
 </script>
+<script>window.TOUR_STEPS=[
+ {
+  "sel": "#ppf",
+  "title": "Pixels per fringe",
+  "text": "Carry the value you settled on in Array Config. Keep it at 8 or above: below that the panel renders a stepped near-square wave, and the harmonics land in the retrieved phase."
+ },
+ {
+  "sel": "#steps",
+  "title": "Phase steps",
+  "text": "How many frames a classical phase-shift measurement uses. More steps means less phase noise and more capture time. Note SMOTS itself does not use these — it works from one pattern and a reference."
+ },
+ {
+  "sel": "#bias",
+  "title": "Bias and modulation",
+  "text": "Together these must keep A ± B inside 0–255. If they do not, the sinusoid clips, and a clipped sinusoid <b>biases</b> the phase rather than just adding noise. The page warns you."
+ },
+ {
+  "sel": "#crop",
+  "title": "The 1:1 pixel crop",
+  "text": "True screen pixels, no scaling. This is where undersampling becomes visible — if the sinusoid looks stepped here, it will look stepped to the camera."
+ },
+ {
+  "sel": "#prof",
+  "title": "Intensity profile",
+  "text": "All N phase steps drawn over two fringes. The bold curve is the step currently displayed."
+ },
+ {
+  "sel": ".btn-row",
+  "title": "Export",
+  "text": "Full-resolution PNGs ready to display on the panel, or a Python snippet that regenerates exactly this pattern with numpy."
+ }
+];</script>
+<script src="assets/tour.js"></script>
 </body>
 </html>

@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" href="asu_icon.ico" sizes="any">
+<link rel="stylesheet" href="assets/tour.css">
 <title>Mirror Tilt & Piezo Actuation Calculator — Diego Bethancourth | ASU Deflectometry</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -84,6 +85,7 @@ body{font-family:Arial,Helvetica,sans-serif;background:#F2F2F5;color:#191919;fon
     <div class="t2"><strong>Diego Bethancourth</strong> &nbsp;&middot;&nbsp; Advisor: Dr. Xiangyu Guo &nbsp;&middot;&nbsp; Systems, Optics and Laser Application Research Lab &nbsp;&middot;&nbsp; Arizona State University</div>
   </div>
   <nav class="nav-links">
+    <a href="guide.html">Start Here</a>
     <a href="index.html">Array Config</a>
     <a href="fringes.html">Fringe Generator</a>
     <a href="piezo.html" class="active">Tilt &amp; Actuation</a>
@@ -581,5 +583,38 @@ function drawSide(s,m){
 
 update();
 </script>
+<script>window.TOUR_STEPS=[
+ {
+  "sel": "#preset",
+  "title": "Which mirrors are motorised",
+  "text": "The as-built bench motorises only the centre node. You can also click any tile in the map, or any table row, to toggle it."
+ },
+ {
+  "sel": "#chan-badge",
+  "title": "The channel budget",
+  "text": "A tip/tilt node consumes two controller channels and a KIM101 has four — so one controller drives at most two nodes. This is a hard hardware limit, not a preference."
+ },
+ {
+  "sel": "#base",
+  "title": "The baseplate split — read this one",
+  "text": "Every mirror needs a large, nearly identical fold angle to route the camera onto the screen, plus a small differential. The common part is set once, mechanically, by how the plate is bolted; only the differential comes from the piezos. Untick this and the piezos get charged for the whole fold, which makes a feasible design look impossible."
+ },
+ {
+  "sel": ".metrics-row",
+  "title": "What to watch",
+  "text": "<b>Max piezo tilt</b> against the limit, and <b>Range used</b>. Green under 80% of range, amber to 100%, red beyond."
+ },
+ {
+  "sel": "#map-svg",
+  "title": "The tilt map",
+  "text": "Green with a P = motorised, dashed grey = manual. Each tile shows its piezo tilt demand and how much of the available range that uses. Click to toggle."
+ },
+ {
+  "sel": "#tbl",
+  "title": "Per-node solution",
+  "text": "The full pointing solution, node by node. Manual nodes show no actuator travel because nothing is driving them — they are set by hand."
+ }
+];</script>
+<script src="assets/tour.js"></script>
 </body>
 </html>
