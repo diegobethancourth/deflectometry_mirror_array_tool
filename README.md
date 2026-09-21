@@ -104,8 +104,14 @@ them.
 > Proc. SPIE **10377**, 103770G (2017).
 
 ```bash
-cd smots && python demo.py && python -m pytest tests/ -q
+pip install -r smots/requirements.txt
+pytest                             # 63 tests, from the repo root
+cd smots && python demo.py         # narrated walkthrough
 ```
+
+Nothing in the package needs hardware — it is validated against a ray-traced
+forward model. See [`smots/README.md`](smots/README.md) for a reviewer's reading
+order and an explicit statement of what is and is not yet established.
 
 SMOTS is not phase-shifting deflectometry: one pattern is displayed, one
 reference frame is captured, and every later frame is compared against it. The
