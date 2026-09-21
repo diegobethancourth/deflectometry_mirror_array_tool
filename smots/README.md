@@ -9,12 +9,38 @@ Sheared-Fourier tilt retrieval for a segmented mirror array, implementing
 Built for the ASU bench: a 3×3 array of 1″ square mirrors with the centre node
 (M5) motorised by 2× MPIA10 inertia actuators on a KIM101 controller.
 
+## For a reviewer
+
+Nothing here needs hardware. From a fresh clone:
+
 ```bash
-pip install numpy
-python demo.py          # full walkthrough, no hardware needed
+pip install -r requirements.txt
+
+pytest                  # 63 tests, ~2 s
+python demo.py          # narrated walkthrough of the retrieval
 python demo.py calib    # screen-pose calibration through the mirrors
-python -m pytest tests/ -q
 ```
+
+`pytest` works from the repository root or from this directory. To use the
+package from elsewhere, `pip install -e .` first.
+
+**Where to look, in order.** `analysis.py` is the core — Eqs. (1)–(4) of the
+paper, plus the phase estimator this implementation prefers and why.
+`geometry.py` turns phase into an angle. `pipeline.py` is the whole chain in one
+function, and is the shortest way to see how the pieces connect. `simulate.py`
+is the ray-traced forward model that makes the tests meaningful: it renders the
+image the camera *would* record from a commanded tilt, so the retrieval can be
+checked against ground truth rather than against itself.
+
+**What is and is not established.** The algorithm is validated end to end against
+that synthetic model, including simultaneous multi-segment retrieval,
+common-mode rejection and the 2π unwrap. It has **not** been run against real
+camera frames — that waits on the bench. Five hardware values are marked
+`UNVERIFIED` in `hardware.py`; two of them, the screen pixel pitch and the
+mirror-to-screen distance, scale every angle the code reports and must be
+measured before any number here means anything. The three sign conventions
+below are the most likely source of a silently wrong result.
+
 
 ## How the measurement works
 

@@ -1,0 +1,8 @@
+# Runtime and test dependencies for the SMOTS reference implementation.
+#   pip install -r requirements.txt
+#
+# numpy is the only runtime dependency. There is deliberately no scipy: the
+# Gauss-Newton refinement in calibration.py is hand-rolled so the package stays
+# installable anywhere with a single wheel.
+numpy>=1.24
+pytest>=7.0

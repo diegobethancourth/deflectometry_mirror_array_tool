@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "smots"
+version = "0.1.0"
+description = "Sheared-Fourier tilt retrieval for a segmented mirror array (SMOTS)"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Diego Bethancourth" }]
+keywords = ["deflectometry", "SMOTS", "metrology", "segmented mirror", "optics"]
+dependencies = ["numpy>=1.24"]
+
+[project.optional-dependencies]
+test = ["pytest>=7.0"]
+
+[tool.setuptools]
+packages = ["smots"]
+
+# Lets `pytest` work straight from a clone, with or without installing first.
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+addopts = "-q"

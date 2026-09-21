@@ -1,0 +1,10 @@
+# Repository-root configuration.
+#
+# This repository is primarily a set of self-contained HTML tools; the Python
+# package lives in smots/. This block exists so that `pytest` works from the
+# repository root as well as from inside smots/, which is what someone does
+# straight after cloning.
+[tool.pytest.ini_options]
+pythonpath = ["smots"]
+testpaths = ["smots/tests"]
+addopts = "-q"
