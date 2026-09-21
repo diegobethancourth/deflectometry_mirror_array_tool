@@ -34,6 +34,12 @@ glossary, the three sign conventions that silently invert angles, and references
 Each section names the file that implements it, so the document and the code stay
 in step.
 
+**[`docs/Dashboard-Guide-Brief.md`](docs/Dashboard-Guide-Brief.md)** is a
+self-contained context brief on using the dashboard — every page, every control
+with its range and default, what each verdict means, a suggested learning order,
+and the failure modes that produce confident wrong answers. Written to be pasted
+into a fresh AI chat as source material for a tutorial, but readable on its own.
+
 ## Governing relations
 
 ### Array configuration
