@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" href="asu_icon.ico" sizes="any">
+<link rel="stylesheet" href="assets/tour.css">
 <title>SMOTS Live Simulator — Diego Bethancourth | ASU Deflectometry</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -88,6 +89,7 @@ canvas{display:block;width:100%;image-rendering:pixelated;border-radius:8px;back
     <div class="t2"><strong>Diego Bethancourth</strong> &nbsp;&middot;&nbsp; Advisor: Dr. Xiangyu Guo &nbsp;&middot;&nbsp; Systems, Optics and Laser Application Research Lab &nbsp;&middot;&nbsp; Arizona State University</div>
   </div>
   <nav class="nav-links">
+    <a href="guide.html">Start Here</a>
     <a href="index.html">Array Config</a>
     <a href="fringes.html">Fringe Generator</a>
     <a href="piezo.html">Tilt &amp; Actuation</a>
@@ -652,5 +654,43 @@ document.getElementById('cam').addEventListener('click', ev=>{
 
 rebuild();
 </script>
+<script>window.TOUR_STEPS=[
+ {
+  "sel": "#sel",
+  "title": "Pick a mirror",
+  "text": "Or click one directly in the camera view. M5 is the centre node — the one motorised on the real bench."
+ },
+ {
+  "sel": "#tx",
+  "title": "Command a tilt",
+  "text": "This is ground truth: the tilt you are imposing. The page then ray-traces the camera image and runs the real retrieval on it, with no knowledge of this number."
+ },
+ {
+  "sel": "#cam",
+  "title": "The simulated camera view",
+  "text": "Genuinely ray-traced — each pixel is reflected off its mirror and traced to the screen. Watch the fringes shift on the mirror you tilt."
+ },
+ {
+  "sel": "#view",
+  "title": "Switch to the sheared pattern",
+  "text": "The most instructive view in the toolkit. Measured minus reference: mirrors that did not move go uniformly grey, and only the one you tilted carries fringes. That is why the method works."
+ },
+ {
+  "sel": ".metrics-row",
+  "title": "Commanded against recovered",
+  "text": "The whole point. <b>Error</b> is the difference. With noise off it falls to hundredths of a microradian; the limit is noise, not the algorithm."
+ },
+ {
+  "sel": "#tbl",
+  "title": "All nodes at once",
+  "text": "Every mirror solved from the same single pair of frames — that is what ‘simultaneous’ means in SMOTS."
+ },
+ {
+  "sel": "#math",
+  "title": "The retrieval chain",
+  "text": "The four steps from sheared pattern to tilt angle, with live numbers. The same mathematics as the Python package."
+ }
+];</script>
+<script src="assets/tour.js"></script>
 </body>
 </html>

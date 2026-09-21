@@ -3,15 +3,23 @@
 Interactive, browser-based calculators supporting the array sizing and component
 selection analysis for a deflectometry (SMOTS / PMD) setup.
 
-Every page is a **single self-contained HTML file** — no build step, no
-dependencies, no server. Open it by double-clicking, email it, or serve the
-folder with GitHub Pages. All controls update the metrics, sketches and the live
-mathematics panel simultaneously.
+Every page is plain HTML with no build step, no server and no external
+dependencies — open one by double-clicking, or serve the folder with GitHub
+Pages. All controls update the metrics, sketches and the live mathematics panel
+simultaneously.
+
+**New here?** Open [**Start Here**](guide.html) for the flowchart of how the
+pages feed each other, then press **Guided tour** in the top bar of any page for
+a walkthrough of that page's controls (arrow keys move, Escape closes).
+
+The only shared assets are `assets/tour.js` and `assets/tour.css`, which drive
+that tour; every page still renders and calculates correctly without them.
 
 ## Pages
 
 | Page | What it answers |
 |---|---|
+| [`guide.html`](guide.html) — **Start Here** | How do the five tools fit together? A clickable flowchart of the design chain, a table of what every amber/red verdict means and where to fix it, and a task router. |
 | [`index.html`](index.html) — **Array Config** | Which mirror layout fits the screen and gives enough fringes? Six governing equations across six candidate layouts, with a ranked comparison table. |
 | [`fringes.html`](fringes.html) — **Fringe Generator** | What exactly do I display on the screen? Phase-shifted sinusoid design, 1:1 pixel inspection, full-resolution PNG export and a matching Python snippet. |
 | [`piezo.html`](piezo.html) — **Tilt & Actuation** | Can the mounts actually point each mirror? Per-mirror law-of-reflection solution, piezo displacement, angular resolution and range budget. |
