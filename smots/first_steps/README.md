@@ -1,4 +1,4 @@
-# First steps — working up to SMOTS
+# First steps — working up to SMOTS (Simultaneous Multi-segmented Mirror Orientation Test System)
 
 Scripts written while reading Choi et al., *Proc. SPIE* **10377**, 103770G (2017),
 in the order the understanding actually has to be built. Each one is standalone,
